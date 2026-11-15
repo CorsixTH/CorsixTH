@@ -105,11 +105,11 @@ local event_changes = {
   [ReputationAccount.event_autopsy_discovered] = {percent = -20}, -- an autopsy is discovered
 }
 
---! Truncate toward zero, as the original's integer division does.
---!math.floor rounds toward negative infinity, which would turn -2.5 into -3
---! rather than -2, and bias every negative percentage event.
---!param value (number) The value to truncate
---!return (integer) The value with its fraction discarded, toward zero
+--- Truncate toward zero, as the original's integer division does.
+---math.floor rounds toward negative infinity, which would turn -2.5 into -3
+--- rather than -2, and bias every negative percentage event.
+--- @param value (number) The value to truncate
+--- @return (integer) The value with its fraction discarded, toward zero
 local function trunc(value)
   if value < 0 then
     return -math.floor(-value)
@@ -117,10 +117,10 @@ local function trunc(value)
   return math.floor(value)
 end
 
---! The rating a given credit and weight produce.
---!param credit (integer) The accumulated credit
---!param weight (integer) The accumulated weight
---!return (integer) The rating, 0 to 1000
+--- The rating a given credit and weight produce.
+--- @param credit (integer) The accumulated credit
+--- @param weight (integer) The accumulated weight
+--- @return (integer) The rating, 0 to 1000
 function ReputationAccount.calculate(credit, weight)
   if weight <= 0 then
     return ReputationAccount.rating_neutral
@@ -135,19 +135,19 @@ function ReputationAccount.calculate(credit, weight)
   return rating
 end
 
---! The change an event makes to the accounting.
---!
---! The delta is calculated from the weight *before* the event, and it is
---! returned rather than applied so that the same figure can be given to the
---! hospital and, when the event names a disease, to that disease. Their two
---! histories differ, so the same delta produces two different rating changes.
---!
---! The weight to scale from is the caller's choice. Percentage events use the
---! hospital's weight.
---!param event (integer) The event identifier, 0 to 24
---!param weight (integer) The weight to scale a percentage event from
---!param amount (integer) The caller's signed figure, for the events that use one
---!return (integer, integer) The change to credit and the change to weight
+--- The change an event makes to the accounting.
+---
+--- The delta is calculated from the weight *before* the event, and it is
+--- returned rather than applied so that the same figure can be given to the
+--- hospital and, when the event names a disease, to that disease. Their two
+--- histories differ, so the same delta produces two different rating changes.
+---
+--- The weight to scale from is the caller's choice. Percentage events use the
+--- hospital's weight.
+--- @param event (integer) The event identifier, 0 to 24
+--- @param weight (integer) The weight to scale a percentage event from
+--- @param amount (integer) The caller's signed figure, for the events that use one
+--- @return (integer, integer) The change to credit and the change to weight
 function ReputationAccount.eventDelta(event, weight, amount)
   local change = event_changes[event]
   if not change then
@@ -168,24 +168,24 @@ function ReputationAccount.eventDelta(event, weight, amount)
   return delta_credit, delta_weight
 end
 
---! The credit that moves a rating by a given number of points.
---!
---! The rating is `500 * credit / weight`, so one point of rating is worth
---! `weight / 500` of credit.
---!param points (integer) The signed number of rating points
---!param weight (integer) The weight to convert against
---!return (integer) The change to credit that moves the rating by that much
+--- The credit that moves a rating by a given number of points.
+---
+--- The rating is `500 * credit / weight`, so one point of rating is worth
+--- `weight / 500` of credit.
+--- @param points (integer) The signed number of rating points
+--- @param weight (integer) The weight to convert against
+--- @return (integer) The change to credit that moves the rating by that much
 function ReputationAccount.pointsToCredit(points, weight)
   return trunc(points * weight / ReputationAccount.rating_neutral)
 end
 
---! A credit and weight that show a given rating at a plausible scale.
---!
---! Calculate a credit and a weight based on a known rating and outcomes.
---!param rating (integer) The rating to reproduce, defaulting to neutral
---!param outcomes (integer) How many outcomes have been seen, which sets the
---! scale.
---!return (integer, integer) The credit and the weight to restore
+--- A credit and weight that show a given rating at a plausible scale.
+---
+--- Calculate a credit and a weight based on a known rating and outcomes.
+--- @param rating (integer) The rating to reproduce, defaulting to neutral
+--- @param outcomes (integer) How many outcomes have been seen, which sets the
+--- scale.
+--- @return (integer, integer) The credit and the weight to restore
 function ReputationAccount.accountingForRating(rating, outcomes)
   rating = rating or ReputationAccount.rating_neutral
 
@@ -208,35 +208,35 @@ function ReputationAccount.accountingForRating(rating, outcomes)
   return best_credit, weight
 end
 
---! Create an account.
---!param credit (integer) The starting credit, defaulting to 20
---!param weight (integer) The starting weight, defaulting to 20
+--- Create an account.
+--- @param credit (integer) The starting credit, defaulting to 20
+--- @param weight (integer) The starting weight, defaulting to 20
 function ReputationAccount:ReputationAccount(credit, weight)
   self.credit = credit or ReputationAccount.start_credit
   self.weight = weight or ReputationAccount.start_weight
 end
 
---! The rating this account currently shows.
---!return (integer) The rating, 0 to 1000
+--- The rating this account currently shows.
+--- @return (integer) The rating, 0 to 1000
 function ReputationAccount:rating()
   return ReputationAccount.calculate(self.credit, self.weight)
 end
 
---! Move the accounting by a given amount.
---!param delta_credit (integer) The change to credit
---!param delta_weight (integer) The change to weight
---!return (integer) The rating after the change
+--- Move the accounting by a given amount.
+--- @param delta_credit (integer) The change to credit
+--- @param delta_weight (integer) The change to weight
+--- @return (integer) The rating after the change
 function ReputationAccount:applyDelta(delta_credit, delta_weight)
   self.credit = self.credit + delta_credit
   self.weight = self.weight + (delta_weight or 0)
   return self:rating()
 end
 
---! Apply one reputation event to this account.
---!param event (integer) The event identifier, 0 to 24
---!param weight (integer) The weight to scale a percentage event from
---!param amount (integer) The caller's signed figure, for the events that use one
---!return (integer) The rating after the event
+--- Apply one reputation event to this account.
+--- @param event (integer) The event identifier, 0 to 24
+--- @param weight (integer) The weight to scale a percentage event from
+--- @param amount (integer) The caller's signed figure, for the events that use one
+--- @return (integer) The rating after the event
 function ReputationAccount:applyEvent(event, weight, amount)
   local delta_credit, delta_weight = ReputationAccount.eventDelta(event, weight, amount)
   return self:applyDelta(delta_credit, delta_weight)
