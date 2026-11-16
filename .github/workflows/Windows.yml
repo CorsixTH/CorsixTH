@@ -31,7 +31,7 @@ jobs:
     env:
       PRESET: ${{inputs.preset || 'win-x64-rel'}}
       ANIMVIEW: ${{inputs.animview && 'ON' || 'OFF'}}
-      NAME: CorsixTH${{inputs.animview && '_and_AnimView' || ''}}${{inputs.preset == 'win-x86-rel' && '_x86' || inputs.preset == 'win-arm64-rel' && '_arm64' || ''}}
+      NAME: CorsixTH${{inputs.animview && '-and-AnimView' || ''}}
       VCPKG_ROOT: ${{ github.workspace }}\vcpkg
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-bincache
       VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/vcpkg-bincache,readwrite"
@@ -41,6 +41,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Set artifact name
+        shell: pwsh
+        run: |
+          $refName = if ('${{github.event_name}}' -eq 'pull_request') {
+              'PR-${{github.event.pull_request.number}}'
+          } else {
+              '${{github.ref_name}}'
+          }
+          $refName = $refName -replace '[\/:*?"<>|]', '-'
+          $architecture = switch ($env:PRESET) {
+              'win-x64-rel' { 'x64' }
+              'win-x86-rel' { 'x86' }
+              'win-arm64-rel' { 'arm64' }
+              default { '' }
+          }
+          "NAME=$env:NAME-$refName-Windows-$architecture" >> $env:GITHUB_ENV
 
       - name: Extract vcpkg baseline
         id: vcpkg-baseline
