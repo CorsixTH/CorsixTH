@@ -19,50 +19,52 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local disease = {}
-disease.id = "sleeping_illness"
-disease.expertise_id = 13
-disease.visuals_id = 11
-disease.name = _S.diseases.sleeping_illness.name
-disease.cause = _S.diseases.sleeping_illness.cause
-disease.symptoms = _S.diseases.sleeping_illness.symptoms
-disease.cure = _S.diseases.sleeping_illness.cure
-disease.yawn = true
-disease.cure_price = 750
-disease.emergency_sound = "emerg015.wav"
-disease.emergency_number = 18
-disease.contagious = true
-disease.initPatient = function(patient)
-  if math.random(0, 1) == 0 then
-    patient:setType("Standard Male Patient")
-    patient:setLayer(0, math.random(1, 5) * 2)
-    patient:setLayer(2, math.random(0, 2) * 2)
-  else
-    patient:setType("Standard Female Patient")
-    patient:setLayer(0, math.random(1, 4) * 2)
-    patient:setLayer(2, 0)
-  end
-  patient:setLayer(1, math.random(0, 3) * 2)
-  patient:setLayer(3, 0)
-  patient:setLayer(4, 0)
-end
--- Diagnosis rooms are the rooms other than the GPs office which can be visited
--- to aid in diagnosis. The need not be visited, and if they are visited, the
--- order in which they are visited is not fixed.
-disease.diagnosis_rooms = {
-  "general_diag",
-  "cardiogram",
-  "scanner",
-  "ultrascan",
-  "blood_machine",
-  "x_ray",
-  "psych",
-  "ward",
-}
--- Treatment rooms are the rooms which must be visited, in the given order, to
--- cure the disease.
-disease.treatment_rooms = {
-  "pharmacy",
+---@type Disease
+local disease = {
+  id = "sleeping_illness",
+  expertise_id = 13,
+  visuals_id = 11,
+  name = _S.diseases.sleeping_illness.name,
+  cause = _S.diseases.sleeping_illness.cause,
+  symptoms = _S.diseases.sleeping_illness.symptoms,
+  cure = _S.diseases.sleeping_illness.cure,
+  yawn = true,
+  cure_price = 750,
+  emergency_sound = "emerg015.wav",
+  emergency_number = 18,
+  contagious = true,
+  initPatient = function(patient)
+    if math.random(0, 1) == 0 then
+      patient:setType("Standard Male Patient")
+      patient:setLayer(0, math.random(1, 5) * 2)
+      patient:setLayer(2, math.random(0, 2) * 2)
+    else
+      patient:setType("Standard Female Patient")
+      patient:setLayer(0, math.random(1, 4) * 2)
+      patient:setLayer(2, 0)
+    end
+    patient:setLayer(1, math.random(0, 3) * 2)
+    patient:setLayer(3, 0)
+    patient:setLayer(4, 0)
+  end,
+  -- Diagnosis rooms are the rooms other than the GPs office which can be visited
+  -- to aid in diagnosis. The need not be visited, and if they are visited, the
+  -- order in which they are visited is not fixed.
+  diagnosis_rooms = {
+    "general_diag",
+    "cardiogram",
+    "scanner",
+    "ultrascan",
+    "blood_machine",
+    "x_ray",
+    "psych",
+    "ward",
+  },
+  -- Treatment rooms are the rooms which must be visited, in the given order, to
+  -- cure the disease.
+  treatment_rooms = {
+    "pharmacy",
+  },
 }
 
 return disease

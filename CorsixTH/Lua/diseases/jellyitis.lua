@@ -18,54 +18,56 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local disease = {}
-disease.id = "jellyitis"
-disease.expertise_id = 12
-disease.visuals_id = 10
-disease.name = _S.diseases.jellyitis.name
-disease.cause = _S.diseases.jellyitis.cause
-disease.symptoms = _S.diseases.jellyitis.symptoms
-disease.cure = _S.diseases.jellyitis.cure
-disease.cure_price = 1000
-disease.emergency_sound = "emerg014.wav"
-disease.emergency_number = 12
-disease.contagious = false
-disease.effect = AnimationEffect.Jelly
-disease.initPatient = function(patient)
-  if math.random(0, 1) == 0 then
-    patient:setType("Standard Male Patient")
-    patient:setLayer(0, math.random(1, 5) * 2)
-    patient:setLayer(2, math.random(0, 2) * 2)
-  else
-    patient:setType("Standard Female Patient")
-    patient:setLayer(0, math.random(1, 4) * 2)
-    patient:setLayer(2, 0)
-  end
-  patient:setLayer(1, math.random(0, 3) * 2)
-  patient:setLayer(3, 0)
-  patient:setLayer(4, 0)
-end
+---@type Disease
+local disease = {
+  id = "jellyitis",
+  expertise_id = 12,
+  visuals_id = 10,
+  name = _S.diseases.jellyitis.name,
+  cause = _S.diseases.jellyitis.cause,
+  symptoms = _S.diseases.jellyitis.symptoms,
+  cure = _S.diseases.jellyitis.cure,
+  cure_price = 1000,
+  emergency_sound = "emerg014.wav",
+  emergency_number = 12,
+  contagious = false,
+  effect = AnimationEffect.Jelly,
+  initPatient = function(patient)
+    if math.random(0, 1) == 0 then
+      patient:setType("Standard Male Patient")
+      patient:setLayer(0, math.random(1, 5) * 2)
+      patient:setLayer(2, math.random(0, 2) * 2)
+    else
+      patient:setType("Standard Female Patient")
+      patient:setLayer(0, math.random(1, 4) * 2)
+      patient:setLayer(2, 0)
+    end
+    patient:setLayer(1, math.random(0, 3) * 2)
+    patient:setLayer(3, 0)
+    patient:setLayer(4, 0)
+  end,
 
--- Diagnosis rooms are the rooms other than the GPs office which can be visited
--- to aid in diagnosis. The need not be visited, and if they are visited, the
--- order in which they are visited is not fixed.
-disease.diagnosis_rooms = {
-  "general_diag",
-  "cardiogram",
-  "scanner",
-  "ultrascan",
-  "blood_machine",
-  "x_ray",
-  "psych",
-  "ward",
-}
--- Treatment rooms are the rooms which must be visited, in the given order, to
--- cure the disease.
-disease.treatment_rooms = {
-  "jelly_vat",
-}
+  -- Diagnosis rooms are the rooms other than the GPs office which can be visited
+  -- to aid in diagnosis. The need not be visited, and if they are visited, the
+  -- order in which they are visited is not fixed.
+  diagnosis_rooms = {
+    "general_diag",
+    "cardiogram",
+    "scanner",
+    "ultrascan",
+    "blood_machine",
+    "x_ray",
+    "psych",
+    "ward",
+  },
+  -- Treatment rooms are the rooms which must be visited, in the given order, to
+  -- cure the disease.
+  treatment_rooms = {
+    "jelly_vat",
+  },
 
--- If a machine is required a small icon should appear in the drug casebook.
-disease.requires_machine = true
+  -- If a machine is required a small icon should appear in the drug casebook.
+  requires_machine = true,
+}
 
 return disease
