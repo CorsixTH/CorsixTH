@@ -113,27 +113,26 @@ function UIOptions:UIOptions(ui, mode)
     { name = "back", func = self.buttonBack },
   }
 
-  width = self.width
+  local btn_width = self.btn_width
   local nav_y_pos = self:_getOptionYPos() + big_button_padding
-  local nav_x_pos = self.margin
+  local nav_x_pos_1, nav_x_pos_2 = self.margin, self.margin + btn_width + big_button_padding
   for i, entry in ipairs(nav_buttons) do
     local name, func = entry.name, entry.func
-
-    local btn_width = self.btn_width
-    -- If back is the only bottom row button then make it full width
-    if i == #nav_buttons and #nav_buttons % 2 == 1 then
-      btn_width = btn_width * 2 + element_spacing
+    local x_pos = nav_x_pos_2
+    if i % 2 == 1 then -- New column
+      x_pos = nav_x_pos_1
+      -- If back is the only bottom row button then make it full width
+      if i == #nav_buttons then
+        btn_width = btn_width * 2 + big_button_padding
+      end
+      if i > 1 then -- Not needed for the first row of buttons
+        nav_y_pos = nav_y_pos + self.big_button_height + element_spacing
+      end
     end
-    self:addBevelPanel(nav_x_pos, nav_y_pos, btn_width, self.big_button_height, col.button)
+    self:addBevelPanel(x_pos, nav_y_pos, btn_width, self.big_button_height, col.button)
       :setLabel(_S[self.strings_ref][name])
       :makeButton(0, 0, btn_width, self.big_button_height, nil, func)
       :setTooltip(_S.tooltip[self.strings_ref][name])
-
-    nav_x_pos = nav_x_pos + self.btn_width + element_spacing
-    if nav_x_pos + self.btn_width + self.margin > width then
-      nav_x_pos = self.margin
-      nav_y_pos = nav_y_pos + self.big_button_height + element_spacing
-    end
   end
 end
 
