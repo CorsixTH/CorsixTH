@@ -84,7 +84,8 @@ body:
       options:
         - CD
         - GOG.com
-        - Origin
+        - Steam
+        - EA App
         - Demo
     validations:
       required: true
