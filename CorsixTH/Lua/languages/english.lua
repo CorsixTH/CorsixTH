@@ -514,6 +514,8 @@ options_window = {
   check_for_updates = "Check for Updates",
   sound = "Sound",
   graphics = "Graphics",
+  apply = "Apply",
+  cancel = "Cancel",
 }
 
 graphics_window = {

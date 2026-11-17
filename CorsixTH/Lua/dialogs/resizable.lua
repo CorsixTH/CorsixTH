@@ -297,7 +297,7 @@ function UIResizable:buildDialog()
       num_cols = num_cols + 1
     end
   end
-  local width = self.margin * 2 + (self.label_width + label_button_gap + self.btn_width) * num_cols
+  local width = self.margin + (self.label_width + label_button_gap + self.btn_width) * num_cols
 
   -- Window parts definition
   -- Title
@@ -412,6 +412,10 @@ function UIResizable:_buttonPressed(setting, func, info)
     app:saveConfig()
     if info then self.ui:addWindow(UIInformation(self.ui, {info})) end
   end
+end
+
+function UIResizable:buttonBack()
+  self:close()
 end
 
 function UIResizable:afterLoad(old, new)

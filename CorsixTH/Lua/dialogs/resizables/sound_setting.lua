@@ -461,18 +461,9 @@ function UISoundSettings:buttonJukebox()
   end
 end
 
---! Callback for back button
--- Opens the UIOptions window again.
-function UISoundSettings:buttonBack()
-  self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
 --! Close window
 function UISoundSettings:close()
   UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
+  local window = UIOptions(self.ui, "menu")
+  self.ui:addWindow(window)
 end
