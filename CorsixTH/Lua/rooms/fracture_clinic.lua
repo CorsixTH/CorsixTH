@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "fracture_clinic"
-room.vip_must_visit = false
-room.level_config_id = 21
-room.class = "FractureRoom"
-room.name = _S.rooms_short.fracture_clinic
-room.long_name = _S.rooms_long.fracture_clinic
-room.tooltip = _S.tooltip.rooms.fracture_clinic
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { cast_remover = 1 }
-room.build_preview_animation = 5072
-room.categories = {
-  clinics = 3,
+---@type StaffRequirements
+local needed_staff = { Nurse = 1 }
+
+---@type RoomProperties
+local room_properties = {
+  id = "fracture_clinic",
+  vip_must_visit = false,
+  level_config_id = 21,
+  class = "FractureRoom",
+  name = _S.rooms_short.fracture_clinic,
+  long_name = _S.rooms_long.fracture_clinic,
+  tooltip = _S.tooltip.rooms.fracture_clinic,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { cast_remover = 1 },
+  build_preview_animation = 5072,
+  categories = {
+    clinics = 3,
+  },
+  minimum_size = 4,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd004.wav",
+  handyman_call_sound = "maint014.wav",
 }
-room.minimum_size = 4
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Nurse = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd004.wav"
-room.handyman_call_sound = "maint014.wav"
 
 class "FractureRoom" (Room)
 
@@ -81,4 +84,4 @@ function FractureRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

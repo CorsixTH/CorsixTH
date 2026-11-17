@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "blood_machine"
-room.vip_must_visit = false
-room.level_config_id = 15
-room.class = "BloodMachineRoom"
-room.name = _S.rooms_short.blood_machine
-room.long_name = _S.rooms_long.blood_machine
-room.tooltip = _S.tooltip.rooms.blood_machine
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { blood_machine = 1 }
-room.build_preview_animation = 5094
-room.categories = {
-  diagnosis = 6,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "blood_machine",
+  vip_must_visit = false,
+  level_config_id = 15,
+  class = "BloodMachineRoom",
+  name = _S.rooms_short.blood_machine,
+  long_name = _S.rooms_long.blood_machine,
+  tooltip = _S.tooltip.rooms.blood_machine,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { blood_machine = 1 },
+  build_preview_animation = 5094,
+  categories = {
+    diagnosis = 6,
+  },
+  minimum_size = 4,
+  wall_type = "yellow",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd006.wav",
+  handyman_call_sound = "maint015.wav"
 }
-room.minimum_size = 4
-room.wall_type = "yellow"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd006.wav"
-room.handyman_call_sound = "maint015.wav"
 
 class "BloodMachineRoom" (Room)
 
@@ -82,4 +85,4 @@ function BloodMachineRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

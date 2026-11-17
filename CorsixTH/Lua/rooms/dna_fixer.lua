@@ -20,30 +20,33 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "dna_fixer"
-room.vip_must_visit = true
-room.level_config_id = 23
-room.class = "DNAFixerRoom"
-room.name = _S.rooms_short.dna_fixer
-room.long_name = _S.rooms_long.dna_fixer
-room.tooltip = _S.tooltip.rooms.dna_fixer
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { dna_fixer = 1, console = 1 }
-room.build_preview_animation = 5070
-room.categories = {
-  clinics = 6,
+---@type StaffRequirements
+local needed_staff = { Researcher = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "dna_fixer",
+  vip_must_visit = true,
+  level_config_id = 23,
+  class = "DNAFixerRoom",
+  name = _S.rooms_short.dna_fixer,
+  long_name = _S.rooms_long.dna_fixer,
+  tooltip = _S.tooltip.rooms.dna_fixer,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { dna_fixer = 1, console = 1 },
+  build_preview_animation = 5070,
+  categories = {
+    clinics = 6,
+  },
+  minimum_size = 5,
+  wall_type = "blue",
+  floor_tile = 17,
+  swing_doors = true,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd015.wav",
+  handyman_call_sound = "maint006.wav",
 }
-room.minimum_size = 5
-room.wall_type = "blue"
-room.floor_tile = 17
-room.swing_doors = true
-room.required_staff = {
-  Researcher = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd015.wav"
-room.handyman_call_sound = "maint006.wav"
 
 class "DNAFixerRoom" (Room)
 
@@ -89,4 +92,4 @@ function DNAFixerRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

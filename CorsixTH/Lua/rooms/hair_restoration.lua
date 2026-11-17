@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "hair_restoration"
-room.vip_must_visit = false
-room.level_config_id = 19
-room.class = "HairRestorationRoom"
-room.name = _S.rooms_short.hair_restoration
-room.long_name = _S.rooms_long.hair_restoration
-room.tooltip = _S.tooltip.rooms.hair_restoration
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { hair_restorer = 1, console = 1 }
-room.build_preview_animation = 5074
-room.categories = {
-  clinics = 4,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "hair_restoration",
+  vip_must_visit = false,
+  level_config_id = 19,
+  class = "HairRestorationRoom",
+  name = _S.rooms_short.hair_restoration,
+  long_name = _S.rooms_long.hair_restoration,
+  tooltip = _S.tooltip.rooms.hair_restoration,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { hair_restorer = 1, console = 1 },
+  build_preview_animation = 5074,
+  categories = {
+    clinics = 4,
+  },
+  minimum_size = 4,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd016.wav",
+  handyman_call_sound = "maint007.wav",
 }
-room.minimum_size = 4
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd016.wav"
-room.handyman_call_sound = "maint007.wav"
 
 class "HairRestorationRoom" (Room)
 
@@ -89,4 +92,4 @@ function HairRestorationRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

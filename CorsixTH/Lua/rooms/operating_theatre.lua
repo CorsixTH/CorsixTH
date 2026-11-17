@@ -20,35 +20,37 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "operating_theatre"
-room.vip_must_visit = true
-room.level_config_id = 10
-room.class = "OperatingTheatreRoom"
-room.name = _S.rooms_short.operating_theatre
-room.long_name = _S.rooms_long.operating_theatre
-room.tooltip = _S.tooltip.rooms.operating_theatre
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = {
-  operating_table = 1,
-  surgeon_screen = 1,
-  op_sink1 = 1,
-  x_ray_viewer = 1
+---@type RoomProperties
+local room_properties = {
+  id = "operating_theatre",
+  vip_must_visit = true,
+  level_config_id = 10,
+  class = "OperatingTheatreRoom",
+  name = _S.rooms_short.operating_theatre,
+  long_name = _S.rooms_long.operating_theatre,
+  tooltip = _S.tooltip.rooms.operating_theatre,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = {
+    operating_table = 1,
+    surgeon_screen = 1,
+    op_sink1 = 1,
+    x_ray_viewer = 1
+  },
+  build_preview_animation = 5080,
+  categories = {
+    treatment = 3,
+  },
+  minimum_size = 6,
+  wall_type = "white",
+  floor_tile = 21,
+  swing_doors = true,
+  required_staff = {
+    Surgeon = 2,
+  },
+  call_sound = "reqd010.wav", -- TODO: There is also an unused sound
+  -- "Another surgeon needed [...]", reqd011.wav
+  -- handyman_call_sound = "maint007.wav" TODO: No sound for this room?
 }
-room.build_preview_animation = 5080
-room.categories = {
-  treatment = 3,
-}
-room.minimum_size = 6
-room.wall_type = "white"
-room.floor_tile = 21
-room.swing_doors = true
-room.required_staff = {
-  Surgeon = 2,
-}
-room.call_sound = "reqd010.wav" -- TODO: There is also an unused sound
--- "Another surgeon needed [...]", reqd011.wav
--- room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?
 
 class "OperatingTheatreRoom" (Room)
 
@@ -379,4 +381,4 @@ function OperatingTheatreRoom:canHumanoidEnter(humanoid)
   return can
 end
 
-return room
+return room_properties

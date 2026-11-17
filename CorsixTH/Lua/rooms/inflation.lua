@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "inflation"
-room.vip_must_visit = false
-room.level_config_id = 17
-room.class = "InflationRoom"
-room.name = _S.rooms_short.inflation
-room.long_name = _S.rooms_long.inflation
-room.tooltip = _S.tooltip.rooms.inflation
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { inflator = 1 }
-room.build_preview_animation = 908
-room.categories = {
-  clinics = 1,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "inflation",
+  vip_must_visit = false,
+  level_config_id = 17,
+  class = "InflationRoom",
+  name = _S.rooms_short.inflation,
+  long_name = _S.rooms_long.inflation,
+  tooltip = _S.tooltip.rooms.inflation,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { inflator = 1 },
+  build_preview_animation = 908,
+  categories = {
+    clinics = 1,
+  },
+  minimum_size = 4,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd014.wav",
+  handyman_call_sound = "maint013.wav",
 }
-room.minimum_size = 4
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd014.wav"
-room.handyman_call_sound = "maint013.wav"
 
 class "InflationRoom" (Room)
 
@@ -80,4 +83,4 @@ function InflationRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

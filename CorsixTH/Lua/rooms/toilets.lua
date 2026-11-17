@@ -20,23 +20,25 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "toilets"
-room.vip_must_visit = false
-room.level_config_id = 29
-room.class = "ToiletRoom"
-room.name = _S.rooms_short.toilets
-room.long_name = _S.rooms_long.toilets
-room.tooltip = _S.tooltip.rooms.toilets
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "loo", "sink" }
-room.objects_needed = { loo = 1, sink = 1 }
-room.build_preview_animation = 5098
-room.categories = {
-  facilities = 3,
+---@type RoomProperties
+local room_properties = {
+  id = "toilets",
+  vip_must_visit = false,
+  level_config_id = 29,
+  class = "ToiletRoom",
+  name = _S.rooms_short.toilets,
+  long_name = _S.rooms_long.toilets,
+  tooltip = _S.tooltip.rooms.toilets,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin", "loo", "sink" },
+  objects_needed = { loo = 1, sink = 1 },
+  build_preview_animation = 5098,
+  categories = {
+    facilities = 3,
+  },
+  minimum_size = 4,
+  wall_type = "green",
+  floor_tile = 21,
 }
-room.minimum_size = 4
-room.wall_type = "green"
-room.floor_tile = 21
 
 class "ToiletRoom" (Room)
 
@@ -172,9 +174,9 @@ end
 
 function ToiletRoom:afterLoad(old, new)
   if old < 110 then
-    room.free_loos = nil
+    room_properties.free_loos = nil
   end
   Room.afterLoad(self, old, new)
 end
 
-return room
+return room_properties

@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "cardiogram"
-room.vip_must_visit = false
-room.level_config_id = 12
-room.class = "CardiogramRoom"
-room.name = _S.rooms_short.cardiogram
-room.long_name = _S.rooms_long.cardiogram
-room.tooltip = _S.tooltip.rooms.cardiogram
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { cardio = 1, screen = 1 }
-room.build_preview_animation = 918
-room.categories = {
-  diagnosis = 3,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "cardiogram",
+  vip_must_visit = false,
+  level_config_id = 12,
+  class = "CardiogramRoom",
+  name = _S.rooms_short.cardiogram,
+  long_name = _S.rooms_long.cardiogram,
+  tooltip = _S.tooltip.rooms.cardiogram,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { cardio = 1, screen = 1 },
+  build_preview_animation = 918,
+  categories = {
+    diagnosis = 3,
+  },
+  minimum_size = 4,
+  wall_type = "yellow",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd001.wav",
+  handyman_call_sound = "maint010.wav",
 }
-room.minimum_size = 4
-room.wall_type = "yellow"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd001.wav"
-room.handyman_call_sound = "maint010.wav"
 
 class "CardiogramRoom" (Room)
 
@@ -127,4 +130,4 @@ function CardiogramRoom:shouldHavePatientReenter(patient)
   return not patient:isLeaving()
 end
 
-return room
+return room_properties
