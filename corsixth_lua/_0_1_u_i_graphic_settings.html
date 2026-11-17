@@ -93,9 +93,9 @@
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1build_dialog">buildDialog</a>()
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_graphic_settings.html#_0_1_u_i_graphic_settings_1button_back">buttonBack</a>()
- (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">UIResizable:buttonBack</a>)
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">buttonBack</a>()
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_graphic_settings.html#_0_1_u_i_graphic_settings_1button_fullscreen">buttonFullscreen</a>()
@@ -103,9 +103,9 @@
  <li class="self">
  <a href="_0_1_u_i_graphic_settings.html#_0_1_u_i_graphic_settings_1button_original_aspect_ratio">buttonOriginalAspectRatio</a>()
  </li>
- <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1close">close</a>()
- (inherited from <a href="_0_1_window.html">Window</a>)
+ <li class="self">
+ <a href="_0_1_u_i_graphic_settings.html#_0_1_u_i_graphic_settings_1close">close</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
@@ -439,7 +439,6 @@
  (*)
  </li>
  <li><span class="p">parent</span>
- (*)
  </li>
  <li><span class="p">reload</span>
  (*)
@@ -517,7 +516,7 @@
  <div class="method">
  <h5><a name="_0_1_u_i_graphic_settings_1__process_override_resolution">function UIGraphicSettings:_processOverrideResolution()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L309">line 309 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L310">line 310 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -525,28 +524,27 @@
  <p>
  Handle required button changes from a window resize event from the user (via UI
 or adjusting window boundaries)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L324">line 324 of Lua/dialogs/resizables/graphics_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_graphic_settings_1button_back">function UIGraphicSettings:buttonBack()</a></h5>
- <p>
- Callback for back button
-Opens the UIOptions window again.<br/><br/>
- <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1button_back">UIResizable:buttonBack</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L332">line 332 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L325">line 325 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphic_settings_1button_fullscreen">function UIGraphicSettings:buttonFullscreen()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L162">line 162 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L163">line 163 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphic_settings_1button_original_aspect_ratio">function UIGraphicSettings:buttonOriginalAspectRatio()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L172">line 172 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L173">line 173 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_graphic_settings_1close">function UIGraphicSettings:close()</a></h5>
+ <p>
+ Close window<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L333">line 333 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -566,7 +564,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L235">line 235 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L236">line 236 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -586,7 +584,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L277">line 277 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L278">line 278 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -606,7 +604,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L218">line 218 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L219">line 219 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -626,14 +624,14 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L182">line 182 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L183">line 183 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphic_settings_1on_change_resolution">function UIGraphicSettings:onChangeResolution()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L319">line 319 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L320">line 320 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -653,7 +651,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L270">line 270 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L271">line 271 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -673,7 +671,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L294">line 294 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L295">line 295 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -693,7 +691,7 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L261">line 261 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L262">line 262 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -713,14 +711,14 @@ Opens the UIOptions window again.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L199">line 199 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L200">line 200 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_graphic_settings_1update_u_i_scale_availability_state">function UIGraphicSettings:updateUIScaleAvailabilityState()</a></h5>
  <p>
  Check if UI scale scale button should be enabled, and update the tooltip.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L252">line 252 of Lua/dialogs/resizables/graphics_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/graphics_settings.lua#L253">line 253 of Lua/dialogs/resizables/graphics_settings.lua</a>.
  </p>
  </div>
 </div>
