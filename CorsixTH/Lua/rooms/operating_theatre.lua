@@ -129,7 +129,7 @@ function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
-  self:setStaffMember(staff)
+  self:addStaffMember(staff)
   -- Put surgeon outfit on
   local screen, screen_x, screen_y = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(screen_x, screen_y)

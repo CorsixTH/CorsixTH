@@ -63,12 +63,9 @@ function Doctor:tickDay()
   -- Are we learning new skills today?
   elseif self:isLearning() then
     local room = self:getRoom()
-    local consultant = room.staff_member
+    local consultant = room:getStaffMember()
     local room_factor = room:getTrainingFactor()
-    -- When counting room occupancy, we must subtract 1 for the consultant in the room.
-    -- Currently, handymen/newly trained consultants also get counted here as they
-    -- could be considered distracting to current trainees.
-    local student_count = room:getStaffCount() - 1
+    local student_count = room:getStaffCount()
     self:trainSkills(consultant, room_factor, student_count)
   end
 end

@@ -39,6 +39,8 @@ room.minimum_size = 4
 room.wall_type = "green"
 room.floor_tile = 17
 room.has_no_queue_dialog = true
+-- Only the consultant lecturer is a staff member of this room
+room.maximum_staff = { Doctor = 1 }
 
 class "TrainingRoom" (Room)
 
@@ -54,14 +56,6 @@ function TrainingRoom:roomFinished()
   -- Training rate and max occupancy based on objects in the room
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
-  local chairs = 0
-  for object, _ in pairs(objects) do
-    if object.object_type.id == "lecture_chair" then
-      chairs = chairs + 1
-    end
-  end
-  -- Total staff occupancy: number of lecture chairs plus projector
-  self.room_info.maximum_staff = { Doctor = chairs + 1 }
   self.training_factor = self:calculateTrainingFactor(objects)
 
   -- Also tell the player if he/she doesn't have a consultant yet.
@@ -206,7 +200,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       projector.reserved_for = humanoid
       humanoid:walkTo(ox, oy)
       self:doStaffUseCycle(humanoid)
-      self:setStaffMember(humanoid)
+      self:addStaffMember(humanoid)
     else
       -- Student entered/placed in room
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
@@ -268,11 +262,22 @@ end
 --!return (staff) The selected consultant.
 function TrainingRoom:getStaffMember()
   for staff_member, _ in pairs(self.staff_member_set) do
-    if staff_member.profile.is_consultant and not staff_member.fired and
-        not staff_member:hasLeavingAction() then
+    if not staff_member.fired and not staff_member:hasLeavingAction() then
       return staff_member
     end
   end
+end
+
+--! Counts the number of student doctors in the room, as they are not considered staff
+--!return (integer) the total count
+function TrainingRoom:getStaffCount()
+  local count = 0
+  for humanoid, _ in pairs(self.humanoids) do
+    if class.is(humanoid, Doctor) and not humanoid.profile.is_consultant then
+      count = count + 1
+    end
+  end
+  return count
 end
 
 return room

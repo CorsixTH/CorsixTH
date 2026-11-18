@@ -95,7 +95,7 @@ function GPRoom:doStaffUseCycle(humanoid)
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
-  self:setStaffMember(humanoid)
+  self:addStaffMember(humanoid)
   self:doStaffUseCycle(humanoid)
   return Room.commandEnteringStaff(self, humanoid, true)
 end

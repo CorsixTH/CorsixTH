@@ -31,12 +31,6 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.world = world
   self.hospital = hospital
 
-  -- Serving staff in single occupancy rooms (like GD, Pharmacy and etc)
-  self.staff_member = nil
-  -- Serving staff list in multi-occupancy rooms (like Operating Theatre)
-  -- Only set this for multi-occupancy, otherwise single occupancy rooms break
-  self.staff_member_set = nil -- Override with {} in derived class
-
   self.room_info = room_info
   self:initRoom(x, y, w, h, door, door2)
 end
@@ -85,10 +79,7 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.objects = {--[[a set rather than a list]]}
   -- the set of humanoids walking to this room
   self.humanoids_enroute = {--[[a set rather than a list]]}
-  self.staff_member_set = {--[[a set rather than a list]]} -- Doctors and Nurses only
-  if not self.room_info.maximum_staff then
-    self.room_info.maximum_staff = { Doctor = 1 }
-  end
+  self.staff_member_set = {--[[a set rather than a list]]} -- Doctors or Nurses only
 
   self.world:prepareRectangleTilesForBuild(self.x, self.y, self.width, self.height)
 end
@@ -387,7 +378,7 @@ function Room:onHumanoidEnter(humanoid)
           -- Send out the previous staff and appoint new one.
           staff_in_room:setNextAction(self:createLeaveAction())
           staff_in_room:queueAction(MeanderAction())
-          self:setStaffMember(staff_entered)
+          self:addStaffMember(staff_entered)
           staff_entered:setCallCompleted()
           self:commandEnteringStaff(staff_entered)
         else
@@ -453,10 +444,16 @@ function Room:getStaffMember()
   return selected_staff
 end
 
---! Set the current staff member.
+--! Add a staff member.
 --!param staff (staff) Staff member to denote as current staff.
-function Room:setStaffMember(staff)
+function Room:addStaffMember(staff)
   self.staff_member_set[staff] = true
+end
+
+--! Remove a staff member.
+--!param staff (staff) Staff member to remove from staff of the room
+function Room:removeStaffMember(staff)
+  self.staff_member_set[staff] = nil
 end
 
 --! Counts the number of doctors or nurses in the room
@@ -499,7 +496,7 @@ end
 -- what to do.
 function Room:commandEnteringStaff(staff, already_initialized)
   if not already_initialized then
-    self:setStaffMember(staff)
+    self:addStaffMember(staff)
     staff:setNextAction(MeanderAction())
   end
   self:tryToFindNearbyPatients()
@@ -515,7 +512,7 @@ end
 -- and dynamic info text
 --!param activate (bool) - true to activate, false or nil to deactivate
 function Room:_staffWaitToggle(activate)
-  if not self.staff_member_set then
+  if self:getStaffCount() == 0 then
     return -- No staff in room
   end
 
@@ -571,8 +568,8 @@ end
 --! Handles the departure of a humanoid from the room
 --!param humanoid The subject entity
 function Room:onHumanoidLeave(humanoid)
-  self.staff_member_set[humanoid] = nil
-  if not self:getStaffMember() then humanoid.in_room = nil end
+  self:removeStaffMember(humanoid)
+--  if not self:getStaffMember() then humanoid.in_room = nil end
   if not self.humanoids[humanoid] then
     print("Warning: Humanoid leaving a room that they are not in")
     return
@@ -1104,17 +1101,13 @@ function Room:afterLoad(old, new)
       self.staff_member_set = nil
     end
   end
-  if old < 267 then
+  if old < 271 then
     if not self.staff_member_set then -- Convert all rooms to staff_member_set
       self.staff_member_set = {}
       if self.staff_member then
         self.staff_member_set[self.staff_member] = true
         self.staff_member = nil
       end
-    end
-    if self.maximum_staff then -- These rooms stored maximum staff in the wrong place
-      self.room_info.maximum_staff = self.maximum_staff
-      self.maximum_staff = nil
     end
   end
 end
@@ -1141,8 +1134,7 @@ end
 --!param humanoid (Humanoid) humanoid to check.
 --!return (boolean) Whether the humanoid is attached.
 function Room:isRoomStaffMember(humanoid)
-  -- The ward and operating theatre use staff_member_set. The other rooms use staff_member.
-  return (humanoid == self.staff_member) or (self.staff_member_set and self.staff_member_set[humanoid])
+  return self.staff_member_set[humanoid]
 end
 
 --! Get the average service quality of the staff members in the room.

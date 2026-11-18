@@ -75,7 +75,7 @@ function WardRoom:roomFinished()
       desks = desks + 1
     end
   end
-  self.room_info.maximum_staff = {
+  self.maximum_staff = {
     Nurse = desks,
   }
   self.maximum_patients = beds
@@ -88,6 +88,10 @@ end
 function WardRoom:commandEnteringStaff(humanoid)
   self:doStaffUseCycle(humanoid)
   return Room.commandEnteringStaff(self, humanoid, true)
+end
+
+function WardRoom:getMaximumStaffCriteria()
+  return self.maximum_staff
 end
 
 function WardRoom:doStaffUseCycle(humanoid)

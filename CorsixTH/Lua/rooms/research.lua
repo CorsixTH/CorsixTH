@@ -127,7 +127,7 @@ function ResearchRoom:roomFinished()
       number = number + 1
     end
   end
-  self.room_info.maximum_staff = {
+  self.maximum_staff = {
     Researcher = number,
   }
   -- Is this the first research department built?
@@ -143,8 +143,12 @@ function ResearchRoom:roomFinished()
   return Room.roomFinished(self)
 end
 
+function ResearchRoom:getMaximumStaffCriteria()
+  return self.maximum_staff
+end
+
 function ResearchRoom:commandEnteringStaff(staff)
-  self:setStaffMember(staff)
+  self:addStaffMember(staff)
   self:doStaffUseCycle(staff)
   return Room.commandEnteringStaff(self, staff, true)
 end
