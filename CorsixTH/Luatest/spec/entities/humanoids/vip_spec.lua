@@ -24,14 +24,12 @@ require("corsixth")
 require("entity")
 require("entities.humanoid")
 require("entities.humanoids.vip")
-require("reputation")
+local ReputationAccount = require("reputation")
 
 local function getVip()
   local animation = {setHitTestResult = function() end}
   return Vip(animation)
 end
-
-local ReputationAccount = _G["ReputationAccount"]
 
 local function create_room(name, args)
   args = args or {}

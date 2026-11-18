@@ -20,9 +20,7 @@ SOFTWARE. --]]
 
 local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 
-cth_require("reputation")
----@type ReputationAccount
-local ReputationAccount = _G["ReputationAccount"]
+local ReputationAccount = cth_require("reputation")
 
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)

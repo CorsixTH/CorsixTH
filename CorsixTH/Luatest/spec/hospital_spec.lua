@@ -24,10 +24,9 @@ require("class_test_base")
 require("utility")
 require("map")
 require("hospital")
-require("reputation")
+local ReputationAccount = require("reputation")
 
 local Hospital = _G["Hospital"]
-local ReputationAccount = _G["ReputationAccount"]
 
 -- Hospital:humanoidDeath reaches updatePercentages, which uses math.round. The
 -- game defines that in app.lua, which these tests do not load. Copy it, and only

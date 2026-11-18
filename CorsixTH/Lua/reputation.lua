@@ -236,8 +236,11 @@ end
 --- @param event (integer) The event identifier, 0 to 24
 --- @param weight (integer) The weight to scale a percentage event from
 --- @param amount (integer) The caller's signed figure, for the events that use one
---- @return (integer) The rating after the event
+--- @return (ReputationAccount) This account, for chaining
 function ReputationAccount:applyEvent(event, weight, amount)
   local delta_credit, delta_weight = ReputationAccount.eventDelta(event, weight, amount)
-  return self:applyDelta(delta_credit, delta_weight)
+  self:applyDelta(delta_credit, delta_weight)
+  return ReputationAccount
 end
+
+return ReputationAccount

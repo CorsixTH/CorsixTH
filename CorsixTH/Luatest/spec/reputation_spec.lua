@@ -20,9 +20,7 @@ SOFTWARE. --]]
 
 require("corsixth")
 require("class_test_base")
-require("reputation")
-
-local ReputationAccount = _G["ReputationAccount"]
+local ReputationAccount = require("reputation")
 
 describe("reputation.lua: ", function()
   -- The four sequences below are measurements the results of observations
@@ -341,8 +339,10 @@ describe("reputation.lua: ", function()
       local small = ReputationAccount(20, 20)
       local large = ReputationAccount(100, 100)
 
-      assert.are.same(25, small:applyEvent(ReputationAccount.event_patient_cured, small.weight) - 500)
-      assert.are.same(5, large:applyEvent(ReputationAccount.event_patient_cured, large.weight) - 500)
+      small:applyEvent(ReputationAccount.event_patient_cured, small.weight)
+      assert.are.same(25, small:rating() - 500)
+      large:applyEvent(ReputationAccount.event_patient_cured, large.weight)
+      assert.are.same(5, large:rating() - 500)
     end)
 
     it("never reduces the weight on its own", function()

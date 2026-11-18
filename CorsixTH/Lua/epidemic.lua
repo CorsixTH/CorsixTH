@@ -19,12 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 cth_require("announcer")
-cth_require("reputation")
-
 local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
-
----@type ReputationAccount
-local ReputationAccount = _G["ReputationAccount"]
+local ReputationAccount = cth_require("reputation")
 
 class "Epidemic"
 

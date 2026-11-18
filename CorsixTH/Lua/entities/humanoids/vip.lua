@@ -54,10 +54,7 @@ If rating exceeds values, it will be capped as necessary
 
 --[[ initialisation --]]
 cth_require("utility")
-cth_require("reputation")
-
----@type ReputationAccount
-local ReputationAccount = _G["ReputationAccount"]
+local ReputationAccount = cth_require("reputation")
 
 local Humanoid = _G['Humanoid'] ---@type Humanoid
 
