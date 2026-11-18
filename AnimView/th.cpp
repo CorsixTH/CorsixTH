@@ -308,16 +308,16 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
 size_t THAnimations::getFrameCount(size_t iAnimation) {
   if (iAnimation >= anims.size()) return 0;
   size_t iCount = 0;
-  uint16_t iFirstFrame = anims.at(iAnimation).frame;
+  size_t iFirstFrame = static_cast<size_t>(anims.at(iAnimation).frame);
   const size_t frameLimit =
       std::min(frames.size(),
                static_cast<size_t>(std::numeric_limits<uint16_t>::max()) + 1);
   if (iFirstFrame < frameLimit) {
     ++iCount;
-    uint16_t iFrame = frames.at(iFirstFrame).next;
+    size_t iFrame = static_cast<size_t>(frames.at(iFirstFrame).next);
     while (iFrame != iFirstFrame && iFrame < frameLimit && iCount < 1024) {
       ++iCount;
-      iFrame = frames.at(iFrame).next;
+      iFrame = static_cast<size_t>(frames.at(iFrame).next);
     }
   }
   return iCount;
