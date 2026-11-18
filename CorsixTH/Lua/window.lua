@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 cth_require("persistance")
 
---! Base class for user-interface dialogs.
+--- Base class for user-interface dialogs.
 class "Window"
 
 ---@class Window
@@ -61,23 +61,34 @@ function Window:Window()
   self.apply_ui_scale = true
 end
 
--- Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files
+--- Set if window needs to pause the game.
+--- Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files
 function Window:mustPause()
   return false
 end
 
+--- Set the size of the window.
+--- Width and height may be exact pixel sizes, unless apply_ui_scale applies
+--- in which case dimensions represent unscaled data and are transformed by
+--- the current ui scale. Ergo, a width of 100 would become 200 at a ui_scale
+--- of 2.
+---@param width (integer) in pixels
+---@param height (integer) in pixels
+---@param apply_ui_scale? (boolean) If true, will adjust based on set scaling level
 function Window:setSize(width, height, apply_ui_scale)
   self.apply_ui_scale = apply_ui_scale ~= nil and apply_ui_scale or self.apply_ui_scale
   self.width = width
   self.height = height
 end
 
--- Sets the window's onscreen position. Each of x and y can be:
--- Integers >= 0 - Absolute pixel positions of top/left edge of window relative
---                 to top/left edge of screen
--- Integers < 0 - Absolute pixel positions of right/bottom edge of window
---                relative to right/bottom edge of screen. Use -0.1 to mean -0.
--- Reals in [0, 1) -
+--- Sets the window's onscreen position. Each of x and y can be:
+--- Integers >= 0 - Absolute pixel positions of top/left edge of window relative
+--- to top/left edge of screen
+--- Integers < 0 - Absolute pixel positions of right/bottom edge of window
+--- relative to right/bottom edge of screen. Use -0.1 to mean -0.
+--- Reals in [0, 1]
+---@param x (number) co-ordinate
+---@param y (number) co-ordinate
 function Window:setPosition(x, y)
   -- Save values to recalculate x and y on screen resolution change
   self.x_original = x
@@ -103,11 +114,14 @@ function Window:setPosition(x, y)
   self.y = y
 end
 
--- Sets the window's default onscreen position and onscreen position.
--- The given x and y are interpreted as for setPosition(x, y), and are the
--- default position for the window. If the user has previously repositioned a
--- window of the same type, then setDefaultPosition() will set the window to
--- that previous position, otherwise it sets it to the default position.
+--- Sets the window's default onscreen position and onscreen position.
+--- The given x and y are interpreted as for setPosition(x, y), and are the
+--- default position for the window. If the user has previously repositioned a
+--- window of the same type, then setDefaultPosition() will set the window to
+--- that previous position, otherwise it sets it to the default position.
+---@param x (number) co-ordinate
+---@param y (number) co-ordinate
+---@return function # Function call to set the new position
 function Window:setDefaultPosition(x, y)
   if self.ui then
     local config = self.ui.app.runtime_config.window_position
@@ -121,14 +135,14 @@ function Window:setDefaultPosition(x, y)
   return self:setPosition(x, y)
 end
 
--- Called after the resolution of the game window changes
+--- Called after the resolution of the game window changes
 function Window:onChangeResolution()
   if self.x_original and self.y_original then
     self:setPosition(self.x_original, self.y_original)
   end
 end
 
--- Called before the window is closed
+--- Called before the window is closed
 function Window:close()
   if self.dragging then
     self.dragging = false
@@ -149,31 +163,35 @@ function Window:close()
   self.closed = true
 end
 
+--- Add the various key handlers for the window
+---@param key (table) Each key to press as a string in an array
+---@param handler (any)
+---@param ... (any)
 function Window:addKeyHandler(key, handler, ...)
   self.ui:addKeyHandler(key, self, handler, ...)
   self.key_handlers[key] = true
 end
 
---!param keys (string or table) The key or a list containing the key & its modifiers,
--- previously passed to Window:addKeyHandler(keys).
+--- Remove a key handler from the window previously declared
+---@param keys (string|table) The key or a list containing the key and its modifiers
 function Window:removeKeyHandler(keys)
   self.ui:removeKeyHandler(keys, self)
 end
 
---! The basic component which makes up most `Window`s.
---! The visual parts of most ingame dialogs are sprites from a sprite sheet.
--- A `Panel` is an instance of a particular sprite, consisting of a sprite
--- index and a position. It is advantageous to construct dialogs out of panels
--- (using `Window:addPanel`) as the common operations on panels (like drawing
--- them and hit-testing against them) are implemented in the `Window` class,
--- thus reducing the amount of work that each individual dialog has to do.
+
+--- The basic component which makes up most 'Window's.
 class "Panel"
 
 ---@class Panel
 ---@operator call: Panel
 local Panel = _G["Panel"] ---@type Panel
 
--- !dummy
+--- The visual parts of most ingame dialogs are sprites from a sprite sheet.
+--- 'A Panel' is an instance of a particular sprite, consisting of a sprite
+--- index and a position. It is advantageous to construct dialogs out of panels
+--- (using 'Window:addPanel') as the common operations on panels (like drawing
+--- them and hit-testing against them) are implemented in the 'Window' class,
+--- thus reducing the amount of work that each individual dialog has to do.
 function Panel:Panel()
   self.window = nil
   self.x = nil
@@ -188,26 +206,46 @@ end
 
 local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
 
+--- Makes a panel into a button
+---@see Window:makeButtonOnPanel
+---@param ... (any)
 function Panel:makeButton(...)
   return self.window:makeButtonOnPanel(self, ...)
 end
 
+--- Makes a panel into a toggle button
+---@see Window:makeButtonOnPanel
+---@see Window:makeToggle
+---@param ... (any)
 function Panel:makeToggleButton(...)
   return self.window:makeButtonOnPanel(self, ...):makeToggle()
 end
 
+--- Makes a panel into a repeat pbutton
+---@see Window:makeButtonOnPanel
+---@see Window:makeRepeat
+---@param ... (any)
 function Panel:makeRepeatButton(...)
   return self.window:makeButtonOnPanel(self, ...):makeRepeat()
 end
 
+--- Makes a panel into a scrollbar
+---@see Window:makeScrollbarOnPanel
+---@param ... (any)
 function Panel:makeScrollbar(...)
   return self.window:makeScrollbarOnPanel(self, ...)
 end
 
+--- Makes a panel into a textbox
+---@see Window:makeTextboxOnPanel
+---@param ... (any)
 function Panel:makeTextbox(...)
   return self.window:makeTextboxOnPanel(self, ...)
 end
 
+--- Makes a panel into a hotkey box
+---@see Window:makeHotkeyBoxOnPanel
+---@param ... (any)
 function Panel:makeHotkeyBox(...)
   return self.window:makeHotkeyBoxOnPanel(self, ...)
 end
@@ -221,11 +259,11 @@ local function sanitize(colour)
   return colour
 end
 
---[[ Set the colour of a panel
-! Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
-!param col (table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
-!param preserve_disable (boolean) If true, do not adjust the panel's disabled colour.
-]]
+--- Set the colour of a panel
+--- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
+---@param col? (Colours|table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
+---@param preserve_disable? (boolean) If true, do not adjust the panel's disabled colour.
+---@return Panel
 function Panel:setColour(col, preserve_disable)
   self.colour = self.colour and TheApp.video:mapRGB(col.red, col.green, col.blue)
   self.highlight_colour = self.highlight_colour and TheApp.video:mapRGB(
@@ -244,9 +282,12 @@ function Panel:setColour(col, preserve_disable)
   return self
 end
 
--- Specify a tooltip to be displayed when hovering this panel.
--- x and y are optional position of bottom left of the tooltip.
--- If not specified, will default to mouse position.
+--- Specify a tooltip to be displayed when hovering this panel. Co-ordinates
+--- set position of bottom left of the tooltip; otherwise defaults to the
+--- current mouse position.
+---@param x? (number) co-ordinate position
+---@param y? (number) co-ordinate position
+---@return Panel
 function Panel:setTooltip(tooltip, x, y)
   self.tooltip = {
     text = tooltip,
@@ -256,6 +297,13 @@ function Panel:setTooltip(tooltip, x, y)
   return self
 end
 
+--- Makes a dynamic tooltip when hovering this panel.
+--- set position of bottom left of the tooltip; otherwise defaults to the
+--- current mouse position.
+---@param callback (function)
+---@param x? (number) co-ordinate position
+---@param y? (number) co-ordinate position
+---@return Panel
 function Panel:setDynamicTooltip(callback, x, y)
   self.tooltip = {
     callback = callback,
@@ -265,12 +313,17 @@ function Panel:setDynamicTooltip(callback, x, y)
   return self
 end
 
---! Specify a label to be drawn on top of the panel.
--- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
---!param label (string) The text to be drawn on top of the label.
---!param font (font) [optional] The font to use. Default is Font01V in QData.
---!param align (string) [optional] Alignment for non-multiline labels (multiline is always left)
---!  can be either of "left", "center", "right"
+--- Specify a label to be drawn on top of the panel.
+--- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
+--- Alignment values can be set to either of "left", "center", "right".
+--- Defaults to "left"
+---@param label (string) The text to be drawn on top of the label.
+---@param font? (any) The font to use. Default is Font01V in QData.
+---@param align? (string)
+---|"left" #
+---|"center" #
+---|"right" #
+---@return Panel
 function Panel:setLabel(label, font, align)
   self.label = label or ""
   self.label_font = font or self.label_font or TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, {ttf_shadow = true, apply_ui_scale = true})
@@ -278,18 +331,18 @@ function Panel:setLabel(label, font, align)
   return self
 end
 
---! Specifies whether auto clip (clipping text at the end so it fits) is enabled for this panel
---!param mode (boolean) true to activate, false to deactivate.
+--- Specifies whether auto clip (clipping text at the end so it fits) is enabled for this panel
+---@param mode (boolean) true to activate, false to deactivate.
 function Panel:setAutoClip(mode)
   self.auto_clip = mode
   return self
 end
 
---! Checks if a given line drawn with the panel's label font would be longer than the given limit
---! and if so, shortens it enough to fit including "..." at the end
---!param line (string) the line to modify
---!param limit (int) the maximum length in pixels the line should have
---!return the possibly modified line
+--- Checks if a given line drawn with the panel's label font would be longer than the given limit
+--- and if so, shortens it enough to fit including "..." at the end
+---@param line (string) the line to modify
+---@param limit (integer) the maximum length in pixels the line should have
+---@return string line # the possibly modified line
 function Panel:clipLine(line, limit)
   local _, last_x = self.label_font:draw(nil, line, 0, 0)
   if last_x > limit then
@@ -303,12 +356,13 @@ function Panel:clipLine(line, limit)
   return line
 end
 
---! Draw function for the label on a panel
---!param canvas The canvas to draw on (can be nil for test)
---!param x x position to start drawing on
---!param y y position to start drawing on
---!param limit (nil or {int, int}) limit after which line and with character on that line to stop drawing
---!return y and x end positions after drawing
+--- Draw function for the label on a panel
+---@param canvas (Panel|nil) The canvas to draw on (can be nil for test)
+---@param x (number) x position to start drawing on
+---@param y (number) y position to start drawing on
+---@param limit (number[]) limit after which line and which character on that line to stop drawing in format (integer, integer)
+---@return number next_y # End position after drawing
+---@return number last_x # End positions after drawing
 function Panel:drawLabel(canvas, x, y, limit)
   local text = self.label
   local center_y = false
@@ -349,55 +403,52 @@ function Panel:drawLabel(canvas, x, y, limit)
   return next_y, last_x
 end
 
---! Set the position of a panel.
---!param x (int) New horizontal position of the panel.
---!param y (int) New vertical position of the panel.
+--- Set the position of a panel.
+---@param x (number) New horizontal position of the panel.
+---@param y (number) New vertical position of the panel.
 function Panel:setPosition(x, y)
   self.x = x
   self.y = y
 end
 
---! Set the size of a panel.
---!param width (int) New width of the panel.
---!param height (int) New height of the panel.
+--- Set the size of a panel.
+---@param width (int) New width of the panel.
+---@param height (int) New height of the panel.
 function Panel:setSize(width, height)
   self.w = width
   self.h = height
 end
 
---! Set the visibility of the panel.
---!param visibility (bool) New visibility of the panel.
+--- Set the visibility of the panel.
+---@param visibility (boolean) New visibility of the panel.
+---@return Panel
 function Panel:setVisible(visibility)
   self.visible = visibility
   return self
 end
 
---! Set whether text wrapping is enabled for this panel.
---!param enabled (bool) Whether to text wrapping enabled.
+--- Set whether text wrapping is enabled for this panel.
+---@param enabled (boolean) Whether to text wrapping enabled.
+---@return Panel
 function Panel:setTextWrap(enabled)
   self.wrap_text = enabled
   return self
 end
 
---[[ Add a `Panel` to the window.
-! Panels form the basic building blocks of most windows. A panel is a small
-bitmap coupled with a position, and by combining several panels, a window can
-be made. By using panels to construct windows, all of the common tasks like
-drawing and hit-testing are provided for you by the base class methods, thus
-reducing the amount of code required elsewhere.
-!param sprite_index (integer) Index into the window's sprite table of the
-bitmap to be displayed.
-!param x (integer) The X pixel position to display the bitmap at.
-!param y (integer) The Y pixel position to display the bitmap at.
-!param w (integer, nil) If the panel is totally opaque, and the width of the
-panel (in pixels) is known, it should be specified here to speed up hit-tests.
-!param h (integer, nil) If the panel is totally opaque, and the height of the
-panel (in pixels) is known, it should be specified here to speed up hit-tests.
-!param apply_ui_scale (bool|nil) If true apply the ui_scale to the dimensions
-when doing the draw and hit test. If nil then apply_ui_scale if enabled for the
-parent window.
-!param draw_flags (integer) Draw flags to apply to the sprite
-]]
+--- Add a 'Panel' to the window.
+--- Panels form the basic building blocks of most windows. A panel is a small
+--- bitmap coupled with a position, and by combining several panels, a window can
+--- be made. By using panels to construct windows, all of the common tasks like
+--- drawing and hit-testing are provided for you by the base class methods, thus
+--- reducing the amount of code required elsewhere.
+---@param sprite_index (integer) Index into the window's sprite table of the bitmap to be displayed.
+---@param x (integer) The X pixel position to display the bitmap at.
+---@param y (integer) The Y pixel position to display the bitmap at.
+---@param w (integer?) If the panel is totally opaque, and the width of the panel (in pixels) is known, it should be specified here to speed up hit-tests.
+---@param h (integer?) If the panel is totally opaque, and the height of the panel (in pixels) is known, it should be specified here to speed up hit-tests.
+---@param apply_ui_scale (boolean?) If true apply the ui_scale to the dimensions when doing the draw and hit test. If nil then apply_ui_scale if enabled for the parent window.
+---@param draw_flags (integer) Draw flags to apply to the sprite
+---@return Panel
 function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale, draw_flags)
   local panel = setmetatable({
     window = self,
@@ -414,6 +465,7 @@ function Window:addPanel(sprite_index, x, y, w, h, apply_ui_scale, draw_flags)
   return panel
 end
 
+--- Remove all panels from a window
 function Window:removeAllPanels()
   self.panels = {}
   self.buttons = {} -- Buttons cannot live without a panel
@@ -427,19 +479,18 @@ local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(pan
   end
 end
 
---[[ Add a solid-colour `Panel` to the window.
-! A solid-colour panel is like a normal panel, expect it displays a solid
-colour rather than a bitmap.
-!param x (integer) The X pixel position to start the panel at.
-!param y (integer) The Y pixel position to start the panel at.
-!param w (integer) The width of the panel, in pixels.
-!param h (integer) The height of the panel, in pixels.
-!param r (integer) Value in [0, 255] giving the red component of the colour.
-!param g (integer) Value in [0, 255] giving the green component of the colour.
-!param b (integer) Value in [0, 255] giving the blue component of the colour.
-!param apply_ui_scale (boolean) Whether to apply UI scale to position and size.
-  Default is to match window.
-]]
+--- Add a solid-colour 'Panel' to the window.
+--- A solid-colour panel is like a normal panel, expect it displays a solid
+--- colour rather than a bitmap.
+---@param x (integer) The X pixel position to start the panel at.
+---@param y (integer) The Y pixel position to start the panel at.
+---@param w (integer) The width of the panel, in pixels.
+---@param h (integer) The height of the panel, in pixels.
+---@param r (integer) Value in [0, 255] giving the red component of the colour.
+---@param g (integer) Value in [0, 255] giving the green component of the colour.
+---@param b (integer) Value in [0, 255] giving the blue component of the colour.
+---@param apply_ui_scale? (boolean) Whether to apply UI scale to position and size. Default is to match window.
+---@return Panel
 function Window:addColourPanel(x, y, w, h, r, g, b, apply_ui_scale)
   local panel = setmetatable({
     window = self,
@@ -473,19 +524,22 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
   end
 end
 
---[[ Add a beveled `Panel` to the window.
-! A bevel panel is similar to a solid colour panel, except that it
-features a highlight and a shadow that makes it appear either lowered or raised.
-!param x (integer) The X pixel position to start the panel at.
-!param y (integer) The Y pixel position to start the panel at.
-!param w (integer) The width of the panel, in pixels.
-!param h (integer) The height of the panel, in pixels.
-!param colour (colour in form .red, .green and .blue) The colour for the panel.
-!param highlight_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the highlight.
-!param shadow_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the shadow.
-!param disabled_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the disabled panel.
-!param lowered_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the lowered (toggled) panel.
-]]
+--- Add a beveled `Panel` to the window.
+--- A bevel panel is similar to a solid colour panel, except that it
+--- features a highlight and a shadow that makes it appear either
+--- lowered or raised.
+--- Colours are passed as table of {red = x, green = y, blue = z}
+---@param x (integer) The X pixel position to start the panel at.
+---@param y (integer) The Y pixel position to start the panel at.
+---@param w (integer) The width of the panel, in pixels.
+---@param h (integer) The height of the panel, in pixels.
+---@param colour? (Colours|table) The colour for the panel in for .red, .green, and .blue.
+---@param highlight_colour? (table) The colour for the highlight.
+---@param shadow_colour? (table) The colour for the shadow.
+---@param disabled_colour? (table) The colour for the disabled panel.
+---@param lowered_colour? (table) The colour for the lowered (toggled) panel.
+---@param apply_ui_scale? (boolean) If true, will adjust based on set scaling level
+---@return Panel
 function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour, apply_ui_scale)
   highlight_colour = highlight_colour or {
     red = sanitize(colour.red + 60),
@@ -524,6 +578,8 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
   return panel
 end
 
+--- Adds a window to the main window array
+---@param window (Window)
 function Window:addWindow(window)
   if window.closed then
     return
@@ -549,6 +605,9 @@ function Window:addWindow(window)
   end
 end
 
+--- Removes a window from the window array
+---@param window (Window) The window to remove
+---@return boolean # Whether removal was successful
 function Window:removeWindow(window)
   if self.windows then
     for n = 1, #self.windows do
@@ -565,9 +624,10 @@ function Window:removeWindow(window)
   return false
 end
 
--- Searches (direct) child windows for window of the given class, and returns
--- one (or nil if there weren't any at all).
--- !param window_class (class) The class of window to search for.
+--- Searches (direct) child windows for window of the given class, and returns
+--- one (or nil if there weren't any at all).
+---@param window_class (any) The class of window to search for.
+---@return Window? # Found window, or nil if none exist
 function Window:getWindow(window_class)
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -578,9 +638,10 @@ function Window:getWindow(window_class)
   end
 end
 
--- Searches (direct) child windows for window of the given class, and returns
--- a (potentially empty) list of matching windows.
--- !param window_class (class) The class of window to search for.
+--- Searches (direct) child windows for window of the given class, and returns
+--- a (potentially empty) list of matching windows.
+---@param window_class (class) The class of window to search for.
+---@return table matching_windows # A list of found windows (can be empty)
 function Window:getWindows(window_class)
   local matching_windows = {}
   if self.windows then
@@ -593,14 +654,14 @@ function Window:getWindows(window_class)
   return matching_windows
 end
 
---! A region of a `Panel` which causes some action when clicked.
+--- A region of a 'Panel' which causes some action when clicked.
 class "Button"
 
 ---@class Button
 ---@operator call: Button
 local Button = _G["Button"] ---@type Button
 
---!dummy
+
 function Button:Button()
   self.ui = nil
   self.is_toggle = nil
@@ -623,13 +684,17 @@ end
 
 local button_mt = permanent("Window.<button_mt>", getmetatable(Button()))
 
+--- Sets the sprite for when a button is disabled
+---@param index (integer) position on the spritesheet in use
+---@return Button
 function Button:setDisabledSprite(index)
   self.sprite_index_disabled = index
   return self
 end
 
---! Enable or disable a button.
---!param enable (boolean) Whether to enable (true) or disable (false) the button.
+--- Enable or disable a button.
+---@param enable (boolean) Whether to enable (true) or disable (false) the button.
+---@return Button
 function Button:enable(enable)
   if enable and not self.enabled then
     self.enabled = true
@@ -649,6 +714,8 @@ function Button:enable(enable)
   return self
 end
 
+--- Sets a button to be toggleable
+---@return Button
 function Button:makeToggle()
   self.is_toggle = true
   self.is_repeat = false
@@ -656,6 +723,8 @@ function Button:makeToggle()
   return self
 end
 
+--- Sets a button to be repeating (cycling?)
+---@return Button
 function Button:makeRepeat()
   self.is_repeat = true
   self.is_toggle = false
@@ -663,7 +732,8 @@ function Button:makeRepeat()
   return self
 end
 
---! Flip the toggle state of the button (on -> off, or off -> on).
+--- Flip the toggle state of the button (on -> off, or off -> on).
+---@return boolean # Resulting state
 function Button:toggle()
   self.sprite_index_normal, self.sprite_index_active =
     self.sprite_index_active, self.sprite_index_normal
@@ -675,8 +745,9 @@ function Button:toggle()
   return self.toggled
 end
 
---! Set the toggle state of the button to the provided state.
---!param state (boolean) Desired state of the toggle button.
+--- Set the toggle state of the button to the provided state.
+---@param state (boolean) Desired state of the toggle button.
+---@return Button
 function Button:setToggleState(state)
   if self.toggled ~= state then
     self:toggle()
@@ -691,14 +762,20 @@ function Button:preservePanel()
   return self
 end
 
+--- Sets the sound the button should make when pressed
+---@param name (string) soundfile with extension (e.g. .wav)
+---@return Button
 function Button:setSound(name)
   self.sound = name
   return self
 end
 
--- Specify a tooltip to be displayed when hovering this button.
--- x and y are optional position of bottom left of the tooltip.
--- If not specified, will default to top center of button.
+--- Specify a tooltip to be displayed when hovering this button.
+--- Coordinate set position of bottom left of the tooltip; otherwise
+--- defaults to the top centre of the button.
+---@param x? (number) co-ordinate position
+---@param y? (number) co-ordinate position
+---@return Button
 function Button:setTooltip(tooltip, x, y)
   self.tooltip = {
     text = tooltip,
@@ -708,6 +785,12 @@ function Button:setTooltip(tooltip, x, y)
   return self
 end
 
+--- Specify a dynamic tooltip to be displayed when hovering this button.
+--- Coordinate set position of bottom left of the tooltip; otherwise
+--- defaults to the top centre of the button.
+---@param x? (number) co-ordinate position
+---@param y? (number) co-ordinate position
+---@return Button
 function Button:setDynamicTooltip(callback, x, y)
   self.tooltip =  {
     callback = callback,
@@ -717,11 +800,11 @@ function Button:setDynamicTooltip(callback, x, y)
   return self
 end
 
---! Called whenever a click on the button should be handled. This depends on the type of button.
---! Normally this is called when a MouseUp occurs over the button (if the MouseDown occurred over
---! this or another button). However for repeat buttons, it is called once on MouseDown and, after
---! a short delay, repeatedly.
---!param mouse_button (string) either "left" or "right"
+--- Called whenever a click on the button should be handled. This depends on the type of button.
+--- Normally this is called when a MouseUp occurs over the button (if the MouseDown occurred over
+--- this or another button). However for repeat buttons, it is called once on MouseDown and, after
+--- a short delay, repeatedly.
+---@param mouse_button (string) either "left" or "right"
 function Button:handleClick(mouse_button)
   local arg = nil
   if self.is_toggle then
@@ -741,9 +824,9 @@ function Button:handleClick(mouse_button)
   end
 end
 
---! Set the position of a button.
---!param x (int) New horizontal position of the button.
---!param y (int) New vertical position of the button.
+--- Set the position of a button.
+---@param x (integer) New horizontal position of the button.
+---@param y (integer) New vertical position of the button.
 function Button:setPosition(x, y)
   self.panel_for_sprite:setPosition(x, y)
   self.r = self.r - self.x + x
@@ -756,9 +839,9 @@ function Button:setPosition(x, y)
   end
 end
 
---! Set the size of a button.
---!param width (int) New width of the button.
---!param height (int) New height of the button.
+--- Set the size of a button.
+---@param width (integer) New width of the button.
+---@param height (integer) New height of the button.
 function Button:setSize(width, height)
   self.panel_for_sprite:setSize(width, height)
   self.r = self.x + width
@@ -769,36 +852,32 @@ function Button:setSize(width, height)
   end
 end
 
---! Set the visibility of the button.
---!param visibility (bool) New visibility of the button.
+--- Set the visibility of the button.
+---@param visibility (boolean) New visibility of the button.
+---@return Button
 function Button:setVisible(visibility)
   self.panel_for_sprite:setVisible(visibility)
   return self
 end
 
---! Convenience function to allow setLabel to be called on a button, not only its panel.
---! see Panel:setLabel
+--- Convenience function to allow setLabel to be called on a button, not only its panel.
+---@see Panel:setLabel
 function Button:setLabel(label, font, align)
   self.panel_for_sprite:setLabel(label, font, align)
   return self
 end
 
---[[ Convert a static panel into a clickable button.
-!param panel (Panel) The panel to convert into a button.
-!param x (integer) The X coordinate of the clickable rectangle on the panel.
-!param y (integer) The Y coordinate of the clickable rectangle on the panel.
-!param w (integer) The width of the clickable rectangle on the panel.
-!param h (integer) The height of the clickable rectangle on the panel.
-!param sprite (integer) An index into the window's sprite sheet. The panel will
-display this sprite when the button is being pressed.
-!param on_click (function) The function to be run when the user left-clicks the
-button. Takes three arguments: `on_click_self`, the toggle state (nil for
-normal buttons, true/false for toggle buttons), the button itself.
-!param on_click_self (function, nil) The first value to pass to `on_click`. If
-nil or not given, then the window is passed as the first argument.
-!param on_rightclick (function, nil) The function to be called when the user
-right-clicks the button.
-]]
+---Convert a static panel into a clickable button.
+---@param panel (Panel) The panel to convert into a button.
+---@param x (integer) The X coordinate of the clickable rectangle on the panel.
+---@param y (integer) The Y coordinate of the clickable rectangle on the panel.
+---@param w (integer) The width of the clickable rectangle on the panel.
+---@param h (integer) The height of the clickable rectangle on the panel.
+---@param sprite (integer) An index into the window's sprite sheet. The panel will display this sprite when the button is being pressed.
+---@param on_click (function) The function to be run when the user left-clicks the button. Takes three arguments: 'on_click_self', the toggle state (nil for normal buttons, true/false for toggle buttons), the button itself.
+---@param on_click_self (function?) The first value to pass to 'on_click'. If nil or not given, then the window is passed as the first argument.
+---@param on_rightclick (function?) The function to be called when the user right-clicks the button.
+---@return Button
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x
   y = y + panel.y
@@ -830,14 +909,13 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
   return button
 end
 
---! A window element used to scroll in lists
+--- A window element used to scroll in lists
 class "Scrollbar"
 
 ---@class Scrollbar
 ---@operator call: Scrollbar
 local Scrollbar = _G["Scrollbar"] ---@type Scrollbar
 
---!dummy
 function Scrollbar:Scrollbar()
   self.base = nil
   self.slider = nil
@@ -849,6 +927,12 @@ function Scrollbar:Scrollbar()
   self.visible = nil
 end
 
+--- Set the range of items to be scrolled by the scrollbar
+---@param min_value (nuumber)
+---@param max_value (number)
+---@param page_size (number)
+---@param value (number)
+---@return Scrollbar
 function Scrollbar:setRange(min_value, max_value, page_size, value)
   page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
   value = math.min(value or min_value, math.max(min_value, max_value - page_size + 1))
@@ -877,12 +961,14 @@ function Scrollbar:setRange(min_value, max_value, page_size, value)
   return self
 end
 
---! Get the pixel position of the slider in the axis which the slider can move
+--- Get the pixel position of the slider in the axis which the slider can move
+---@return number # X or Y position
 function Scrollbar:getXorY()
   return self.slider[self.direction]
 end
 
---! Set the pixel position of the slider in the axis which the slider can move
+--- Set the pixel position of the slider in the axis which the slider can move
+---@param xy (number) Position to go to
 function Scrollbar:setXorY(xy)
   local dir = self.direction
   local min, max
@@ -909,17 +995,16 @@ end
 
 local scrollbar_mt = permanent("Window.<scrollbar_mt>", getmetatable(Scrollbar()))
 
---[[ Convert a static panel into a scrollbar.
-! Scrollbars consist of a base panel (the panel given as a parameter)
-and an additional slider panel (automatically created BevelPanel).
-!param panel (panel) The panel that will serve as the scrollbar base.
-!param slider_colour (colour in form .red, .green and .blue) The colour for the slider.
-!param callback (function) Function that is called whenever the slider position changes.
-!param min_value (integer) The minimum value the scrollbar can represent.
-!param max_value (integer) The maximum value the scrollbar can represent.
-!param page_size (integer) The amount of objects represented on one page.
-!param value (integer, nil) The current value, or min_value if not specified.
-]]
+--- Convert a static panel into a scrollbar.
+--- Scrollbars consist of a base panel (the panel given as a parameter)
+--- and an additional slider panel (automatically created BevelPanel).
+---@param panel (Panel) The panel that will serve as the scrollbar base.
+---@param slider_colour (table) Colour of slider in form .red, .green, and .blue
+---@param callback (function) Function that is called whenever the slider position changes.
+---@param min_value (integer) The minimum value the scrollbar can represent.
+---@param max_value (integer) The maximum value the scrollbar can represent.
+---@param page_size (integer) The amount of objects represented on one page.
+---@param value (integer?) The current value, or min_value if not specified.
 function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, max_value, page_size, value)
   local slider = self:addBevelPanel(panel.x + 1, panel.y + 1, panel.w - 2, panel.h - 2, slider_colour)
   local scrollbar = setmetatable({
@@ -940,14 +1025,13 @@ function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, 
   return scrollbar
 end
 
---! A window element used to enter text
+--- A window element used to enter text
 class "Textbox"
 
 ---@class Textbox
 ---@operator call: Textbox
 local Textbox = _G["Textbox"] ---@type Textbox
 
---!dummy
 function Textbox:Textbox()
   self.panel = nil
   self.confirm_callback = nil
@@ -966,6 +1050,7 @@ end
 
 local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
 
+--- Function call on tick event in textbox
 function Textbox:onTick()
   if self.active then
     self.cursor_counter = self.cursor_counter + 1
@@ -978,6 +1063,10 @@ function Textbox:onTick()
   end
 end
 
+--- Draws the text cursor
+---@param canvas (Textbox)
+---@param x (integer) co-ordinate
+---@param y (integer) co-ordinate
 function Textbox:drawCursor(canvas, x, y)
   if self.cursor_state then
     local col = TheApp.video:mapRGB(255, 255, 255)
@@ -996,7 +1085,7 @@ function Textbox:drawCursor(canvas, x, y)
   end
 end
 
---! Set the box to not active and run confirm callback, if any
+--- Set the box to not active and run confirm callback, if any
 function Textbox:confirm()
   self:setActive(false)
   if self.confirm_callback then
@@ -1004,7 +1093,7 @@ function Textbox:confirm()
   end
 end
 
---! Set the box to not active and run abort callback, if any
+--- Set the box to not active and run abort callback, if any
 function Textbox:abort()
   self:setActive(false)
   if self.abort_callback then
@@ -1012,10 +1101,10 @@ function Textbox:abort()
   end
 end
 
---! Set the textbox active status to true or false, taking care of any
+--- Set the textbox active status to true or false, taking care of any
 -- additional things that need to be done: deactivate any other textboxes,
 -- handle blinking cursor, keyboard repeat on/off, set button state accordingly
---!param active (boolean) whether to activate (true) or deactivate (false) the box
+---@param active (boolean) whether to activate (true) or deactivate (false) the box
 function Textbox:setActive(active)
   local ui = self.panel.window.ui
   if active then
@@ -1044,6 +1133,8 @@ function Textbox:setActive(active)
   end
 end
 
+--- Process click event on a textbox. We either enter the textbox editing
+--- mode, or complete the edit.
 function Textbox:clicked()
   local active = self.button.toggled
   if active then
@@ -1057,8 +1148,11 @@ function Textbox:clicked()
   end
 end
 
---! Handles special characters such as Enter. Normal text input is processed in the textInput function.
---! Note though that this function still returns true if it appears to be a characters being entered.
+--- Handles special characters such as Enter. Normal text input is processed in the textInput function.
+--- Note though that this function still returns true if it appears to be a characters being entered.
+---@param char (string) The key pressed
+---@param rawchar (string)
+---@return boolean handled # True if keypress has been dealt with
 function Textbox:keyInput(char, rawchar)
   if not self.active then
     return false
@@ -1240,7 +1334,8 @@ function Textbox:keyInput(char, rawchar)
   return handled
 end
 
---! Handles actual text input.
+--- Handles actual text input.
+---@param text (string|table) Text entered, or a table to set cursor position
 function Textbox:textInput(text)
   if not self.active then
     return false
@@ -1260,14 +1355,14 @@ function Textbox:textInput(text)
   self.panel:setLabel(self.text)
 end
 
---[[ Limit input handled by textbox to specific classes of characters
-!param types (string or table) One of, or an table of any number of input types
-! valid input types are:
-!  "alpha": Letters (lower and uppercase)
-!  "numbers": 0-9
-!  "misc": other characters, currently space and hyphen
-!  "all": experimental category that allows, theoretically, all input
-]]
+--- Limit input handled by textbox to specific classes of characters
+--- For types, it is one of, or an table of any number of input types
+---@param types (string|table)
+---|"alpha" # Letters (lower and uppercase)
+---|"numbers" # 0-9
+---|"misc" # other characters, currently space and hyphen
+---|"all" # experimental category that allows, theoretically, all input
+---@return Textbox
 function Textbox:allowedInput(types)
   if type(types) ~= "table" then types = {types} end
   self.allowed_input = {}
@@ -1277,40 +1372,46 @@ function Textbox:allowedInput(types)
   return self
 end
 
---[[ Limit input to a maximum of [limit] characters.
-!param limit (integer or nil) Number of characters until the textbox will stop accepting input, or nil to deactivate limit.
-]]
+--- Limit input to a maximum of [limit] characters.
+---@param limit (integer?) Number of characters until the textbox will stop accepting input, or nil to deactivate limit.
+---@return Textbox
 function Textbox:characterLimit(limit)
   self.char_limit = limit
   return self
 end
 
---[[ Set the text of the textbox to a given string or list of strings.
-! Use empty string to make textbox a single line textbox (default).
-! Use table with empty string {""} to make it a multiline textbox.
-!param text (string or table) The string or list of strings the textbox should contain.
-]]
+---Set the text of the textbox to a given string or list of strings.
+--- Use empty string to make textbox a single line textbox (default).
+--- Use table with empty string {""} to make it a multiline textbox.
+---@param text (string|table) The string or list of strings the textbox should contain.
+---@return Textbox
 function Textbox:setText(text)
   self.text = text
   self.panel:setLabel(self.text)
   return self
 end
 
+--- Set the textbox position
+---@param x (integer) co-ordinate
+---@param y (integer) co-ordinate
 function Textbox:setPosition(x, y)
   self.button:setPosition(x, y)
 end
 
+--- Set the textbox size
+---@param width (number) pixels
+---@param height (number) pixels
 function Textbox:setSize(width, height)
   self.button:setSize(width, height)
 end
 
---[[ Convert a static panel into a textbox.
-! Textboxes consist of the panel given as a parameter, which is made into a
-ToggleButton automatically, and handle keyboard input while active.
-!param panel (panel) The panel that will serve as the textbox base.
-!param confirm_callback (function) The function to call when text is confirmed.
-!param abort_callback (function) The function to call when entering is aborted.
-]]
+--- Convert a static panel into a textbox.
+--- Textboxes consist of the panel given as a parameter, which is made into a
+--- ToggleButton automatically, and handle keyboard input while active.
+---@param panel (Panel) The panel that will serve as the textbox base.
+---@param confirm_callback (function) The function to call when text is confirmed.
+---@param abort_callback (function) The function to call when entering is aborted.
+---@return Textbox
 function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
   local textbox = setmetatable({
     panel = panel,
@@ -1340,14 +1441,13 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
   return textbox
 end
 
---! A window element used to accept hotkey configurations.
+--- A window element used to accept hotkey configurations.
 class "HotkeyBox"
 
 ---@class HotkeyBox
 ---@operator call: HotkeyBox
 local HotkeyBox = _G["HotkeyBox"] ---@type HotkeyBox
 
---!dummy
 function HotkeyBox:HotkeyBox()
   self.panel = nil
   self.confirm_callback = nil
@@ -1364,7 +1464,7 @@ end
 
 local hotkeybox_mt = permanent("Window.<hotkeybox_mt>", getmetatable(HotkeyBox()))
 
---! Set the box to not active and run confirm callback, if any
+--- Set the box to not active and run confirm callback, if any
 function HotkeyBox:confirm()
   self:setActive(false)
   if self.confirm_callback then
@@ -1373,7 +1473,7 @@ function HotkeyBox:confirm()
   self.noted_keys = {}
 end
 
---! Set the box to not active and run abort callback, if any
+--- Set the box to not active and run abort callback, if any
 function HotkeyBox:abort()
   self:setActive(false)
   if self.abort_callback then
@@ -1382,10 +1482,10 @@ function HotkeyBox:abort()
   self.noted_keys = {}
 end
 
---! Set the hotkeybox active status to true or false, taking care of any
--- additional things that need to be done: deactivate any other hotkeyboxes,
--- handle blinking cursor, keyboard repeat on/off, set button state accordingly
---!param active (boolean) whether to activate (true) or deactivate (false) the box
+--- Set the hotkeybox active status to true or false, taking care of any
+--- additional things that need to be done: deactivate any other hotkeyboxes,
+--- handle blinking cursor, keyboard repeat on/off, set button state accordingly
+---@param active (boolean) whether to activate (true) or deactivate (false) the box
 function HotkeyBox:setActive(active)
   local ui = self.panel.window.ui
   if active then
@@ -1407,6 +1507,8 @@ function HotkeyBox:setActive(active)
   end
 end
 
+--- Process click event on a hotkey box. We either enter the textbox editing
+--- mode, or complete the edit.
 function HotkeyBox:clicked()
   local active = self.button.toggled
   if active then
@@ -1420,6 +1522,10 @@ function HotkeyBox:clicked()
   end
 end
 
+--- Handle key input for hotkey box.
+---@param char (string)
+---@param rawchar (string)
+---@param modifiers (any)
 function HotkeyBox:keyInput(char, rawchar, modifiers)
   if not self.active then
     return false
@@ -1428,14 +1534,14 @@ function HotkeyBox:keyInput(char, rawchar, modifiers)
   return true
 end
 
---[[ Limit input handled by textbox to specific classes of characters
-!param types (string or table) One of, or an table of any number of input types
-! valid input types are:
-!  "alpha": Letters (lower and uppercase)
-!  "numbers": 0-9
-!  "misc": other characters, currently space and hyphen
-!  "all": experimental category that allows, theoretically, all input
-]]
+--- Limit input handled by textbox to specific classes of characters
+--- For types, it is one of, or an table of any number of input types
+---@param types (string|table)
+---|"alpha" # Letters (lower and uppercase)
+---|"numbers" # 0-9
+---|"misc" # other characters, currently space and hyphen
+---|"all" # experimental category that allows, theoretically, all input
+---@return HotkeyBox
 function HotkeyBox:allowedInput(types)
   if type(types) ~= "table" then types = {types} end
   self.allowed_input = {}
@@ -1445,36 +1551,40 @@ function HotkeyBox:allowedInput(types)
   return self
 end
 
---[[ Set the text of the textbox to a given string or list of strings.
-! Use empty string to make textbox a single line textbox (default).
-! Use table with empty string {""} to make it a multiline textbox.
-!param text (string or table) The string or list of strings the textbox should contain.
-]]
+--- Set the text of the textbox to a given string or list of strings.
+--- Use empty string to make textbox a single line textbox (default).
+--- Use table with empty string {""} to make it a multiline textbox.
+---@param text (string|table) The string or list of strings the textbox should contain.
 function HotkeyBox:setText(text)
   self.text = text
   self.panel:setLabel(self.text)
   return self
 end
 
+--- Sets position of the hotkey box
+---@see Button:setPosition
+---@param x (integer) co-ordinate
+---@param y (integer) co-ordinate
 function HotkeyBox:setPosition(x, y)
   self.button:setPosition(x, y)
 end
 
+--- Set size of the hotkey box
+---@see Button:setSize
+---@param width (integer)
+---@param height (integer)
 function HotkeyBox:setSize(width, height)
   self.button:setSize(width, height)
 end
 
---================================
---================================
---================================
 
---[[ Convert a static panel into a hotkeybox.
-! hotkeyboxes consist of the panel given as a parameter, which is made into a
-ToggleButton automatically, and handle keyboard input while active.
-!param panel (panel) The panel that will serve as the hotkeybox base.
-!param confirm_callback (function) The function to call when text is confirmed.
-!param abort_callback (function) The function to call when entering is aborted.
-]]
+--- Convert a static panel into a hotkeybox.
+--- hotkeyboxes consist of the panel given as a parameter, which is made into a
+--- ToggleButton automatically, and handle keyboard input while active.
+---@param panel (Panel) The panel that will serve as the hotkeybox base.
+---@param confirm_callback (function) The function to call when text is confirmed.
+---@param abort_callback (function) The function to call when entering is aborted.
+---@return HotkeyBox
 function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
   local hotkeybox = setmetatable({
     panel = panel,
@@ -1502,8 +1612,10 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
   return hotkeybox
 end
 
--- Return the X and Y coordinates of the window as drawn on
--- the screen after factoring in the ui_scale.
+--- Return the X and Y coordinates of the window as drawn on
+--- the screen after factoring in the ui_scale.
+---@return number # Scaled x co-ordinate
+---@return number # Scaled y co-ordinate
 function Window:getRealXY()
   local s = self.apply_ui_scale and TheApp.gfx:getUIScale() or 1
   return self.x * s, self.y * s
@@ -1551,6 +1663,7 @@ function Window:draw(canvas, x, y)
   end
 end
 
+--- Handle language change for window
 function Window:onChangeLanguage()
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -1559,6 +1672,10 @@ function Window:onChangeLanguage()
   end
 end
 
+--- Handle change of cursor position (when in game?)
+---@param x (integer) co-ordinate
+---@param y (integer) co-ordinate
+---@return boolean repaint # Where true, a repaint occurs
 function Window:onCursorWorldPositionChange(x, y)
   local repaint = false
   if self.windows then
@@ -1571,6 +1688,11 @@ function Window:onCursorWorldPositionChange(x, y)
   return repaint
 end
 
+--- Check if the cursor click hit a panel
+---@param x (integer) co-ordinate relative to entire window
+---@param y (integer) co-ordinate relative to entire window
+---@param panel (Panel) Panel to be checked
+---@return boolean # True if hit
 function Window:hitTestPanel(x, y, panel)
   local s = panel.apply_ui_scale and TheApp.gfx:getUIScale() or 1
   local xpos, ypos = x - panel.x * s, y - panel.y * s
@@ -1588,15 +1710,15 @@ function Window:hitTestPanel(x, y, panel)
   return false
 end
 
---[[ Used to test if cursor is currently hovering over certain area in dialog.
-!param active_hover (bool) Is cursor already hovers over it?
-!param mouse_x (integer) Mouse X coordinate
-!param mouse_y (integer) Mouse Y coordinate
-!param min_x (integer) Minimum X area
-!param max_x (integer) Maximum X area
-!param min_y (integer) Minimum Y area
-!param max_y (integer) Maximum Y area
-]]
+--- Used to test if cursor is currently hovering over certain area in dialog.
+---@param active_hover (boolean) Is cursor already hovers over it?
+---@param mouse_x (integer) Mouse X coordinate
+---@param mouse_y (integer) Mouse Y coordinate
+---@param min_x (integer) Minimum X area
+---@param max_x (integer) Maximum X area
+---@param min_y (integer) Minimum Y area
+---@param max_y (integer) Maximum Y area
+---@return boolean # True if hovering in area
 function Window:hoverTest(active_hover, mouse_x, mouse_y, min_x, max_x, min_y, max_y)
   local is_currently_hovering = mouse_x > min_x and mouse_x < max_x and mouse_y > min_y and mouse_y < max_y
   if is_currently_hovering then
@@ -1608,12 +1730,10 @@ function Window:hoverTest(active_hover, mouse_x, mouse_y, min_x, max_x, min_y, m
   return false
 end
 
---[[ Used to test if the window has a (non-transparent) pixel at the given position.
-!param x (integer) The X coordinate of the pixel to test, relative to the
-top-left corner of the window.
-!param y (integer) The Y coordinate of the pixel to test, relative to the
-top-left corner of the window.
-]]
+--- Used to test if the window has a (non-transparent) pixel at the given position.
+---@param x (integer) The X coordinate of the pixel to test, relative to the top-left corner of the window.
+---@param y (integer) The Y coordinate of the pixel to test, relative to the top-left corner of the window.
+---@return boolean # Hit result
 function Window:hitTest(x, y)
   if self.panels[1] then
     for _, panel in ipairs(self.panels) do
@@ -1633,6 +1753,11 @@ function Window:hitTest(x, y)
   return false
 end
 
+--- Handle a mouse down event in a window
+---@param button (string) Whether it is a left or right click
+---@param x (integer) co-ordinate of click
+---@param y (integer) co-ordinate of click
+---@return boolean repaint # Specifies ia repaint is required
 function Window:onMouseDown(button, x, y)
   local repaint = false
   if not self.visible then return false end
@@ -1689,16 +1814,21 @@ function Window:onMouseDown(button, x, y)
   return repaint
 end
 
---[[ Get the name of the saved window position group.
-! When the user drags a window, the new position of the window is saved, and
-then when any windows in the same group are opened in the future, the position
-of the new window is set to the saved position. By default, each window class
-is its own group, but by overriding this method, that can be changed.
-]]
+--- Get the name of the saved window position group.
+--- When the user drags a window, the new position of the window is saved, and
+--- then when any windows in the same group are opened in the future, the position
+--- of the new window is set to the saved position. By default, each window class
+---is its own group, but by overriding this method, that can be changed.
+---@return any # a class
 function Window:getSavedWindowPositionName()
   return class.type(self)
 end
 
+--- Handle a mouse up event in a window
+---@param button (string) Whether it is a left or right click
+---@param x (integer) co-ordinate of click
+---@param y (integer) co-ordinate of click
+---@return boolean repaint # Specifies ia repaint is required
 function Window:onMouseUp(button, x, y)
   local repaint = false
 
@@ -1756,14 +1886,12 @@ function Window:onMouseUp(button, x, y)
   return repaint
 end
 
---! This function can be used to control mousewheel input (i.e. scrolling).
---! Override this function in derived classes, with what you'd like to happen
---! on this event.
---!param x (int) Mousewheel has moved on the horizontal axis (-1 is
--- leftward movement, +1 is rightward movement)
---!param y (int) Mousewheel has moved on the vertical axis (-1 is downward
--- movement, +1 is upward movement)
---!return repaint (boolean) if screen is to be redrawn.
+--- This function can be used to control mousewheel input (i.e. scrolling).
+--- Override this function in derived classes, with what you'd like to happen
+--- on this event.
+---@param x (int) Mousewheel has moved on the horizontal axis (-1 is leftward movement, +1 is rightward movement)
+---@param y (int) Mousewheel has moved on the vertical axis (-1 is downward movement, +1 is upward movement)
+---@return boolean repaint # if screen is to be redrawn.
 function Window:onMouseWheel(x, y)
   local repaint = false
   if self.windows then
@@ -1805,10 +1933,10 @@ local --[[persistable:window_drag_round]] function round(value, amount)
   return amount * math.floor(value / amount + 0.5)
 end
 
---[[ Initiate dragging of the window.
-!param x The X position of the cursor in window coordinates.
-!param y The Y position of the cursor in window coordinates.
-]]
+--- Initiate dragging of the window.
+---@param x The X position of the cursor in window coordinates.
+---@param y The Y position of the cursor in window coordinates.
+---@return boolean? # False if drag not possible
 function Window:beginDrag(x, y)
   if not self.width or not self.height or not self.ui or
       self.ui.app.runtime_config.lock_windows or not self.draggable then
@@ -1847,14 +1975,12 @@ function Window:beginDrag(x, y)
   return true
 end
 
---[[ Called when the user moves the mouse.
-!param x (integer) The new X coordinate of the cursor, relative to the top-left
-corner of the window.
-!param y (integer) The new Y coordinate of the cursor, relative to the top-left
-corner of the window.
-!param dx (integer) The number of pixels which the cursor moved horizontally.
-!param dy (integer) The number of pixels which the cursor moved vertically.
-]]
+--- Called when the user moves the mouse.
+---@param x (integer) The new X coordinate of the cursor, relative to the top-left corner of the window.
+---@param y (integer) The new Y coordinate of the cursor, relative to the top-left corner of the window.
+---@param dx (integer) The number of pixels which the cursor moved horizontally.
+---@param dy (integer) The number of pixels which the cursor moved vertically.
+---@return boolean repaint # if screen is to be redrawn.
 function Window:onMouseMove(x, y, dx, dy)
   local repaint = false
 
@@ -1912,7 +2038,7 @@ function Window:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
--- Called regularly at a rate independent of the game speed.
+--- Called regularly at a rate independent of the game speed.
 function Window:onTick()
   if self.active_button then
     local btn = self.active_button
@@ -1951,7 +2077,7 @@ function Window:onTick()
   end
 end
 
--- Called regularly at the same rate that entities are ticked.
+--- Called regularly at the same rate that entities are ticked.
 function Window:onWorldTick()
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -1960,14 +2086,14 @@ function Window:onWorldTick()
   end
 end
 
--- Bring the window to the top of its parent
+--- Bring the window to the top of its parent
 function Window:bringToTop()
   if self.parent then
     self.parent:sendToTop(self)
   end
 end
 
--- Tell the window to bring the specified sub-window to its top
+--- Tell the window to bring the specified sub-window to its top
 function Window:sendToTop(window)
   local window_index
   if self.windows then
@@ -1998,7 +2124,7 @@ function Window:sendToTop(window)
   end
 end
 
--- Tell the window to bring the specified sub-window to its bottom
+--- Tell the window to bring the specified sub-window to its bottom
 function Window:sendToBottom(window)
   if self.windows then
     for i = 1, #self.windows do -- Search specified window in windows list
@@ -2011,14 +2137,17 @@ function Window:sendToBottom(window)
   end
 end
 
+--- Make a button start a blink cycle
+--- Note: Only one button can blink at a time for a window
+---@param button_index (number)
 function Window:startButtonBlinking(button_index)
-
   self.blinking_button = button_index
   self.blink_counter = 0
   local btn = self.buttons[button_index]
   btn.sprite_index_blink = btn.sprite_index_normal
 end
 
+--- End a button blink cycle
 function Window:stopButtonBlinking()
   -- Does any button actually blink?
   if self.blinking_button then
@@ -2030,15 +2159,16 @@ function Window:stopButtonBlinking()
   end
 end
 
---! Create a static (non-changeable) tooltip to be displayed in a certain region.
---! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
---!param text (string) The string to display.
---!param x (integer) The X coordinate relative to the top-left corner.
---!param y (integer) The Y coordinate relative to the top-left corner.
---!param r (integer) The right (X + width) coordinate relative to the top-left corner.
---!param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
---!param tooltip_x (integer) [optional] The X coordinate to display the tooltip at.
---!param tooltip_y (integer) [optional] The Y coordinate to display the tooltip at.
+--- Create a static (non-changeable) tooltip to be displayed in a certain region.
+--- tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
+---@param text (string) The string to display.
+---@param x (integer) The X coordinate relative to the top-left corner.
+---@param y (integer) The Y coordinate relative to the top-left corner.
+---@param r (integer) The right (X + width) coordinate relative to the top-left corner.
+---@param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
+---@param tooltip_x (integer?) The X coordinate to display the tooltip at.
+---@param tooltip_y (integer?) The Y coordinate to display the tooltip at.
+---@return table region
 function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y, apply_ui_scale)
   local region = {
     text = text, x = x, y = y, r = r, b = b,
@@ -2049,15 +2179,16 @@ function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y, apply_ui_sca
   return region
 end
 
---! Create a dynamic tooltip to be displayed in a certain region.
---! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
---!param callback (function) A function that returns the string to display or nil for no tooltip.
---!param x (integer) The X coordinate relative to the top-left corner.
---!param y (integer) The Y coordinate relative to the top-left corner.
---!param r (integer) The right (X + width) coordinate relative to the top-left corner.
---!param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
---!param tooltip_x (integer) [optional] The X coordinate to display the tooltip at.
---!param tooltip_y (integer) [optional] The Y coordinate to display the tooltip at.
+--- Create a dynamic tooltip to be displayed in a certain region.
+--- tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
+---@param callback (function) A function that returns the string to display or nil for no tooltip.
+---@param x (integer) The X coordinate relative to the top-left corner.
+---@param y (integer) The Y coordinate relative to the top-left corner.
+---@param r (integer) The right (X + width) coordinate relative to the top-left corner.
+---@param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
+---@param tooltip_x (integer?) The X coordinate to display the tooltip at.
+---@param tooltip_y (integer?) The Y coordinate to display the tooltip at.
+---@return table region
 function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     callback = callback, x = x, y = y, r = r, b = b,
@@ -2068,7 +2199,13 @@ function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
   return region
 end
 
--- An 'element' can either be a panel, a button, or a tooltip region.
+--- Grab tooltip for specified window element.
+--- An 'element' can either be a panel, a button, or a tooltip region.
+---@see Window:getTooltipAt
+---@param elem (any) A panel, button, or tooltip region
+---@param x (number) co-ordinate
+---@param y (number) co-ordinate
+---@return table # contains tooltip text, and position
 function Window:getTooltipForElement(elem, x, y)
   local text
   if elem.callback then
@@ -2094,13 +2231,14 @@ function Window:getTooltipForElement(elem, x, y)
   end
 end
 
---! Query the window for tooltip text to display for a particular position.
---! Tooltips are either associated with buttons, panels, or a region.
+--- Query the window for tooltip text to display for a particular position.
+--- Tooltips are either associated with buttons, panels, or a region.
 -- (see Button:setTooltip, Panel:setTooltip, Window:make[Dynamic]Tooltip)
---! Button tooltips take precedence over region tooltips, which again take precedence over panels.
+--- Button tooltips take precedence over region tooltips, which again take precedence over panels.
 -- Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
---!param x (integer) The X coordinate relative to the top-left corner.
---!param y (integer) The Y coordinate relative to the top-left corner.
+---@param x (integer) The X coordinate relative to the top-left corner.
+---@param y (integer) The Y coordinate relative to the top-left corner.
+---@return function?
 function Window:getTooltipAt(x, y)
   local s = self.apply_ui_scale and TheApp.gfx:getUIScale() or 1
   if x < 0 or y < 0 or (self.width and x >= self.width * s) or (self.height and y >= self.height * s) then
@@ -2134,6 +2272,7 @@ function Window:getTooltipAt(x, y)
   end
 end
 
+--- Afterload handler for Panel
 function Panel:afterLoad(old, new)
   if old < 160 then
     self.lowered_colour = self.colour
@@ -2143,7 +2282,7 @@ function Panel:afterLoad(old, new)
   end
 end
 
---! Stub to be extended in subclasses, if needed.
+--- Stub to be extended in subclasses, if needed.
 function Window:afterLoad(old, new)
   if old < 2 then
     -- Scrollbars were added
