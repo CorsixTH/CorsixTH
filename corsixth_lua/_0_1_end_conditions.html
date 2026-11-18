@@ -29,7 +29,7 @@
  <h4>Method Index</h4>
  <ul>
  <li class="self">
- <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__check_lose_group">_checkLoseGroup</a>(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>)
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__check_lose_group">_checkLoseGroup</a>(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>, <span class="p">baseline_start</span>)
  </li>
  <li class="self">
  <a href="_0_1_end_conditions.html#_0_1_end_conditions_1__check_win_group">_checkWinGroup</a>(<span class="p">hospital</span>, <span class="p">win_table</span>)
@@ -44,7 +44,10 @@
  <a href="_0_1_end_conditions.html#_0_1_end_conditions_1check_end_game">checkEndGame</a>(<span class="p">hospital</span>)
  </li>
  <li class="self">
- <a href="_0_1_end_conditions.html#_0_1_end_conditions_1generate_report_table">generateReportTable</a>(<span class="p">hospital</span>)
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1generate_advice">generateAdvice</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_end_conditions.html#_0_1_end_conditions_1generate_report_table">generateReportTable</a>(<span class="p">hospital</span>, <span class="p">baseline_start</span>)
  </li>
  <li class="self">
  <a href="_0_1_end_conditions.html#_0_1_end_conditions_1get_attribute">getAttribute</a>(<span class="p">hospital</span>, <span class="p">attribute</span>)
@@ -95,7 +98,7 @@
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_end_conditions_1__check_lose_group">function EndConditions:_checkLoseGroup(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>)</a></h5>
+ <h5><a name="_0_1_end_conditions_1__check_lose_group">function EndConditions:_checkLoseGroup(<span class="p">hospital</span>, <span class="p">lose_table</span>, <span class="p">report</span>, <span class="p">baseline_start</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
@@ -119,9 +122,14 @@
  <td class="t">boolean</td>
  <td class="d"> Whether a report table will be returned.</td>
  </tr>
+ <tr>
+ <td class="n">baseline_start</td>
+ <td class="t">boolean</td>
+ <td class="d"> Use the start attribute for calculating progress, not boundary</td>
+ </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L181">line 181 of Lua/endconditions.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L182">line 182 of Lua/endconditions.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -159,7 +167,7 @@
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L214">line 214 of Lua/endconditions.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L217">line 217 of Lua/endconditions.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -180,7 +188,7 @@
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L232">line 232 of Lua/endconditions.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L235">line 235 of Lua/endconditions.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -245,7 +253,41 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_end_conditions_1generate_report_table">function EndConditions:generateReportTable(<span class="p">hospital</span>)</a></h5>
+ <h5><a name="_0_1_end_conditions_1generate_advice">function EndConditions:generateAdvice(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Generate advice for this hospital on achieving the world goals<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">hospital</td>
+ <td class="d"> The player's hospital</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">table</td>
+ <td class="d">All high priority and relevant advice</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L338">line 338 of Lua/endconditions.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_end_conditions_1generate_report_table">function EndConditions:generateReportTable(<span class="p">hospital</span>, <span class="p">baseline_start</span>)</a></h5>
  <p>
  Generate table for the Progress Report dialog and progress advice.<br/><br/>
  <strong>Parameters:</strong>
@@ -259,6 +301,11 @@ ie more groups of conditions that lead to loss than win.<br/><br/>
  <td class="n">hospital</td>
  <td class="t">Hospital</td>
  <td class="d"> The hospital of the tests.</td>
+ </tr>
+ <tr>
+ <td class="n">baseline_start</td>
+ <td class="t">boolean</td>
+ <td class="d"> Use the start attribute for calculating progress, not boundary</td>
  </tr>
  </table>
  </p><p>
@@ -289,7 +336,7 @@ functions if there is one for this attribute.<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L247">line 247 of Lua/endconditions.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/endconditions.lua#L250">line 250 of Lua/endconditions.lua</a>.
  </p>
  </div>
 </div>
