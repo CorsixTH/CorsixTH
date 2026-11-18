@@ -290,9 +290,9 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
   mskLayers.clear();
   if (iAnimation >= anims.size()) return;
 
-  uint16_t iFrameIndex = anims.at(iAnimation).frame;
+  size_t iFrameIndex = static_cast<size_t>(anims.at(iAnimation).frame);
   if (iFrameIndex >= frames.size()) return;
-  uint16_t iFirstFrameIndex = iFrameIndex;
+  size_t iFirstFrameIndex = iFrameIndex;
 
   do {
     th_frame_t* pFrame = &(frames.at(iFrameIndex));
@@ -301,7 +301,7 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
     while ((pElement = _getElement(iListIndex++))) {
       mskLayers.set(pElement->flags >> 4, pElement->layerid);
     }
-    iFrameIndex = frames.at(iFrameIndex).next;
+ 	  iFrameIndex = static_cast<size_t>(frames.at(iFrameIndex).next);
   } while (iFrameIndex < frames.size() && iFrameIndex != iFirstFrameIndex);
 }
 
