@@ -301,7 +301,7 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
     while ((pElement = _getElement(iListIndex++))) {
       mskLayers.set(pElement->flags >> 4, pElement->layerid);
     }
- 	  iFrameIndex = static_cast<size_t>(frames.at(iFrameIndex).next);
+    iFrameIndex = static_cast<size_t>(frames.at(iFrameIndex).next);
   } while (iFrameIndex < frames.size() && iFrameIndex != iFirstFrameIndex);
 }
 
