@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <set>
 #include <stdexcept>
 #include <vector>
@@ -308,10 +309,13 @@ size_t THAnimations::getFrameCount(size_t iAnimation) {
   if (iAnimation >= anims.size()) return 0;
   size_t iCount = 0;
   uint16_t iFirstFrame = anims.at(iAnimation).frame;
-  if (iFirstFrame < frames.size()) {
+  const size_t frameLimit =
+      std::min(frames.size(),
+               static_cast<size_t>(std::numeric_limits<uint16_t>::max()) + 1);
+  if (iFirstFrame < frameLimit) {
     ++iCount;
     uint16_t iFrame = frames.at(iFirstFrame).next;
-    while (iFrame != iFirstFrame && iFrame < frames.size() && iCount < 1024) {
+    while (iFrame != iFirstFrame && iFrame < frameLimit && iCount < 1024) {
       ++iCount;
       iFrame = frames.at(iFrame).next;
     }
