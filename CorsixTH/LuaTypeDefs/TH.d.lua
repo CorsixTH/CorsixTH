@@ -113,10 +113,10 @@ function THSpriteSheet:isVisible(sprite) end
 ---@alias THFontAlign "left"|"center"|"centre"|"middle"|"right"
 
 ---@class THRgba
----@field red integer
----@field blue integer
----@field green integer
----@field alpha integer
+---@field red? integer default 0
+---@field blue? integer default 0
+---@field green? integer default 0
+---@field alpha? integer default 255
 local THRgba = {}
 
 ---@class THFontOptions
