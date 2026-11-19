@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! The multi-purpose panel for launching dialogs / screens and dynamic information.
 class "UIBottomPanel" (Window)
@@ -1125,3 +1125,5 @@ function UIBottomPanel:afterLoad(old, new)
 
   Window.afterLoad(self, old, new)
 end
+
+return UIBottomPanel

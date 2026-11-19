@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Options window used in the main menu and ingame.
 class "UIUpdate" (UIResizable)
@@ -111,3 +111,5 @@ end
 function UIUpdate:buttonIgnore()
   self:close()
 end
+
+return UIUpdate

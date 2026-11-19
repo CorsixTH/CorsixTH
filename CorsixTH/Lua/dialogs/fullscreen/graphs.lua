@@ -19,7 +19,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 --! Charts fullscreen window
 class "UIGraphs" (UIFullscreen)
@@ -477,6 +478,7 @@ end
 
 function UIGraphs:close()
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -504,3 +506,5 @@ function UIGraphs:afterLoad(old, new)
   end
   self:updateLines()
 end
+
+return UIGraphs

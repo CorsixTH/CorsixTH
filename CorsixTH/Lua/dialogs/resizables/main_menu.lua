@@ -18,7 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local UIInformation = cth_require("dialogs.information")
+local UIResizable = cth_require("dialogs.resizable")
+local TreeControl = cth_require("dialogs.tree_ctrl")
+local FileTreeNode = TreeControl.FileTreeNode
 
 --! Class for main menu window.
 class "UIMainMenu" (UIResizable)
@@ -145,6 +149,7 @@ function UIMainMenu:onMouseMove(x, y, dx, dy)
 end
 
 function UIMainMenu:buttonNewGame()
+  local UINewGame = cth_require("dialogs.resizables.new_game")
   local window = UINewGame(self.ui)
   self.ui:addWindow(window)
 end
@@ -153,6 +158,7 @@ function UIMainMenu:buttonCustomCampaign()
   if TheApp.using_demo_files then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
   else
+    local UICustomCampaign = cth_require("dialogs.resizables.menu_list_dialogs.custom_campaign")
     local window = UICustomCampaign(self.ui)
     self.ui:addWindow(window)
   end
@@ -162,6 +168,7 @@ function UIMainMenu:buttonCustomGame()
   if TheApp.using_demo_files then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
   else
+    local UICustomGame = cth_require("dialogs.resizables.menu_list_dialogs.custom_game")
     local window = UICustomGame(self.ui)
     self.ui:addWindow(window)
   end
@@ -186,11 +193,13 @@ function UIMainMenu:buttonContinueGame()
 end
 
 function UIMainMenu:buttonLoadGame()
+  local UILoadGame = cth_require("dialogs.resizables.file_browsers.load_game")
   local window = UILoadGame(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIMainMenu:buttonOptions()
+  local UIOptions = cth_require("dialogs.resizables.options")
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end
@@ -207,3 +216,5 @@ function UIMainMenu:buttonExit()
   end
   ))
 end
+
+return UIMainMenu

@@ -19,8 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 --! Town map fullscreen window (purchase land, set radiator levels, map overview).
 class "UITownMap" (UIFullscreen)
@@ -106,6 +106,7 @@ end
 
 function UITownMap:close()
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -353,12 +354,16 @@ function UITownMap:increaseHeat()
 end
 
 function UITownMap:bankManager()
+  local UIBankManager = cth_require("dialogs.fullscreen.bank_manager")
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   local dlg = UIBankManager(self.ui)
   self.ui:addWindow(dlg)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 function UITownMap:bankStats()
+  local UIBankManager = cth_require("dialogs.fullscreen.bank_manager")
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   local dlg = UIBankManager(self.ui)
   dlg:showStatistics()
   self.ui:addWindow(dlg)
@@ -377,3 +382,5 @@ function UITownMap:afterLoad(old, new)
 
   UIFullscreen.afterLoad(self, old, new)
 end
+
+return UITownMap

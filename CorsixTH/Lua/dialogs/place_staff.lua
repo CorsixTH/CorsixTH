@@ -19,9 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 local math_floor
     = math.floor
-local Window = _G['Window'] ---@type Window
 
 --! Invisible window which handles placing a `Staff` member in the world.
 class "UIPlaceStaff" (Window)
@@ -45,7 +45,7 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.allow_in_rooms = not profile:isType("Receptionist")
   self.anim = TH.animation()
   self.anim:setLayer(5, profile.layer5)
-  local Humanoid = _G["Humanoid"] ---@type Humanoid
+  local Humanoid = cth_require("entities.humanoid")
   local idle_anim = Humanoid.getIdleAnimation(profile.humanoid_class)
   self.anim:setAnimation(self.world.anims, idle_anim)
   local _, ghost = ui.app.gfx:getPalette("MPalette.dat")
@@ -185,3 +185,5 @@ function UIPlaceStaff:onMouseUp(button, x, y)
     end
   end
 end
+
+return UIPlaceStaff

@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 cth_require("ui")
 cth_require("announcer")
+local Window = cth_require("window")
 
 local UI = _G['UI'] ---@type UI
 

@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
+local Window = cth_require("window")
 
 --! Calls Dispatcher Window
 class "UICallsDispatcher" (UIResizable)
@@ -152,9 +153,12 @@ end
 function UICallsDispatcher:itemButtonClicked(index)
   local call = self.call_list[index + self.scrollbar.value - 1]
   if call and call.assigned then
+    local UIStaff = cth_require("dialogs.staff_dialog")
     self.ui:addWindow(UIStaff(self.ui, call.assigned))
   end
   if call and call.object then
+    local Room = cth_require("room")
+    local Entity = cth_require("entity")
     if class.is(call.object, Room) then
       self:scrollToRoom(call.object)
     elseif class.is(call.object, Entity) then
@@ -186,3 +190,5 @@ function UICallsDispatcher:close()
   self.dispatcher:removeChangeCallback(self.update)
   Window.close(self)
 end
+
+return UICallsDispatcher

@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIDropdown = cth_require("dialogs.resizables.dropdown")
+local UIResizable = cth_require("dialogs.resizable")
 
 class "UISoundSettings" (UIResizable)
 
@@ -441,6 +442,7 @@ end
 --! Button handler for soundfont
 -- Opens a file chooser dialog for selecting a soundfont.
 function UISoundSettings:buttonBrowseForSoundfont()
+  local UIChooseSoundfont = cth_require("dialogs.resizables.file_browsers.choose_soundfont")
   local browser = UIChooseSoundfont(self.ui, self.mode, self, self.selectSoundfont)
   self.ui:addWindow(browser)
 end
@@ -457,6 +459,7 @@ end
 -- Opens the jukebox window.
 function UISoundSettings:buttonJukebox()
   if self.app.config.audio then
+    local UIJukebox = cth_require("dialogs.jukebox")
     self.ui:addWindow(UIJukebox(self.app))
   end
 end
@@ -464,6 +467,9 @@ end
 --! Close window
 function UISoundSettings:close()
   UIResizable.close(self)
+  local UIOptions = cth_require("dialogs.resizables.options")
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end
+
+return UISoundSettings

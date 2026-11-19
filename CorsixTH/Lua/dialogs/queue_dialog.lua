@@ -19,8 +19,63 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 
-local Window = _G['Window'] ---@type Window
+class "UIQueuePopup" (Window)
+
+---@class UIQueuePopup: Window
+---@operator call: UIQueuePopup
+local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
+
+function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
+  self:Window()
+  self.esc_closes = true
+  self.ui = ui
+  self.patient = patient
+  self.width = 188
+  self.height = 68
+  local app = ui.app
+  self.modal_class = "popup"
+  self:setDefaultPosition(x, y)
+
+  -- Background sprites
+  self:addPanel(375, 0, 0)
+
+  -- Buttons
+  self:addPanel(0, 12, 12):makeButton(0, 0, 81, 54, 378, self.sendToReception)
+  self:addPanel(0, 95, 12):makeButton(0, 0, 81, 54, 379, self.sendHome)
+  self:addPanel(377, 0, 58)
+
+  self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
+  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+end
+
+function UIQueuePopup:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  -- TODO: Same as above.
+  -- x, y = self.x + x, self.y + y
+  --[[for i, hospital in ipairs(self.ui.app.world.hospitals) do
+    self.white_font:draw(canvas, hospital.name:upper() , x + 74, y + 78 + (i-1)*34, 92, 0)
+  end]]
+end
+
+function UIQueuePopup:sendToReception()
+  local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
+  self.patient:setNextAction(SeekReceptionAction())
+  self:close()
+end
+
+function UIQueuePopup:sendHome()
+  self.patient:goHome("kicked")
+  self:close()
+end
+
+function UIQueuePopup:afterLoad(old, new)
+  if old < 236 then
+    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  end
+  Window.afterLoad(self, old, new)
+end
 
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
@@ -145,7 +200,6 @@ function UIQueue:onMouseDown(button, x, y)
     self.just_added = true
     local px = self.x + math.floor(x / s)
     local py = self.y + math.floor(y / s)
-    local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
     self.ui:addWindow(UIQueuePopup(self.ui, px, py, self.hovered.patient))
   end
 end
@@ -155,7 +209,6 @@ function UIQueue:onMouseUp(button, x, y)
     self.just_added = false
   else
     -- Always remove any leftover popup windows
-    local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
     local window = self.ui:getWindow(UIQueuePopup)
     if window then
       window:close()
@@ -253,7 +306,6 @@ end
 
 function UIQueue:close()
   -- Always remove any leftover popup windows
-  local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
   local window = self.ui:getWindow(UIQueuePopup)
   if window then
     window:close()
@@ -365,58 +417,4 @@ function UIQueue:afterLoad(old, new)
   Window.afterLoad(self, old, new)
 end
 
-class "UIQueuePopup" (Window)
-
----@class UIQueuePopup: Window
----@operator call: UIQueuePopup
-local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
-
-function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
-  self:Window()
-  self.esc_closes = true
-  self.ui = ui
-  self.patient = patient
-  self.width = 188
-  self.height = 68
-  local app = ui.app
-  self.modal_class = "popup"
-  self:setDefaultPosition(x, y)
-
-  -- Background sprites
-  self:addPanel(375, 0, 0)
-
-  -- Buttons
-  self:addPanel(0, 12, 12):makeButton(0, 0, 81, 54, 378, self.sendToReception)
-  self:addPanel(0, 95, 12):makeButton(0, 0, 81, 54, 379, self.sendHome)
-  self:addPanel(377, 0, 58)
-
-  self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-end
-
-function UIQueuePopup:draw(canvas, x, y)
-  Window.draw(self, canvas, x, y)
-  -- TODO: Same as above.
-  -- x, y = self.x + x, self.y + y
-  --[[for i, hospital in ipairs(self.ui.app.world.hospitals) do
-    self.white_font:draw(canvas, hospital.name:upper() , x + 74, y + 78 + (i-1)*34, 92, 0)
-  end]]
-end
-
-function UIQueuePopup:sendToReception()
-  local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
-  self.patient:setNextAction(SeekReceptionAction())
-  self:close()
-end
-
-function UIQueuePopup:sendHome()
-  self.patient:goHome("kicked")
-  self:close()
-end
-
-function UIQueuePopup:afterLoad(old, new)
-  if old < 236 then
-    self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
-  end
-  Window.afterLoad(self, old, new)
-end
+return UIQueue

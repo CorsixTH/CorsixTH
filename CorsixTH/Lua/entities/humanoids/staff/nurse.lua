@@ -56,3 +56,5 @@ function Nurse:afterLoad(old, new)
   end
   Staff.afterLoad(self, old, new)
 end
+
+return Nurse

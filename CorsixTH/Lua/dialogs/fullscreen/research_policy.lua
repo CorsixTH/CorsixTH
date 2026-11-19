@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 class "UIResearch" (UIFullscreen)
 
@@ -245,6 +245,7 @@ end
 function UIResearch:close()
   self.ui:stopSound(self.bg_sound)
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -269,3 +270,5 @@ function UIResearch:afterLoad(old, new)
   end
   self:_playBgSound()
 end
+
+return UIResearch

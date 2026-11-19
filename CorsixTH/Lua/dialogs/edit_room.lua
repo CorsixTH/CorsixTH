@@ -18,9 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-cth_require("dialogs.place_objects")
-
-local UIPlaceObjects = _G['UIPlaceObjects'] ---@type UIPlaceObjects
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local UIInformation = cth_require("dialogs.information")
+local UIPlaceObjects = cth_require("dialogs.place_objects")
 
 class "UIEditRoom" (UIPlaceObjects)
 
@@ -288,6 +288,7 @@ function UIEditRoom:_humanoidsInArea()
 end
 
 function UIEditRoom:onTick()
+  local UIFurnishCorridor = cth_require("dialogs.furnish_corridor")
   UIFurnishCorridor.onTick(self)
   self:_checkIsWaitingHumanoidsToLeaveArea()
 end
@@ -559,6 +560,7 @@ function UIEditRoom:purchaseItems()
     end
   end
 
+  local UIFurnishCorridor = cth_require("dialogs.furnish_corridor")
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
@@ -1687,3 +1689,5 @@ function UIEditRoom:afterLoad(old, new)
   UIPlaceObjects.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
+
+return UIEditRoom
