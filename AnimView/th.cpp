@@ -29,6 +29,7 @@ SOFTWARE.
 
 #include <algorithm>
 #include <array>
+#include <limits>
 #include <set>
 #include <stdexcept>
 #include <vector>
@@ -289,9 +290,9 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
   mskLayers.clear();
   if (iAnimation >= anims.size()) return;
 
-  uint16_t iFrameIndex = anims.at(iAnimation).frame;
+  size_t iFrameIndex = static_cast<size_t>(anims.at(iAnimation).frame);
   if (iFrameIndex >= frames.size()) return;
-  uint16_t iFirstFrameIndex = iFrameIndex;
+  size_t iFirstFrameIndex = iFrameIndex;
 
   do {
     th_frame_t* pFrame = &(frames.at(iFrameIndex));
@@ -300,20 +301,23 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
     while ((pElement = _getElement(iListIndex++))) {
       mskLayers.set(pElement->flags >> 4, pElement->layerid);
     }
-    iFrameIndex = frames.at(iFrameIndex).next;
+    iFrameIndex = static_cast<size_t>(frames.at(iFrameIndex).next);
   } while (iFrameIndex < frames.size() && iFrameIndex != iFirstFrameIndex);
 }
 
 size_t THAnimations::getFrameCount(size_t iAnimation) {
   if (iAnimation >= anims.size()) return 0;
   size_t iCount = 0;
-  uint16_t iFirstFrame = anims.at(iAnimation).frame;
-  if (iFirstFrame < frames.size()) {
+  size_t iFirstFrame = static_cast<size_t>(anims.at(iAnimation).frame);
+  const size_t frameLimit =
+      std::min(frames.size(),
+               static_cast<size_t>(std::numeric_limits<uint16_t>::max()) + 1);
+  if (iFirstFrame < frameLimit) {
     ++iCount;
-    uint16_t iFrame = frames.at(iFirstFrame).next;
-    while (iFrame != iFirstFrame && iFrame < frames.size() && iCount < 1024) {
+    size_t iFrame = static_cast<size_t>(frames.at(iFirstFrame).next);
+    while (iFrame != iFirstFrame && iFrame < frameLimit && iCount < 1024) {
       ++iCount;
-      iFrame = frames.at(iFrame).next;
+      iFrame = static_cast<size_t>(frames.at(iFrame).next);
     }
   }
   return iCount;
