@@ -70,7 +70,7 @@ Image8bpp::Image8bpp(int iWidth, int iHeight)
 {
     this->iWidth = iWidth;
     this->iHeight = iHeight;
-    pData = (uint8 *)malloc(iWidth * iHeight);
+    pData = (uint8 *)malloc(static_cast<size_t>(iWidth) * static_cast<size_t>(iHeight));
 }
 
 Image8bpp::~Image8bpp()
