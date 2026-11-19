@@ -891,12 +891,40 @@ function Audio:reinitAudioSystem()
   if jukebox_window then
     jukebox_window:close()
   end
+
+  -- Remember the track that is playing so that it can be resumed after the
+  -- reinit, rather than switching to a random track.
+  local previous_filename, previous_filename_music
+  if self.background_music ~= nil then
+    for _, info in ipairs(self.background_playlist) do
+      if info.music == self.background_music then
+        previous_filename = info.filename
+        previous_filename_music = info.filename_music
+        break
+      end
+    end
+  end
+
   self:stopBackgroundTrack()
   self:destroy()
   self:init()
   -- Restore speech data and sound libraries
   self.app:initLanguage()
-  self:playRandomBackgroundTrack()
+
+  local resumed = false
+  if previous_filename then
+    for index, info in ipairs(self.background_playlist) do
+      if info.enabled and info.filename == previous_filename
+          and info.filename_music == previous_filename_music then
+        self:playBackgroundTrack(index)
+        resumed = true
+        break
+      end
+    end
+  end
+  if not resumed then
+    self:playRandomBackgroundTrack()
+  end
   if jukebox_window then
     self.app.ui:addWindow(UIJukebox(self.app))
   end
