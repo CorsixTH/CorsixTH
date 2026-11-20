@@ -177,6 +177,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   self.discovered_diseases = {} -- a list
+  self.emergency_count = 0
+  self.emergency_cured = 0
+  self.emergency_visitors = 0
 
   -- Create a cheats instance for each hospital. AIHospitals don't know how to cheat (we hope!)
   self.hosp_cheats = Cheats(self)
@@ -1155,6 +1158,11 @@ function Hospital:resolveEmergency()
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
   else -- Too few rescued, reputation hit
     self:changeReputation("emergency_failed", emer.disease)
+  end
+  if self.emergency_count then
+    self.emergency_count = self.emergency_count + 1
+    self.emergency_cured = self.emergency_cured + rescued_patients
+    self.emergency_visitors = self.emergency_visitors + total
   end
 
   self.world:nextEmergency()
