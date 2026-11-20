@@ -20,7 +20,6 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
-local UIResizable = cth_require("dialogs.resizable")
 local TreeControl = cth_require("dialogs.tree_ctrl")
 local lfsext = TH.lfsExt()
 local DummyRootNode = TreeControl.DummyRootNode
@@ -59,15 +58,6 @@ function UIChooseSoundfont:choiceMade(name)
     self.choiceCallback(self.soundOptionsUI, name)
   end
   self:close()
-end
-
---! Close the dialog and return to the previous dialog
-function UIChooseSoundfont:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UISoundSettings = cth_require("dialogs.resizables.sound_setting")
-    self.ui:addWindow(UISoundSettings(self.ui, "menu"))
-  end
 end
 
 return UIChooseSoundfont

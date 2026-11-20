@@ -533,9 +533,6 @@ function UIHotkeyAssign:buttonAccept()
   hotkeys_backedUp = false
 
   self:close()
-  local UIOptions = cth_require("dialogs.resizables.options")
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
 end
 
 function UIHotkeyAssign:buttonDefaults()
@@ -554,17 +551,6 @@ function UIHotkeyAssign:buttonCancel()
   hotkeys_backedUp = false
 
   self:close()
-  local UIOptions = cth_require("dialogs.resizables.options")
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
-function UIHotkeyAssign:close()
-  UIResizable.close(self)
-  if self.mode == "menu"  then
-    local UIOptions = cth_require("dialogs.resizables.options")
-    self.ui:addWindow(UIOptions(self.ui, "menu"))
-  end
 end
 
 function UIHotkeyAssign:showKeyPane(pane)

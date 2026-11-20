@@ -20,7 +20,6 @@ SOFTWARE. --]]
 
 local UIInformation = cth_require("dialogs.information")
 local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
-local UIResizable = cth_require("dialogs.resizable")
 local FilteredFileTreeNode = UIFileBrowser.FilteredFileTreeNode
 
 --! Load Game Window
@@ -58,14 +57,6 @@ function UILoadGame:loadError(err)
   print(err)
   TheApp:loadMainMenu()
   TheApp.ui:addWindow(UIInformation(TheApp.ui, {err}))
-end
-
-function UILoadGame:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UIMainMenu = cth_require("dialogs.resizables.main_menu")
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
 end
 
 function UILoadGame:afterLoad()

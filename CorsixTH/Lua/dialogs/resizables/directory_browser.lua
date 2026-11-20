@@ -211,14 +211,6 @@ function UIDirectoryBrowser:exit()
   self.ui.app:exit()
 end
 
-function UIDirectoryBrowser:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UIFolder = cth_require("dialogs.resizables.folder_settings")
-    self.ui:addWindow(UIFolder(self.ui, "menu"))
-  end
-end
-
 function UIDirectoryBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   local s = TheApp.gfx:getUIScale()

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIChooseFont = cth_require("dialogs.resizables.file_browsers.choose_font")
+local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
 local UIInformation = cth_require("dialogs.information")
 local UIResizable = cth_require("dialogs.resizable")
 
@@ -201,9 +203,16 @@ function UIFolder:resetMusicDir()
   self.music_panel:setTooltip(tooltip_music)
 end
 
+--- Makes these folder settings again, for the dialogs they open to go back
+-- to. The new settings go back wherever these went.
+---@return fun(): UIResizable
+function UIFolder:backHere()
+  local ui, mode, back_to = self.ui, self.mode, self.back_to
+  return function() return UIFolder(ui, mode):setBackTo(back_to) end
+end
+
 function UIFolder:buttonBrowseForFont()
-  local UIChooseFont = cth_require("dialogs.resizables.file_browsers.choose_font")
-  local browser = UIChooseFont(self.ui, self.mode)
+  local browser = UIChooseFont(self.ui, self.mode):setBackTo(self:backHere())
   self.ui:addWindow(browser)
 end
 
@@ -218,8 +227,8 @@ function UIFolder:buttonBrowseForSavegames()
       self.saves_panel:setLabel(app.config.savegames, self.built_in_font)
     end
   end
-  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
+      :setBackTo(self:backHere())
   self.ui:addWindow(browser)
 end
 
@@ -230,8 +239,8 @@ function UIFolder:buttonBrowseForTHInstall()
     app:saveConfig()
     app:reset()
   end
-  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.new_th_location, "InstallDirTreeNode", callback)
+      :setBackTo(self:backHere())
   self.ui:addWindow(browser)
 end
 
@@ -246,8 +255,8 @@ function UIFolder:buttonBrowseForScreenshots()
       self.screenshots_panel:setLabel(app.config.screenshots, self.built_in_font)
     end
   end
-  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
+      :setBackTo(self:backHere())
   self.ui:addWindow(browser)
 end
 
@@ -267,16 +276,9 @@ function UIFolder:buttonBrowseForAudio_music()
     app.audio:reinitAudioSystem()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
-  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
+      :setBackTo(self:backHere())
   self.ui:addWindow(browser)
-end
-
-function UIFolder:close()
-  UIResizable.close(self)
-  local UIOptions = cth_require("dialogs.resizables.options")
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
 end
 
 return UIFolder

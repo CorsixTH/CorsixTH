@@ -74,14 +74,7 @@ end
 
 -- So that we can see the option has been changed reload the menu
 function UICustomise:reload()
-  local window = UICustomise(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
-function UICustomise:close()
-  UIResizable.close(self)
-  local UIOptions = cth_require("dialogs.resizables.options")
-  local window = UIOptions(self.ui, "menu")
+  local window = UICustomise(self.ui, "menu"):setBackTo(self.back_to)
   self.ui:addWindow(window)
 end
 

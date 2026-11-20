@@ -418,6 +418,24 @@ function UIResizable:buttonBack()
   self:close()
 end
 
+--- Set the dialog to open when this one closes (back, close, apply or
+-- cancel). The dialog that opens this one passes it in, so that no dialog has
+-- to know where it sits in the menu tree.
+---@param make_dialog (fun(): Window)? Makes the dialog to open, nil for none.
+---@return UIResizable self
+function UIResizable:setBackTo(make_dialog)
+  self.back_to = make_dialog
+  return self
+end
+
+--- Close the dialog, then open the dialog it goes back to, if it has one.
+function UIResizable:close()
+  Window.close(self)
+  if self.back_to then
+    self.ui:addWindow(self.back_to())
+  end
+end
+
 function UIResizable:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   if old < 65 then

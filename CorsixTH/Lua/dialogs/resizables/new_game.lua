@@ -175,10 +175,4 @@ function UINewGame:buttonCancel()
   self:close()
 end
 
-function UINewGame:close()
-  UIResizable.close(self)
-  local UIMainMenu = cth_require("dialogs.resizables.main_menu")
-  self.ui:addWindow(UIMainMenu(self.ui))
-end
-
 return UINewGame

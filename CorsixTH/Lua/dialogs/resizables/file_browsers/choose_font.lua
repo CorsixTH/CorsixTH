@@ -20,7 +20,6 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
-local UIResizable = cth_require("dialogs.resizable")
 local TreeControl = cth_require("dialogs.tree_ctrl")
 local lfsext = TH.lfsExt()
 local DummyRootNode = TreeControl.DummyRootNode
@@ -54,19 +53,7 @@ function UIChooseFont:choiceMade(name)
   app.config.unicode_font = name
   app:saveConfig()
   app.gfx:loadFontFile()
-  local UIOptions = cth_require("dialogs.resizables.options")
-  if class.is(self.parent, UIOptions) then
-    self.parent:checkForAvailableLanguages()
-  end
   self:close()
-end
-
-function UIChooseFont:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UIFolder = cth_require("dialogs.resizables.folder_settings")
-    self.ui:addWindow(UIFolder(self.ui, self.mode))
-  end
 end
 
 return UIChooseFont

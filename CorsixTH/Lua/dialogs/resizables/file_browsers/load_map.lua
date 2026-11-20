@@ -19,7 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
-local UIResizable = cth_require("dialogs.resizable")
 local FilteredFileTreeNode = UIFileBrowser.FilteredFileTreeNode
 
 --! Load Map Window
@@ -45,14 +44,6 @@ function UILoadMap:choiceMade(name)
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
   app:loadLevel(name, nil, nil, nil, nil, true, _S.errors.load_map_prefix, nil)
-end
-
-function UILoadMap:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UIMainMenu = cth_require("dialogs.resizables.main_menu")
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
 end
 
 return UILoadMap

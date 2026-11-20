@@ -418,12 +418,4 @@ function UIGraphicSettings:_processWindowResizeEvent()
   self.buttons.window_size:setLabel(window_w .. "x" .. window_h)
 end
 
---! Close window
-function UIGraphicSettings:close()
-  UIResizable.close(self)
-  local UIOptions = cth_require("dialogs.resizables.options")
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
 return UIGraphicSettings

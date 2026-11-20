@@ -130,12 +130,4 @@ function UIMenuList:buttonBack()
   self:close()
 end
 
-function UIMenuList:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    local UIMainMenu = cth_require("dialogs.resizables.main_menu")
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
-end
-
 return UIMenuList
