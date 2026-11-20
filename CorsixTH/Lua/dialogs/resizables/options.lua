@@ -18,7 +18,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIAccessibility = cth_require("dialogs.resizables.menu_list_dialogs.accessibility")
+local UICustomise = cth_require("dialogs.resizables.customise")
+local UIDropdown = cth_require("dialogs.resizables.dropdown")
+local UIFolder = cth_require("dialogs.resizables.folder_settings")
+local UIGraphicSettings = cth_require("dialogs.resizables.graphics_settings")
+local UIHotkeyAssign = cth_require("dialogs.resizables.hotkey_assign")
+local UIResizable = cth_require("dialogs.resizable")
+local UISoundSettings = cth_require("dialogs.resizables.sound_setting")
 
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
@@ -229,33 +236,41 @@ function UIOptions:buttonMouseCapture()
   self.buttons.capture_mouse:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
 end
 
+--- Makes these options again, for the dialogs they open to go back to. The
+-- new options go back wherever these went.
+---@return fun(): UIResizable
+function UIOptions:backHere()
+  local ui, mode, back_to = self.ui, self.mode, self.back_to
+  return function() return UIOptions(ui, mode):setBackTo(back_to) end
+end
+
 function UIOptions:buttonCustomise()
-  local window = UICustomise(self.ui, "menu")
+  local window = UICustomise(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonFolder()
-  local window = UIFolder(self.ui, "menu")
+  local window = UIFolder(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonHotkey()
-  local window = UIHotkeyAssign(self.ui, "menu")
+  local window = UIHotkeyAssign(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonSound()
-  local window = UISoundSettings(self.ui, "menu")
+  local window = UISoundSettings(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonGraphics()
-  local window = UIGraphicSettings(self.ui, "menu")
+  local window = UIGraphicSettings(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonAccessibility()
-  local window = UIAccessibility(self.ui, "menu")
+  local window = UIAccessibility(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
@@ -264,6 +279,7 @@ function UIOptions:buttonScrollSpeed()
     self.buttons.scroll_speed:setLabel(tostring(scrollspeed_number)):setToggleState(false)
   end
 
+  local UIScrollSpeed = cth_require("dialogs.resizables.scroll_speed")
   self.ui:addWindow(UIScrollSpeed(self.ui, callback))
 end
 
@@ -272,6 +288,7 @@ function UIOptions:buttonShiftScrollSpeed()
     self.buttons.shift_scroll_speed:setLabel(tostring(shift_scrollspeed_number)):setToggleState(false)
   end
 
+  local UIShiftScrollSpeed = cth_require("dialogs.resizables.shift_scroll_speed")
   self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
 end
 
@@ -280,12 +297,8 @@ function UIOptions:buttonZoomSpeed()
     self.buttons.zoom_speed:setLabel(tostring(zoomspeed_number)):setToggleState(false)
   end
 
+  local UIZoomSpeed = cth_require("dialogs.resizables.zoom_speed")
   self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
 end
 
-function UIOptions:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
-end
+return UIOptions

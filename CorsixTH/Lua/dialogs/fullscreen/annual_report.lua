@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIFullscreen = cth_require("dialogs.fullscreen")
+local Window = cth_require("window")
 
 --! Annual Report fullscreen window shown at the start of each year.
 class "UIAnnualReport" (UIFullscreen)
@@ -471,7 +472,6 @@ end
 --! Overridden close function. The game should be unpaused again when closing the dialog.
 function UIAnnualReport:close()
   local TheApp = _G["TheApp"] ---@type App
-  local Window = _G["Window"] ---@type Window
   if TheApp.world:getLocalPlayerHospital().game_won then
     TheApp.video:setBlueFilterActive(false)
   end
@@ -680,3 +680,5 @@ function UIAnnualReport:afterLoad(old, new)
 
   UIFullscreen.afterLoad(self, old, new)
 end
+
+return UIAnnualReport

@@ -18,10 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local Window = cth_require("window")
 local ipairs
     = ipairs
-
-local Window = _G['Window'] ---@type Window
 
 class "UIJukebox" (Window)
 
@@ -192,3 +191,5 @@ function UIJukebox:afterLoad(old, new)
     self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, { apply_ui_scale = true })
   end
 end
+
+return UIJukebox

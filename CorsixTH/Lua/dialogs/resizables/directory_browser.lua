@@ -20,11 +20,13 @@ SOFTWARE. --]]
 
 local lfs = require("lfs")
 local TH = require("TH")
+local FileSystem = cth_require("filesystem")
+local TreeControl = cth_require("dialogs.tree_ctrl")
+local UIResizable = cth_require("dialogs.resizable")
+local DummyRootNode = TreeControl.DummyRootNode
+local FileTreeNode = TreeControl.FileTreeNode
 local iso_fs = TH.iso_fs
 local lfsext = TH.lfsExt()
-local FileTreeNode = _G['FileTreeNode'] ---@type FileTreeNode
-local TreeControl = _G['TreeControl'] ---@type TreeControl
-local UIResizable = _G['UIResizable'] ---@type UIResizable
 
 --! A tree node representing a directory in the physical file-system.
 class "DirTreeNode" (FileTreeNode)
@@ -209,13 +211,6 @@ function UIDirectoryBrowser:exit()
   self.ui.app:exit()
 end
 
-function UIDirectoryBrowser:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIFolder(self.ui, "menu"))
-  end
-end
-
 function UIDirectoryBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   local s = TheApp.gfx:getUIScale()
@@ -227,3 +222,5 @@ function UIDirectoryBrowser:draw(canvas, x, y)
     self.font:drawWrapped(canvas, self.instruction, x + 5 * s, y + 15 * s, self.width * s - 10 * s)
   end
 end
+
+return UIDirectoryBrowser

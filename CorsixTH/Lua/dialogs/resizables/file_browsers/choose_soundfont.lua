@@ -19,11 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
+local TreeControl = cth_require("dialogs.tree_ctrl")
 local lfsext = TH.lfsExt()
+local DummyRootNode = TreeControl.DummyRootNode
+local FilteredFileTreeNode = UIFileBrowser.FilteredFileTreeNode
 
 local file_extensions = {".sf2", ".sf3"}
-
-local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 
 --! Window where the user can choose a soundfont file.
 class "UIChooseSoundfont" (UIFileBrowser)
@@ -58,10 +60,4 @@ function UIChooseSoundfont:choiceMade(name)
   self:close()
 end
 
---! Close the dialog and return to the previous dialog
-function UIChooseSoundfont:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UISoundSettings(self.ui, "menu"))
-  end
-end
+return UIChooseSoundfont

@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Base class for 640x480px dialogs (fullscreen in original game resolution).
 class "UIFullscreen" (Window)
@@ -144,3 +144,5 @@ function UIFullscreen:afterLoad(old, new)
     self.draggable = not not self.border_sprites
   end
 end
+
+return UIFullscreen

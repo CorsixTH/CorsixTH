@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Interface for items within a UI tree control
 class "TreeNode"
@@ -488,6 +488,8 @@ end
 class "TreeControl" (Window) ---@type TreeControl
 
 ---@class TreeControl: Window
+---@field DummyRootNode DummyRootNode
+---@field FileTreeNode FileTreeNode
 ---@operator call: TreeControl
 local TreeControl = _G["TreeControl"] ---@type TreeControl
 
@@ -724,3 +726,8 @@ function TreeControl:draw(canvas, x, y)
     node = node:getNextVisible()
   end
 end
+
+TreeControl.DummyRootNode = DummyRootNode
+TreeControl.FileTreeNode = FileTreeNode
+
+return TreeControl

@@ -378,3 +378,5 @@ function Doctor:tostring()
     self.profile.is_researcher or 0)
   return result
 end
+
+return Doctor

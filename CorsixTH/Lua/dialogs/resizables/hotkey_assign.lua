@@ -18,8 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
-local Window = _G['Window'] ---@type Window
+local UIResizable = cth_require("dialogs.resizable")
+local Window = cth_require("window")
 
 --! Custom key bindings
 class "UIHotkeyAssign" (UIResizable)
@@ -27,6 +27,13 @@ class "UIHotkeyAssign" (UIResizable)
 ---@class UIHotkeyAssign: UIResizable
 ---@operator call: UIHotkeyAssign
 local UIHotkeyAssign = _G["UIHotkeyAssign"] ---@type UIHotkeyAssign
+
+--! Child window for setting key bindings
+class "UIHotkeyAssignKeyPane" (Window)
+
+---@class UIHotkeyAssignKeyPane: Window
+---@operator call: UIHotkeyAssignKeyPane
+local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"] ---@type UIHotkeyAssignKeyPane
 
 local col_bg = {
   red = 154,
@@ -526,8 +533,6 @@ function UIHotkeyAssign:buttonAccept()
   hotkeys_backedUp = false
 
   self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
 end
 
 function UIHotkeyAssign:buttonDefaults()
@@ -546,15 +551,6 @@ function UIHotkeyAssign:buttonCancel()
   hotkeys_backedUp = false
 
   self:close()
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
-
-function UIHotkeyAssign:close()
-  UIResizable.close(self)
-  if self.mode == "menu"  then
-    self.ui:addWindow(UIOptions(self.ui, "menu"))
-  end
 end
 
 function UIHotkeyAssign:showKeyPane(pane)
@@ -567,13 +563,6 @@ function UIHotkeyAssign:showKeyPane(pane)
     v.button:setToggleState(k == pane)
   end
 end
-
---! Child window for setting key bindings
-class "UIHotkeyAssignKeyPane" (Window)
-
----@class UIHotkeyAssignKeyPane: Window
----@operator call: UIHotkeyAssignKeyPane
-local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"] ---@type UIHotkeyAssignKeyPane
 
 function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_hotkeys)
   self:Window()
@@ -637,3 +626,5 @@ function UIHotkeyAssignKeyPane:resetAllButtonText(app_hotkeys)
     self.hotkey_buttons[k]:setText(string.upper(array_join(app_hotkeys[k], "+")))
   end
 end
+
+return UIHotkeyAssign

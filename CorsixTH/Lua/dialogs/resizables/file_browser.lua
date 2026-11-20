@@ -19,10 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local lfs = require("lfs")
-
-local FileTreeNode = _G['FileTreeNode'] ---@type FileTreeNode
-local TreeControl = _G['TreeControl'] ---@type TreeControl
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local TreeControl = cth_require("dialogs.tree_ctrl")
+local UIResizable = cth_require("dialogs.resizable")
+local FileTreeNode = TreeControl.FileTreeNode
 
 --! A tree node representing a file (or directory) in the physical file-system
 --  that meets a given file extension criterion.
@@ -152,6 +151,7 @@ end
 class "UIFileBrowser" (UIResizable)
 
 ---@class UIFileBrowser: UIResizable
+---@field FilteredFileTreeNode FilteredFileTreeNode
 ---@operator call: UIFileBrowser
 local UIFileBrowser = _G["UIFileBrowser"] ---@type UIFileBrowser
 
@@ -245,3 +245,7 @@ end
 function UIFileBrowser:buttonBack()
   self:close()
 end
+
+UIFileBrowser.FilteredFileTreeNode = FilteredFileTreeNode
+
+return UIFileBrowser

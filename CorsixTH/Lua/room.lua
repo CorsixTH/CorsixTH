@@ -1237,3 +1237,5 @@ end
 -- And they does not participate in the current game logic.
 local --[[persistable:room_dealt_with_patient_callback]] function _(staff_humanoid) end
 ----- END Save game compatibility -----
+
+return Room

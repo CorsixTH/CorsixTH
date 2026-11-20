@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 --! Bank manager (for loans / insurance companies) and bank statement fullscreen windows.
 class "UIBankManager" (UIFullscreen)
@@ -336,6 +337,7 @@ function UIBankManager:close()
   local ui = self.ui
   ui:setCursor(ui.default_cursor) -- Return to default cursor
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -465,6 +467,9 @@ function UIBankManager:decreaseLoan()
 end
 
 function UIBankManager:openTownMap()
+  local UITownMap = cth_require("dialogs.fullscreen.town_map")
   local dlg = UITownMap(self.ui)
   self.ui:addWindow(dlg)
 end
+
+return UIBankManager
