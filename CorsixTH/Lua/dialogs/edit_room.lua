@@ -1666,11 +1666,17 @@ end
 
 function UIEditRoom:_setCellFlagsOnBlueprint(flags)
   local rect = self.blueprint_rect
-  local map = self.ui.app.map.th
+  local map = self.ui.app.map
+  local native = map.th
   for y = rect.y, rect.y + rect.h - 1 do
     for x = rect.x, rect.x + rect.w - 1 do
-      map:setCellFlags(x, y, flags)
+      native:setCellFlags(x, y, flags)
     end
+  end
+  -- Avoidance changes must update the cached debug overlay while paused.
+  -- Temporary passability checks should not scan the whole map.
+  if flags.avoidTile ~= nil and map.debug_flags then
+    map:updateDebugOverlayFlags()
   end
 end
 
