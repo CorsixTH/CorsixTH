@@ -814,6 +814,13 @@ function Graphics:loadFont(sprite_table, font_options, y_sep, ttf_color, force_b
   return font
 end
 
+--- Resets the language font cache table, useful when the unicode font
+--- is changed for example.
+function Graphics:resetLanguageFontCache()
+  self.cache.language_fonts = {}
+  self.app:initLanguage()
+end
+
 function Graphics:arabicNumerals()
   local strings = self.app.strings
   local language = self.app.config.language
