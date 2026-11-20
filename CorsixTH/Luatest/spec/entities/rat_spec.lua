@@ -56,12 +56,14 @@ describe("rat.lua: ", function()
     local map = {th = {getCellFlags = function() return {roomId = 0} end},
         width = 100, height = 100}
     setmetatable(map, {__index = Map})
+    local hospital = {
+      ratholes = opts.no_holes and {} or {hole_b},
+      isInHospital = function() return true end,
+      incrementRatsKilled = function() end,
+    }
     rat.world = {
       map = map,
-      getLocalPlayerHospital = function()
-        return {ratholes = opts.no_holes and {} or {hole_b},
-                isInHospital = function() return true end}
-      end,
+      getLocalPlayerHospital = function() return hospital end,
       getPath = opts.get_path or function() return {10, 11}, {10, 10} end,
       destroyEntity = function() end,
     }
@@ -155,7 +157,7 @@ describe("rat.lua: ", function()
     local rat = createRat()
     rat.tile_x, rat.tile_y = 7, 8
     rat.world.getLocalPlayerHospital = function()
-      return {ratholes = {}, isInHospital = function() return false end}
+      return {ratholes = {}, isInHospital = function() return false end, incrementRatsKilled = function() end}
     end
     stub(rat.world, "newObject")
     stub(rat.world, "destroyEntity")
@@ -172,7 +174,7 @@ describe("rat.lua: ", function()
     rat.world.getLocalPlayerHospital = function()
       return {ratholes = {}, isInHospital = function(_, x, y)
         return x == 10 and y == 10
-      end}
+      end, incrementRatsKilled = function() end}
     end
     stub(rat.world, "newObject")
     stub(rat.world, "destroyEntity")
