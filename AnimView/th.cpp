@@ -429,19 +429,39 @@ Bitmap::Bitmap() : m_iWidth(0), m_iHeight(0), m_pData(nullptr) {}
 Bitmap::~Bitmap() { delete[] m_pData; }
 
 void Bitmap::create(int iWidth, int iHeight) {
+  if (iWidth < 0 || iHeight < 0) {
+    throw std::length_error("bitmap dimensions must be non-negative");
+  }
+  const size_t width = static_cast<size_t>(iWidth);
+  const size_t height = static_cast<size_t>(iHeight);
+  if (height != 0 && width > std::numeric_limits<size_t>::max() / height) {
+    throw std::length_error("bitmap dimensions overflow");
+  }
+  const size_t pixelCount = width * height;
+
   delete[] m_pData;
-  m_pData = new uint8_t[iWidth * iHeight];
+  m_pData = new uint8_t[pixelCount];
   m_iWidth = iWidth;
   m_iHeight = iHeight;
-  memset(m_pData, 0xFF, iWidth * iHeight);
+  memset(m_pData, 0xFF, pixelCount);
 }
 
 void Bitmap::create(int iWidth, int iHeight, const uint8_t* pData) {
+  if (iWidth < 0 || iHeight < 0) {
+    throw std::length_error("bitmap dimensions must be non-negative");
+  }
+  const size_t width = static_cast<size_t>(iWidth);
+  const size_t height = static_cast<size_t>(iHeight);
+  if (height != 0 && width > std::numeric_limits<size_t>::max() / height) {
+    throw std::length_error("bitmap dimensions overflow");
+  }
+  const size_t pixelCount = width * height;
+
   delete[] m_pData;
-  m_pData = new uint8_t[iWidth * iHeight];
+  m_pData = new uint8_t[pixelCount];
   m_iWidth = iWidth;
   m_iHeight = iHeight;
-  memcpy(m_pData, pData, iWidth * iHeight);
+  memcpy(m_pData, pData, pixelCount);
 }
 
 void Bitmap::blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags) const {
