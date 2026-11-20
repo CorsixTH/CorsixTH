@@ -724,72 +724,173 @@ function Hospital:spawnRat(hole)
   return rat
 end
 
+--- Check if a rathole is in our current viewport
+---@param map Map
+---@param hole Rathole # Rathole to look for
+---@param left number # Viewport left by tiles
+---@param top number # Viewport top by tiles
+---@param right number # Viewport right by tiles
+---@param bottom number # sViewport bottom by tiles
 local function isRatholeInView(map, hole, left, top, right, bottom)
   if hole.wall ~= "north" and hole.wall ~= "west" then return false end
   local x, y = map:WorldToScreen(hole.x, hole.y)
   return x >= left and x <= right and y >= top and y <= bottom
 end
 
---! Find visible corridor wall tiles inside the hospital that are suitable for
--- ratholes, nearest to the centre of the current view first.
---!param count (integer) Maximum number of tiles to return.
---!param left (number) Left edge of the current view in map screen coordinates.
---!param top (number) Top edge of the current view in map screen coordinates.
---!param right (number) Right edge of the current view in map screen coordinates.
---!param bottom (number) Bottom edge of the current view in map screen coordinates.
---!return (list of {x, y, wall, parcel}) Up to `count` suitable tiles.
-function Hospital:findRatholeTiles(count, left, top, right, bottom)
+--- Retrieve all wall tiles from a given starting point using Manhattan distance
+--- or all wall tiles if no distance is specified
+---@param visible_wall boolean # If true, get visible walls faces only
+---@param start_x number # Starting x co-ordinate
+---@param start_y number # Starting y co-ordinate
+---@param look_distance? number # How many tiles to look from starting point
+---@return table wall_tiles # Found wall tiles from search
+function Hospital:getWallTiles(visible_wall, start_x, start_y, look_distance)
+  local function findPreferredWall(walls)
+    local west_wall
+
+    for _, wall in ipairs(walls) do
+      if wall.wall == "north" then
+        return wall
+      elseif wall.wall == "west" and not west_wall then
+        west_wall = wall
+      end
+    end
+
+    return west_wall
+  end
   local map = self.world.map
   local th = map.th
-  local candidates = {}
-  local centre_x, centre_y = (left + right) / 2, (top + bottom) / 2
-  for x = 1, map.width do
-    for y = 1, map.height do
-      local flags = th:getCellFlags(x, y)
-      if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
-        local pick
-        for _, wall in ipairs(self:getWallsAround(x, y)) do
-          if wall.wall == "north" then
-            pick = wall
-            break
-          elseif wall.wall == "west" and not pick then
-            pick = wall
+  local wall_tiles = {}
+
+  local min_x = 1
+  local max_x = map.width
+  local min_y = 1
+  local max_y = map.height
+
+  if look_distance then
+    min_x = math.max(1, start_x - look_distance)
+    max_x = math.min(map.width, start_x + look_distance)
+    min_y = math.max(1, start_y - look_distance)
+    max_y = math.min(map.height, start_y + look_distance)
+  end
+
+  for x = min_x, max_x do
+    for y = min_y, max_y do
+      local distance
+
+      if look_distance then
+        distance = math.abs(x - start_x) +
+            math.abs(y - start_y)
+      end
+
+      if not look_distance or distance <= look_distance then
+        local flags = th:getCellFlags(x, y)
+
+        if self:isInHospital(x, y) and
+              flags.roomId == 0 and flags.buildable then
+            local walls = self:getWallsAround(x, y)
+          local wall
+          if #walls > 0 then
+            wall = visible_wall and findPreferredWall(walls) or
+                walls[math.random(1, #walls)]
           end
-        end
-        local hole = pick and {x = x, y = y, wall = pick.wall,
-            parcel = pick.parcel}
-        if hole and isRatholeInView(map, hole, left, top, right, bottom) then
-          local exists = false
-          for _, other in ipairs(self.ratholes) do
-            if other.x == x and other.y == y and other.wall == hole.wall then
-              exists = true
-              break
-            end
-          end
-          if not exists then
-            local screen_x, screen_y = map:WorldToScreen(x, y)
-            hole.distance = (screen_x - centre_x) ^ 2 +
-                (screen_y - centre_y) ^ 2
-            candidates[#candidates + 1] = hole
+
+          if wall then
+            wall_tiles[#wall_tiles + 1] = {
+              x = x,
+              y = y,
+              wall = wall.wall,
+              parcel = wall.parcel,
+              distance = distance,
+            }
           end
         end
       end
     end
   end
-  table.sort(candidates, function(a, b) return a.distance < b.distance end)
+
+  return wall_tiles
+end
+
+--- Retrieve all wall tiles not containing a rathole from a given starting
+--- point using Manhattan distance or all wall tiles if no distance is specified
+---@param visible_only boolean # If true, get visible walls faces only
+---@param start_x number # Starting x co-ordinate
+---@param start_y number # Starting y co-ordinate
+---@param look_distance? number # How many tiles to look from starting point
+---@return table available_tiles # Found wall tiles from search
+function Hospital:_getWallTilesWithoutRathole(visible_only, start_x, start_y, look_distance)
+  local function hasRathole(ratholes, hole)
+    for _, rathole in ipairs(ratholes) do
+      if rathole.x == hole.x and
+          rathole.y == hole.y and
+          rathole.wall == hole.wall then
+        return true
+      end
+    end
+
+    return false
+  end
+
+  local wall_tiles =
+      self:getWallTiles(visible_only, start_x, start_y, look_distance)
+  local available_tiles = {}
+
+  for _, wall_tile in ipairs(wall_tiles) do
+    if not hasRathole(self.ratholes, wall_tile) then
+      available_tiles[#available_tiles + 1] = wall_tile
+    end
+  end
+
+  return available_tiles
+end
+
+--- Find visible corridor wall tiles inside the hospital that are suitable for
+--- ratholes, nearest to the centre of the current view first.
+---@param count integer # Maximum number of tiles to return.
+---@param left number # Left edge of the current view in map screen coordinates.
+---@param top number # Top edge of the current view in map screen coordinates.
+---@param right number # Right edge of the current view in map screen coordinates.
+---@param bottom number # Bottom edge of the current view in map screen coordinates.
+---@return table result # (list of {x, y, wall, parcel}) Up to 'count' suitable tiles.
+function Hospital:_findTilesForRatholesNearestViewport(count, left, top, right, bottom)
+  local map = self.world.map
+  local candidates = {}
+  local centre_x = (left + right) / 2
+  local centre_y = (top + bottom) / 2
+
+  for _, hole in ipairs(self:_getWallTilesWithoutRathole(true)) do
+    if isRatholeInView(
+        map, hole, left, top, right, bottom) then
+      local screen_x, screen_y =
+          map:WorldToScreen(hole.x, hole.y)
+
+      hole.distance = (screen_x - centre_x) ^ 2 +
+          (screen_y - centre_y) ^ 2
+
+      candidates[#candidates + 1] = hole
+    end
+  end
+
+  table.sort(candidates, function(a, b)
+    return a.distance < b.distance
+  end)
+
   local result = {}
+
   for i = 1, math.min(count, #candidates) do
     candidates[i].distance = nil
     result[i] = candidates[i]
   end
+
   return result
 end
 
---! Debug helper: ensure two visible ratholes exist, then spawn a rat from one.
---!param left (number) Left edge of the current view in map screen coordinates.
---!param top (number) Top edge of the current view in map screen coordinates.
---!param right (number) Right edge of the current view in map screen coordinates.
---!param bottom (number) Bottom edge of the current view in map screen coordinates.
+--- Debug helper: ensure two visible ratholes exist, then spawn a rat from one.
+---@param left number # Left edge of the current view in map screen coordinates.
+---@param top number # Top edge of the current view in map screen coordinates.
+---@param right number # Right edge of the current view in map screen coordinates.
+---@param bottom number # Bottom edge of the current view in map screen coordinates.
 function Hospital:makeDebugRat(left, top, right, bottom)
   local visible_holes = {}
   for _, hole in ipairs(self.ratholes) do
@@ -800,7 +901,7 @@ function Hospital:makeDebugRat(left, top, right, bottom)
 
   local emerge_hole
   local needed = math.max(0, 2 - #visible_holes)
-  for _, tile in ipairs(self:findRatholeTiles(needed, left, top, right, bottom)) do
+  for _, tile in ipairs(self:_findTilesForRatholesNearestViewport(needed, left, top, right, bottom)) do
     self:addRathole(tile.x, tile.y, tile.wall, tile.parcel)
     local hole = self.ratholes[#self.ratholes]
     visible_holes[#visible_holes + 1] = hole
@@ -812,57 +913,6 @@ function Hospital:makeDebugRat(left, top, right, bottom)
   emerge_hole = emerge_hole or visible_holes[math.random(1, #visible_holes)]
   self:spawnRat(emerge_hole)
 end
-
---! Daily update of the ratholes.
---!param self (Hospital) hospital being updated.
-local function dailyUpdateRatholes(self, minimum_holes)
-  local map = self.world.map
-  local th = map.th
-
-  local wanted_holes = math.max(minimum_holes or 0,
-      math.round(th:getLitterFraction(self:getPlayerIndex()) * 200))
-  if #self.ratholes < wanted_holes then -- Not enough holes, find a new spot
-    -- Try to find a wall in a corridor, and add it if possible.
-    -- Each iteration does a few probes at a random position, most tries will
-    -- fail on not being on a free (non-built) tile in a corridor with a wall
-    -- in the right hospital.
-    -- Doing more iterations speeds up finding a suitable location, less
-    -- iterations is reduces needed processor time.
-    -- "6 + 2 * difference" is an arbitrary value that seems to work nicely, 12
-    -- is an arbitrary upper limit on the number of tries.
-    for _ = 1, math.min(12, 6 + 2 * (wanted_holes - #self.ratholes)) do
-      local x = math.random(1, map.width)
-      local y = math.random(1, map.height)
-      local flags = th:getCellFlags(x, y)
-      if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
-        local walls = self:getWallsAround(x, y)
-        if #walls > 0 then
-          -- Found a wall, check it for not being used.
-          local wall = walls[math.random(1, #walls)]
-          local found = false
-          for _, hole in ipairs(self.ratholes) do
-            if hole.x == x and hole.y == y and hole.wall == wall.wall then
-              found = true
-              break
-            end
-          end
-
-          if not found then
-            self:addRathole(x, y, wall.wall, wall.parcel)
-            break
-          end
-        end
-      end
-    end
-  end
-end
-
--- Rats appear even in a spotless hospital, and more often as it gets littered.
--- The daily spawn chance and the cap on simultaneous rats both scale with the
--- size of the hospital.
-local base_rat_spawn_chance = 0.05 -- daily chance in a clean hospital
-local litter_rat_spawn_chance = 0.5 -- extra chance at full litter
-local tiles_per_rat = 200 -- hospital tiles allowed per simultaneous rat
 
 --! Total number of tiles across the hospital's owned plots, used to scale rat
 -- activity with hospital size.
@@ -876,7 +926,9 @@ function Hospital:getOwnedTileCount()
   return tiles
 end
 
-local function countActiveRats(self)
+--- Retrieve how many rats are currently in the hospital
+---@return number count # Number found
+function Hospital:_countActiveRats()
   local count = 0
   for _, entity in ipairs(self.world.entities) do
     if class.is(entity, Rat) then count = count + 1 end
@@ -884,7 +936,8 @@ local function countActiveRats(self)
   return count
 end
 
-local function hasRatholeRoute(self)
+--! Check a hospital has at least two ratholes to complete a route
+function Hospital:_hasRatholeRoute()
   local first = self.ratholes[1]
   if not first then return false end
   for i = 2, #self.ratholes do
@@ -894,22 +947,74 @@ local function hasRatholeRoute(self)
   return false
 end
 
-local function dailyUpdateRats(self)
+-- Rats appear even in a spotless hospital, and more often as it gets littered.
+-- The daily spawn chance and the cap on simultaneous rats both scale with the
+-- size of the hospital.
+local base_rat_spawn_chance = 0.05 -- daily chance in a clean hospital
+local litter_rat_spawn_chance = 0.5 -- extra chance at full litter
+local tiles_per_rat = 200 -- hospital tiles allowed per simultaneous rat
+
+--! Daily update of spawned rats (if any)
+function Hospital:_dailyUpdateRats()
   local max_rats = math.max(1, math.floor(self:getOwnedTileCount() / tiles_per_rat))
-  if countActiveRats(self) >= max_rats then return end
+  if self:_countActiveRats() >= max_rats then return end
 
   local litter = self.world.map.th:getLitterFraction(self:getPlayerIndex())
   if math.random() < base_rat_spawn_chance + litter * litter_rat_spawn_chance then
     -- Clean hospitals normally have no ratholes. Add only enough for a rat to
     -- run between real holes when a spawn attempt succeeds.
     for _ = 1, 2 do
-      if hasRatholeRoute(self) then break end
-      dailyUpdateRatholes(self, #self.ratholes + 1)
+      if self:_hasRatholeRoute() then break end
+      self:_dailyUpdateRatholes(#self.ratholes + 1)
     end
-    if hasRatholeRoute(self) then
+    if self:_hasRatholeRoute() then
       self:spawnRat()
     end
   end
+end
+
+--- Daily update of the ratholes.
+--- Each day, the maximum of one rathole will be spawned.
+---@param minimum_holes number # Number of holes requested to exist
+function Hospital:_dailyUpdateRatholes(minimum_holes)
+  local map = self.world.map
+  local th = map.th
+
+  local wanted_holes = math.max(minimum_holes or 0,
+      math.round(th:getLitterFraction(self:getPlayerIndex()) * 200))
+  local difference = wanted_holes - #self.ratholes
+  if difference <= 0 then return false end
+  -- Not enough holes.
+  --[[
+  Rathole chance calculations:
+  The more ratholes wanted vs actual, the higher chance one is made.
+
+  Using 3 ^ difference, with baseline at 3% once a hole is wanted:
+  1 - 5 extra holes: 3%
+  6     ''    ''   : 4.45%
+  7     ''    ''   : 13.35%
+  8     ''    ''   : 40.05%
+  9     ''    ''   : 100% (capped)
+  ]]--
+  local map_size = map.width * map.height
+  local chance_baseline = 500
+  local rathole_chance = 3 ^ difference
+  rathole_chance = math.max(chance_baseline, rathole_chance)
+  local roll = math.random(1, map_size)
+
+  if roll > rathole_chance then return false end
+  -- Try to find a new spot of a wall in a corridor, near a randomly placed litter.
+  local litters = self.world:getAllLitter(self)
+  if #litters == 0 then return false end
+  local random_litter = litters[math.random(1, #litters)]
+  local possible_holes = self:_getWallTilesWithoutRathole(false, random_litter.tile_x, random_litter.tile_y, 5)
+  -- There is a chance we did not hit any walls, so no hole will be made
+  if #possible_holes == 0 then return false end
+  local chosen_hole = possible_holes[math.random(1, #possible_holes)]
+  self:addRathole(
+      chosen_hole.x, chosen_hole.y,
+      chosen_hole.wall, chosen_hole.parcel)
+  return true
 end
 
 -- Called at the end of each day.
@@ -957,8 +1062,8 @@ function Hospital:onEndDay()
   self.acc_heating = self.acc_heating + heating_costs
 
   if self:isPlayerHospital() then
-    dailyUpdateRatholes(self)
-    dailyUpdateRats(self)
+    self:_dailyUpdateRatholes()
+    self:_dailyUpdateRats()
   end
 end
 
@@ -2045,23 +2150,23 @@ function Hospital:getWallsAround(x, y)
   local flags = th:getCellFlags(x, y)
 
   _, nw, ww = th:getCell(x, y) -- floor, north wall, west wall
-  if ww ~= 0 then
+  if (ww % 0x100) > 0 then
     walls[#walls + 1] = {wall = "west", parcel = flags.parcelId}
   end
-  if nw ~= 0 then
-    walls[#walls + 1] = {wall = "north",  parcel = flags.parcelId}
+  if (nw % 0x100) > 0 then
+    walls[#walls + 1] = {wall = "north", parcel = flags.parcelId}
   end
 
   if x ~= map.width then
     _, _, ww = th:getCell(x + 1, y)
-    if ww ~= 0 then
+    if (ww % 0x100) > 0 then
       walls[#walls + 1] = {wall = "east", parcel = flags.parcelId}
     end
   end
 
   if y ~= map.height then
     _, nw, _ = th:getCell(x, y + 1)
-    if nw ~= 0 then
+    if (nw % 0x100) > 0 then
       walls[#walls + 1] = {wall = "south", parcel = flags.parcelId}
     end
   end
