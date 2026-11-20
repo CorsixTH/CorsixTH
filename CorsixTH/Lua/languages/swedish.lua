@@ -387,7 +387,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "Stäng av eller sätt på allt ljud i spelet",
-  audio_toggle = "Slå av eller på",
+  audio = "Slå av eller på",
 }
 
 customise_window = {
@@ -415,11 +415,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "Mappinställningar",
-  data_label = "TH Data",
-  font_label = "Typsnitt",
-  music_label = "MP3",
-  savegames_label = "Sparningar",
-  screenshots_label = "Skärmbilder",
+  theme_hospital_install = "TH Data",
+  unicode_font = "Typsnitt",
+  audio_music = "MP3",
+  savegames = "Sparningar",
+  screenshots = "Skärmbilder",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "Här kan du välja en ny sökväg där Theme Hospital ligger. Så fort du väljer en ny mapp kommer spelet att startas om!",
   savegames_location = "Välj var sparade spel ska läggas.",
@@ -430,16 +430,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Bläddra efter mappsökväg",
-  data_location = "Mapp där originalspelet Theme Hospital finns. Krävs för att spela CorsixTH",
-  font_location = "Sökväg till en typsnittsfil som kan visa Unicode-tecken som krävs för ditt språk. Om detta inte är specificerat kommer du inte att kunna välja sådana språk, till exempel ryska och kinesiska",
-  savegames_location = "Som standard läggs sparade spel i en mapp som ligger bredvid konfigurationsfilen. Om det inte fungerar kan du välja en egen här",
-  screenshots_location = "Skärmbilder sparas som standard i en mapp bredvid konfigurationsfilen. Här kan du välja en annan mapp istället",
-  music_location = "Välj en sökväg där du har mp3-filer. Mappen måste redan finnas",
-  browse_data = "Bläddra efter en ny sökväg till Theme Hospital  ( nuvarande sökväg: %1% )",
-  browse_font = "Bläddra efter en annan typsnittsfil  ( nuvarande sökväg:: %1% )",
-  browse_saves = "Bläddra efter en annan mapp att lägga sparade spel i  ( nuvarande sökväg:: %1% ) ",
-  browse_screenshots = "Bläddra efter en annan mapp för skärmbilder  ( nuvarande sökväg:: %1% ) ",
-  browse_music = "Bläddra efter en annan mapp med musik  ( nuvarande sökväg:: %1% ) ",
+  theme_hospital_install = "Mapp där originalspelet Theme Hospital finns. Krävs för att spela CorsixTH",
+  unicode_font = "Sökväg till en typsnittsfil som kan visa Unicode-tecken som krävs för ditt språk. Om detta inte är specificerat kommer du inte att kunna välja sådana språk, till exempel ryska och kinesiska",
+  savegames = "Som standard läggs sparade spel i en mapp som ligger bredvid konfigurationsfilen. Om det inte fungerar kan du välja en egen här",
+  screenshots = "Skärmbilder sparas som standard i en mapp bredvid konfigurationsfilen. Här kan du välja en annan mapp istället",
+  audio_music = "Välj en sökväg där du har mp3-filer. Mappen måste redan finnas",
+  browse_font = "Bläddra efter en annan typsnittsfil ",
+  browse_saves = "Bläddra efter en annan mapp att lägga sparade spel i  ",
+  browse_screenshots = "Bläddra efter en annan mapp för skärmbilder  ",
+  browse_music = "Bläddra efter en annan mapp med musik  ",
   no_font_specified = "Ingen typsnittsfil vald än!",
   not_specified = "Ingen sökväg vald än!",
   default = "Standardsökväg",

@@ -445,7 +445,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "Attiva o disattiva tutti i suoni del gioco",
-  audio_toggle = "Attiva o Disattiva Audio",
+  audio = "Attiva o Disattiva Audio",
   jukebox = "Apri il Jukebox per controllare la musica",
 }
 
@@ -478,11 +478,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "Posizione cartelle",
-  data_label = "Posizione TH",
-  font_label = "Font",
-  music_label = "Musica",
-  savegames_label = "Salvataggi",
-  screenshots_label = "Screenshot",
+  theme_hospital_install = "Posizione TH",
+  unicode_font = "Font",
+  audio_music = "Musica",
+  savegames = "Salvataggi",
+  screenshots = "Screenshot",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "Qui puoi specificare una nuova directory di installazione di Theme Hospital o un file ISO. Non appena scegli la nuova directory, il gioco verrà riavviato. Tieni presente che le estensioni dei file non sono attualmente visualizzate.",
   savegames_location = "Seleziona la cartella che vuoi usare per i salvataggi",
@@ -493,16 +493,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Sfoglia le cartelle",
-  data_location = "La cartella dell'installazione originale di Theme Hospital, che è richiesto per eseguire CorsixTH",
-  font_location = "Posizione di un font che è in grado di mostrare i caratteri Unicode richiesti dalla tua lingua. Se non specificata, non potrai scegliere lingue che hanno bisogno di più caratteri rispetto a quelli di cui dispone il gioco originale. Esempio: Russo e Cinese",
-  savegames_location = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione e verrà utilizzata per archiviare i giochi salvati. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
-  screenshots_location = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
-  music_location = "Seleziona la posizione per i tuoi file MP3. Devi aver già creato la cartella e poi selezionare la cartella che hai creato.",
-  browse_data = "Sfoglia per selezionare un percorso diverso per l'installazione di Theme Hospital ( Percorso attuale: %1% )",
-  browse_font = "Sfoglia per selezionare un altro file font ( posizione attuale: %1% )",
-  browse_saves = "Sfoglia per selezionare un percorso diverso per la tua cartella dei salvataggi ( Percorso attuale: %1% ) ",
-  browse_screenshots = "Sfoglia per selezionare percorso diverso per la tua cartella degli screenshot ( Percorso attuale: %1% ) ",
-  browse_music = "Sfoglia per selezionare un percorso diverso per la tua cartella della musica ( Percorso attuale: %1% ) ",
+  theme_hospital_install = "La cartella dell'installazione originale di Theme Hospital, che è richiesto per eseguire CorsixTH",
+  unicode_font = "Posizione di un font che è in grado di mostrare i caratteri Unicode richiesti dalla tua lingua. Se non specificata, non potrai scegliere lingue che hanno bisogno di più caratteri rispetto a quelli di cui dispone il gioco originale. Esempio: Russo e Cinese",
+  savegames = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione e verrà utilizzata per archiviare i giochi salvati. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
+  screenshots = "Per impostazione predefinita, la cartella dei salvataggi si trova accanto al file di configurazione. In alternativa, puoi usarne un'altra selezionando quella che desideri utilizzare.",
+  audio_music = "Seleziona la posizione per i tuoi file MP3. Devi aver già creato la cartella e poi selezionare la cartella che hai creato.",
+  browse_font = "Sfoglia per selezionare un altro file font",
+  browse_saves = "Sfoglia per selezionare un percorso diverso per la tua cartella dei salvataggi",
+  browse_screenshots = "Sfoglia per selezionare percorso diverso per la tua cartella degli screenshot",
+  browse_music = "Sfoglia per selezionare un percorso diverso per la tua cartella della musica",
   no_font_specified = "Non è stata ancora specificata nessuna posizione per il font!",
   not_specified = "Non è stato ancora specificato nessun percorso per la cartella!",
   default = "Posizione di default",
