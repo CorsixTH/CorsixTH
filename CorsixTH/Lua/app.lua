@@ -32,8 +32,8 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
--- Adjust random announcement delay
-local SAVEGAME_VERSION = 270
+-- Reputation is calculated from credit and weight
+local SAVEGAME_VERSION = 271
 
 --- Controls the main CorsixTH application
 class "App"

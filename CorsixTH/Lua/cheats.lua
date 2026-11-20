@@ -220,7 +220,11 @@ end
 
 function Cheats:cheatMaxReputation()
   local hosp = self.hospital
-  hosp:unconditionalChangeReputation(hosp.reputation_max)
+  local account = hosp.reputation_account
+  -- Twice the weight is as high as the rating can go. Anything beyond that only
+  -- shows up if the weight ever falls again.
+  account.credit = account.weight * 2
+  hosp:updateReputation()
 end
 
 --- Instantly repairs all of the player's machines (regardless of condition, without decreasing strength)
