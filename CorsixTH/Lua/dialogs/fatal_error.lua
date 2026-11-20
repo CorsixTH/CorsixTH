@@ -18,20 +18,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- The UIFatalError window should be presented only when a fatal, non-recoverable error
--- of the program occurs and needs to be restarted.
+local Window = _G['Window'] ---@type Window
+
+--- The UIFatalError window should be presented only when a fatal, non-recoverable error
+--- of the program occurs and needs to be restarted.
 class "UIFatalError" (Window)
 
----@type UIFatalError
-local UIFatalError = _G["UIFatalError"]
+---@class UIFatalError: Window
+---@operator call: UIFatalError
+local UIFatalError = _G["UIFatalError"] ---@type UIFatalError
 
 local col = { bg = Colours.FatalError }
 
 
---! Constructor for the Fatal Error dialog.
---!param ui (ui)
---!param gamelog_dir (string) Path to this session's gamelog.
---!param can_reset (boolean) Determine if this crash allows for an app reset.
+--- Constructor for the Fatal Error dialog.
+---@param ui (UI)
+---@param gamelog_dir (string) Path to this session's gamelog.
+---@param can_reset (boolean) Determine if this crash allows for an app reset.
 function UIFatalError:UIFatalError(ui, gamelog_dir, can_reset)
   self:Window()
   local app = ui.app
@@ -141,15 +144,15 @@ function UIFatalError:onChangeLanguage()
     end
 end
 
---! Open the gamelog in the operating system's default application.
+--- Open the gamelog in the operating system's default application.
 function UIFatalError:openFilePath()
   local file_path = self.text[2]:gsub('"', '\\"')
   openURL(file_path)
 end
 
---! Override: Change the cursor when hovering over the gamelog path.
---! We must also restore the default cursor manually if another window
---! affects the cursor.
+--- Override: Change the cursor when hovering over the gamelog path.
+--- We must also restore the default cursor manually if another window
+--- affects the cursor.
 function UIFatalError:onMouseMove(x, y)
   local s = TheApp.gfx:getUIScale()
   self.active_hover = self:hoverTest(
@@ -167,7 +170,7 @@ function UIFatalError:onMouseMove(x, y)
   end
 end
 
---! Override: Change cursor on clicking gamelog path
+--- Override: Change cursor on clicking gamelog path
 function UIFatalError:onMouseDown(button, x, y)
   if self.file_path_button and self:hitTestPanel(x, y, self.file_path_panel) then
     self.ui:setCursor(self.file_path_cursor_active)
@@ -175,8 +178,8 @@ function UIFatalError:onMouseDown(button, x, y)
   return Window.onMouseDown(self, button, x, y)
 end
 
---! Diverges from Window:onMouseUp(button, x, y)
---! Play an error sound if user clicks outside dialog
+--- Diverges from Window:onMouseUp(button, x, y)
+--- Play an error sound if user clicks outside dialog
 function UIFatalError:onMouseUp(button, x, y)
   local s = TheApp.gfx:getUIScale()
   if x < 0 or y < 0 or x >= self.width * s or y >= self.height * s then
@@ -185,7 +188,7 @@ function UIFatalError:onMouseUp(button, x, y)
   return Window.onMouseUp(self, button, x, y)
 end
 
---! Override: Always hit this window
+--- Override: Always hit this window
 function UIFatalError:hitTest(x, y)
   return true
 end
@@ -206,7 +209,7 @@ function UIFatalError:draw(canvas, x, y)
   )
 end
 
---! Closing this dialog must be via the 'x' button (if available)
+--- Closing this dialog must be via the 'x' button (if available)
 function UIFatalError:close()
   Window.close(self)
   if TheApp.config.debug then return end -- Debug mode re-enters the game
