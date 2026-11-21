@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
+local Window = cth_require("window")
 
 --! Interactive Machine List
 class "UIMachineMenu" (UIResizable)
@@ -192,6 +193,7 @@ end
 function UIMachineMenu:scrollToEntity(entity)
   local x, y = self.ui.app.map:WorldToScreen(entity.tile_x, entity.tile_y)
   self.ui:scrollMapTo(x, y)
+  local UIMachine = cth_require("dialogs.machine_dialog")
   self.ui:addWindow(UIMachine(self.ui, entity, entity:getRoom()))
 end
 
@@ -214,9 +216,10 @@ function UIMachineMenu:warningButtonClicked(index)
   local room = machine.object:getRoom()
 
   if machine and room.is_active then
-    local UIMachine = UIMachine(ui, machine.object, room)
-    UIMachine:replaceMachine()
-    ui:addWindow(UIMachine)
+    local UIMachine = cth_require("dialogs.machine_dialog")
+    local dlg = UIMachine(ui, machine.object, room)
+    dlg:replaceMachine()
+    ui:addWindow(dlg)
   end
 end
 
@@ -227,6 +230,7 @@ function UIMachineMenu:assignedHandymanButtonClicked(index)
   local room = machine.object:getRoom()
 
   if machine and machine.assigned_to and room.is_active then
+    local UIStaff = cth_require("dialogs.staff_dialog")
     self.ui:addWindow(UIStaff(ui, machine.assigned_to))
   end
 end
@@ -413,3 +417,5 @@ function UIMachineMenu:afterLoad(old, new)
   end
   Window.afterLoad(self, old, new)
 end
+
+return UIMachineMenu

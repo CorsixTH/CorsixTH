@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 --! Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).
 class "UIPolicy" (UIFullscreen)
@@ -232,6 +233,7 @@ function UIPolicy:close()
     self.hospital.policies[key] = number + (s.x - (s.total_min_x or s.min_x))/divider
   end
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -252,3 +254,5 @@ function UIPolicy:afterLoad(old, new)
 
   UIFullscreen.afterLoad(self, old, new)
 end
+
+return UIPolicy

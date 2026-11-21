@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local Window = cth_require("window")
 
 class "UIMachine" (Window)
 
@@ -144,6 +145,7 @@ function UIMachine:onMouseDown(code, x, y)
       local ui = self.ui
       local first_machine, next_machine = nil, self.machine
       local next_room
+      local Machine = cth_require("entities.machine")
       for _, entity in ipairs(ui.app.world.entities) do
         -- is a machine and not a slave (e.g. operating_table_b)
         if class.is(entity, Machine) and not entity.master then
@@ -186,3 +188,5 @@ function UIMachine:afterLoad(old, new)
   end
   Window:afterLoad(old, new)
 end
+
+return UIMachine

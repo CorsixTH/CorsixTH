@@ -18,9 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
---! Dialog for staff member requesting a salaray raise.
+--! Dialog for staff member requesting a salary raise.
 class "UIStaffRise" (Window)
 
 ---@class UIStaffRise: Window
@@ -83,7 +83,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:makeTooltip(_S.tooltip.staff_window.salary, 14, 171, 168, 193)
   self:makeTooltip(_S.tooltip.staff_window.ability, 12, 213, 89, 243)
 
-  local Doctor = _G["Doctor"] ---@type Doctor
+  local Doctor = cth_require("entities.humanoids.staff.doctor")
   if class.is(staff, Doctor) then
     self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 89, 197, 168, 243)
     self:makeTooltip(_S.tooltip.staff_window.skills, 14, 132, 47, 166)
@@ -144,6 +144,7 @@ function UIStaffRise:draw(canvas, x, y)
     end
   end
 
+  local Doctor = cth_require("entities.humanoids.staff.doctor")
   if class.is(self.staff, Doctor) then
     self:drawDoctorAttributes(canvas)
   end
@@ -201,3 +202,5 @@ function UIStaffRise:afterLoad(old, new)
     self.face_parts = TheApp.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
   end
 end
+
+return UIStaffRise

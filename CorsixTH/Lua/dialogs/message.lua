@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Small fax notification window which sits on the bottom bar.
 class "UIMessage" (Window)
@@ -114,12 +114,14 @@ function UIMessage:openMessage()
     return
   end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
+    local UIStaffRise = cth_require("dialogs.staff_rise")
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
     self:removeMessage()
   else
     if self.fax then
       self.fax:close()
     else
+      local UIFax = cth_require("dialogs.fullscreen.fax")
       self.fax = UIFax(self.ui, self)
       self.ui:addWindow(self.fax)
       self.ui:playSound("fax_in.wav")
@@ -219,3 +221,5 @@ function UIMessage:afterLoad(old, new)
   end
   Window.afterLoad(self, old, new)
 end
+
+return UIMessage

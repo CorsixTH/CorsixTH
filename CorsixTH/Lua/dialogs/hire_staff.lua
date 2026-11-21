@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 class "UIHireStaff" (Window)
 
@@ -145,6 +145,7 @@ function UIHireStaff:hire()
   end
   self.ui:playSound("YesX.wav")
   table.remove(self.world.available_staff[self.category], self.current_index)
+  local UIPlaceStaff = cth_require("dialogs.place_staff")
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
 
@@ -289,3 +290,5 @@ function UIHireStaff:afterLoad(old, new)
     self.face_parts = TheApp.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
   end
 end
+
+return UIHireStaff

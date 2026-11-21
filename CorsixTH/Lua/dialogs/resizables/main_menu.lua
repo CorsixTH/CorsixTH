@@ -18,7 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local UICustomCampaign = cth_require("dialogs.resizables.menu_list_dialogs.custom_campaign")
+local UICustomGame = cth_require("dialogs.resizables.menu_list_dialogs.custom_game")
+local UIInformation = cth_require("dialogs.information")
+local UILoadGame = cth_require("dialogs.resizables.file_browsers.load_game")
+local UINewGame = cth_require("dialogs.resizables.new_game")
+local UIOptions = cth_require("dialogs.resizables.options")
+local UIResizable = cth_require("dialogs.resizable")
+local TreeControl = cth_require("dialogs.tree_ctrl")
+local FileTreeNode = TreeControl.FileTreeNode
 
 --! Class for main menu window.
 class "UIMainMenu" (UIResizable)
@@ -144,8 +153,15 @@ function UIMainMenu:onMouseMove(x, y, dx, dy)
   UIResizable.onMouseMove(self, x, y, dx, dy)
 end
 
+--- Makes the main menu again, for the dialogs it opens to go back to.
+---@return fun(): UIMainMenu
+function UIMainMenu:backHere()
+  local ui = self.ui
+  return function() return UIMainMenu(ui) end
+end
+
 function UIMainMenu:buttonNewGame()
-  local window = UINewGame(self.ui)
+  local window = UINewGame(self.ui):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
@@ -153,7 +169,7 @@ function UIMainMenu:buttonCustomCampaign()
   if TheApp.using_demo_files then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
   else
-    local window = UICustomCampaign(self.ui)
+    local window = UICustomCampaign(self.ui):setBackTo(self:backHere())
     self.ui:addWindow(window)
   end
 end
@@ -162,7 +178,7 @@ function UIMainMenu:buttonCustomGame()
   if TheApp.using_demo_files then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
   else
-    local window = UICustomGame(self.ui)
+    local window = UICustomGame(self.ui):setBackTo(self:backHere())
     self.ui:addWindow(window)
   end
 end
@@ -186,12 +202,12 @@ function UIMainMenu:buttonContinueGame()
 end
 
 function UIMainMenu:buttonLoadGame()
-  local window = UILoadGame(self.ui, "menu")
+  local window = UILoadGame(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
 function UIMainMenu:buttonOptions()
-  local window = UIOptions(self.ui, "menu")
+  local window = UIOptions(self.ui, "menu"):setBackTo(self:backHere())
   self.ui:addWindow(window)
 end
 
@@ -207,3 +223,5 @@ function UIMainMenu:buttonExit()
   end
   ))
 end
+
+return UIMainMenu

@@ -22,7 +22,7 @@ SOFTWARE. --]]
 strict_declare_global "_"
 _ = nil
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Interactive Lua Console for ingame debugging.
 class "UILuaConsole" (UIResizable)
@@ -145,3 +145,5 @@ function UILuaConsole:afterLoad(old, new)
     self.close_button.on_click = self.buttonClose
   end
 end
+
+return UILuaConsole

@@ -272,3 +272,5 @@ function FileSystem:_getFilePath(virtual_path, ...)
   end
   return self
 end
+
+return FileSystem

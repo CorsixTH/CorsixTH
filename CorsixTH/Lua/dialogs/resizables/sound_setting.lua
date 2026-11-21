@@ -18,7 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIChooseSoundfont = cth_require("dialogs.resizables.file_browsers.choose_soundfont")
+local UIDropdown = cth_require("dialogs.resizables.dropdown")
+local UIResizable = cth_require("dialogs.resizable")
 
 class "UISoundSettings" (UIResizable)
 
@@ -438,10 +440,19 @@ function UISoundSettings:selectMidiPort(index)
   self.app.audio:reinitAudioSystem()
 end
 
+--- Makes these sound settings again, for the dialogs they open to go back
+-- to. The new settings go back wherever these went.
+---@return fun(): UIResizable
+function UISoundSettings:backHere()
+  local ui, mode, back_to = self.ui, self.mode, self.back_to
+  return function() return UISoundSettings(ui, mode):setBackTo(back_to) end
+end
+
 --! Button handler for soundfont
 -- Opens a file chooser dialog for selecting a soundfont.
 function UISoundSettings:buttonBrowseForSoundfont()
   local browser = UIChooseSoundfont(self.ui, self.mode, self, self.selectSoundfont)
+      :setBackTo(self:backHere())
   self.ui:addWindow(browser)
 end
 
@@ -457,13 +468,9 @@ end
 -- Opens the jukebox window.
 function UISoundSettings:buttonJukebox()
   if self.app.config.audio then
+    local UIJukebox = cth_require("dialogs.jukebox")
     self.ui:addWindow(UIJukebox(self.app))
   end
 end
 
---! Close window
-function UISoundSettings:close()
-  UIResizable.close(self)
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
+return UISoundSettings

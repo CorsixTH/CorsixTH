@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Customise window used in the main menu and ingame.
 class "UICustomise" (UIResizable)
@@ -74,12 +74,8 @@ end
 
 -- So that we can see the option has been changed reload the menu
 function UICustomise:reload()
-  local window = UICustomise(self.ui, "menu")
+  local window = UICustomise(self.ui, "menu"):setBackTo(self.back_to)
   self.ui:addWindow(window)
 end
 
-function UICustomise:close()
-  UIResizable.close(self)
-  local window = UIOptions(self.ui, "menu")
-  self.ui:addWindow(window)
-end
+return UICustomise

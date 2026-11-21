@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
@@ -108,6 +109,7 @@ end
 
 function UICasebook:close()
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -417,3 +419,5 @@ function UICasebook:afterLoad(old, new)
   UIFullscreen.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
+
+return UICasebook

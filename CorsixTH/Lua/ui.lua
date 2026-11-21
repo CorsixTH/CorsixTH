@@ -18,9 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-cth_require("window")
-
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --- Top-level container for all other user-interface components.
 class "UI" (Window)

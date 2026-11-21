@@ -18,7 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
+local UIInformation = cth_require("dialogs.information")
+local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
+local FilteredFileTreeNode = UIFileBrowser.FilteredFileTreeNode
 
 --! Load Game Window
 class "UILoadGame" (UIFileBrowser)
@@ -57,13 +59,8 @@ function UILoadGame:loadError(err)
   TheApp.ui:addWindow(UIInformation(TheApp.ui, {err}))
 end
 
-function UILoadGame:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
-end
-
 function UILoadGame:afterLoad()
   self:close()
 end
+
+return UILoadGame
