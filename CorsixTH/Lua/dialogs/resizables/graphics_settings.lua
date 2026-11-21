@@ -217,7 +217,7 @@ class "UIGraphicSettings" (UIResizable)
 local UIGraphicSettings = _G["UIGraphicSettings"] ---@type UIGraphicSettings
 
 function UIGraphicSettings:UIGraphicSettings(ui, mode)
-  self:UIResizable(ui, 605, 209, col.bg)
+  self:UIResizable(ui, 305, 370, col.bg)
 
   local app = _G['TheApp']
 

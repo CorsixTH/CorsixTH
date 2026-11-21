@@ -250,7 +250,7 @@ class "UIAccessibility" (UIResizable)
 local UIAccessibility = _G["UIAccessibility"] ---@type UIAccessibility
 
 function UIAccessibility:UIAccessibility(ui, mode)
-  self:UIResizable(ui, 320, 280, col.bg)
+  self:UIResizable(ui, 305, 255, col.bg)
 
   local app = ui.app
   self.mode = mode

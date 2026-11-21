@@ -518,7 +518,7 @@ end
 --- set game window is selected. If no image fits that criteria the smallest
 --- available image is used.
 function UI:setMenuBackground()
-  local screen_h = self.app.config.height
+  local _, screen_h = self.app.video:getRenderSize()
   local bg_size_idx = 1
 
   -- Available mainmenu*.bmp sizes

@@ -44,7 +44,7 @@ local THRawBitmap = {}
 ---@param file THFile # bitmap data file
 ---@param width integer # width of the bitmap in pixels
 ---@param canvas THRenderTarget # the canvas to load the bitmap into
----@param options {flags: integer?}?
+---@param options {flags?: integer, type?: BitmapType }?
 ---@return THRawBitmap # self
 function THRawBitmap:load(file, width, canvas, options) end
 

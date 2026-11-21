@@ -453,19 +453,18 @@ tooltip = {
     close = "콘솔 닫기",
   },
   folders_window = {
-    browse_font = "다른 폰트 파일을 지정합니다 ( 현재 위치: %1% )",
+    browse_font = "다른 폰트 파일을 지정합니다",
     screenshots_location = "기본적으로, 스크린샷들은 설정 파일이 있는 곳에 함께 저장됩니다. 필요한 경우 스크린샷을 원하는 곳에 저장할 수 있습니다. 사용하기 원하는 디렉토리를 선택하세요.",
-    browse_music = "다른 음악 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    browse_music = "다른 음악 디렉토리를 지정합니다",
     music_location = "mp3 음악 파일들이 있는 위치를 지정하세요. 디렉토리는 미리 만들어져 있어야 합니다.",
-    data_location = "오리지널 테마 병원 설치 경로 (CorsixTH 를 플레이 하기 위해 필요)",
-    browse_data = "테마 병원 설치 경로를 다시 설정합니다 ( 현재 위치: %1% )",
-    savegames_location = "기본적으로, 저장된 게임들은 설정 파일이 있는 곳에 함께 저장됩니다. 필요한 경우 저장된 게임들을 원하는 곳에 저장할 수 있습니다. 사용하기 원하는 디렉토리를 선택하세요.",
+    theme_hospital_install = "오리지널 테마 병원 설치 경로 (CorsixTH 를 플레이 하기 위해 필요)",
+    savegames = "기본적으로, 저장된 게임들은 설정 파일이 있는 곳에 함께 저장됩니다. 필요한 경우 저장된 게임들을 원하는 곳에 저장할 수 있습니다. 사용하기 원하는 디렉토리를 선택하세요.",
     back = "이 메뉴를 닫고 설정 메뉴로 돌아갑니다",
-    browse_saves = "다른 저장 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    savegames_location = "다른 저장 디렉토리를 지정합니다",
     browse = "폴더 위치를 지정합니다",
-    browse_screenshots = "다른 스크린샷 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    browse_screenshots = "다른 스크린샷 디렉토리를 지정합니다",
     not_specified = "폴더 위치 지정되지 않음!",
-    font_location = "사용중인 언어를 표시하는데 필요한 폰트 파일의 위치를 지정합니다. 이것을 설정하지 않으면 오리지널 게임에 포함되지 않은 문자들은 표시되지 않습니다 (예: 러시아어, 중국어)",
+    unicode_font = "사용중인 언어를 표시하는데 필요한 폰트 파일의 위치를 지정합니다. 이것을 설정하지 않으면 오리지널 게임에 포함되지 않은 문자들은 표시되지 않습니다 (예: 러시아어, 중국어)",
     reset_to_default = "디렉토리를 기본 위치로 되돌립니다 ( %1% )",
     default = "기본 위치",
     no_font_specified = "폰트 위치 지정되지 않음!",
@@ -594,7 +593,7 @@ tooltip = {
     cancel = "해상도를 변경하지 않고 돌아갑니다",
   },
   audio_window = {
-    audio_toggle = "켜고 끄기",
+    audio = "켜고 끄기",
   }
 }
 menu_charts = {
@@ -1424,16 +1423,16 @@ handyman_window = {
 }
 folders_window = {
   screenshots_location = "스크린샷을 저장할 디렉토리를 선택하세요",
-  music_label = "MP3들",
+  audio_music = "MP3들",
   back = "뒤로",
-  savegames_label = "저장된 게임들",
+  savegames = "저장된 게임들",
   caption = "폴더 위치",
-  savegames_location = "게임을 저장할 디렉토리를 선택하세요",
-  font_label = "폰트",
+  savegames_loccation = "게임을 저장할 디렉토리를 선택하세요",
+  unicode_font = "폰트",
   new_th_location = "여기서 테마 병원 설치 디렉토리를 새로 지정할 수 있습니다. 새 위치를 지정하는 즉시 게임이 재시작 됩니다.",
-  screenshots_label = "스크린샷",
+  screenshots = "스크린샷",
   music_location = "음악을 재생할 디렉토리를 선택하세요",
-  data_label = "테마 병원 데이터",
+  theme_hospital_install = "테마 병원 데이터",
 }
 customise_window = {
   movies = "영상 컨트롤",

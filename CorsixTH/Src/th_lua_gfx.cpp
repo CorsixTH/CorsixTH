@@ -112,14 +112,22 @@ int l_rawbitmap_load(lua_State* L) {
       luaT_testuserdata<render_target>(L, 4, luaT_upvalueindex(1), false);
 
   uint32_t flags = 0;
+  uint32_t type = 0;
   if (lua_type(L, 5) == LUA_TTABLE) {
     lua_getfield(L, 5, "flags");
     flags = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
     lua_pop(L, 1);
+    lua_getfield(L, 5, "type");
+    type = static_cast<uint32_t>(luaL_optinteger(L, -1, 0));
+    lua_pop(L, 1);
   }
 
   try {
-    pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface, flags);
+    if (type == 1) {
+      pBitmap->load_from_png(pData, iDataLen, pSurface, flags);
+    } else {
+      pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface, flags);
+    }
   } catch (const std::exception& ex) {
     lua_pushstring(L, ex.what());
     lua_error(L);

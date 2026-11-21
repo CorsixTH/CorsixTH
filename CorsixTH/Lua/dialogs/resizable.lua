@@ -281,6 +281,7 @@ This function uses the contents of the self.entry_list table, which is a list of
   reset_func - The reset button's function which clears a setting and resets the label and button.
       This also marks an entry where false should mean unset, not off.
   new_column - Boolean, in the first item of the new column
+  unicode -- Boolean, to display the value in a unicode font, rather than the builtin font
 ]]
 function UIResizable:buildDialog()
   self.on_top = self.mode == "menu"
@@ -315,7 +316,7 @@ function UIResizable:buildDialog()
     self.labels[name], self.buttons[name] = self:createOptionsElement(
       _S[self.strings_ref][name], _S.tooltip[self.strings_ref][name],
       current_value, _S.tooltip[self.strings_ref][name],
-      { bg = col.setting, active = entry.raised and col.setting_active },
+      { bg = col.setting, active = entry.raised and col.setting_active }, entry.unicode and value,
       self:_buttonPressed(name, entry.func, entry.info and _S.errors[name]),
       (not entry.raised) and value, entry.default_value, entry.reset_func)
   end
@@ -340,8 +341,8 @@ end
 -- and the setting itself. We return both elements of the setting (panel
 -- and the button made from the panel)
 function UIResizable:createOptionsElement(option_label, option_tooltip,
-    setting_label, setting_tooltip, setting_colours, callback,
-    toggle_state, default_value, reset_func)
+    setting_label, setting_tooltip, setting_colours, unicode,
+    callback, toggle_state, default_value, reset_func)
   local y_pos = self:_getOptionYPos()
   local column_width = self.label_width + label_button_gap + self.btn_width
   local x_offset = column_width * (self.column_count - 1)
@@ -355,10 +356,11 @@ function UIResizable:createOptionsElement(option_label, option_tooltip,
     :setTooltip(option_tooltip)
   setting_panel.lowered = true
   local s_col = setting_colours or { bg = col.setting }
+  local font = unicode and self.ui.app.gfx:loadMenuFont() or self.built_in_font
   -- Make the setting value button
   local setting_button = self:addBevelPanel(setting_x, y_pos, btn_width, self.btn_height,
       s_col.bg, s_col.highlight, s_col.shadow, s_col.disabled, s_col.active)
-    :setLabel(setting_label, self.built_in_font)
+    :setLabel(setting_label, font)
     :setTooltip(setting_tooltip)
     :setAutoClip(self.autoclip)
     :makeToggleButton(0, 0, btn_width, self.btn_height, nil, callback)
