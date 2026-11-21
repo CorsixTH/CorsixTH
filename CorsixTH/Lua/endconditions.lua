@@ -406,3 +406,5 @@ function EndConditions:generateAdvice(hospital)
 
   return advice_tbl, priority_advice_tbl
 end
+
+return EndConditions

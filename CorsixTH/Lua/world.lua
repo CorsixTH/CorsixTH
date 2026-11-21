@@ -40,7 +40,7 @@ cth_require("research_department")
 cth_require("entity_map")
 local Date = cth_require("date")
 cth_require("announcer")
-cth_require("endconditions")
+local EndConditions = cth_require("endconditions")
 cth_require("earthquake")
 
 --- Manages entities, rooms, and the date.
@@ -288,7 +288,6 @@ end
 
 --- In EndConditions, collect and test the win and lose conditions of the level.
 function World:determineWinningConditions()
-  local EndConditions = _G["EndConditions"] ---@type EndConditions
   self.endconditions = EndConditions(self.map.level_config,
       self.map.level_number, self.free_build_mode)
 end
