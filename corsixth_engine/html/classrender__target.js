@@ -9,6 +9,7 @@ var classrender__target =
     [ "begin_intermediate_drawing", "classrender__target.html#ac9089bcb284f4f6b973144c1305a6b89", null ],
     [ "create_palettized_texture", "classrender__target.html#a4ae1ea0d2b4c6dc9d740023828135307", null ],
     [ "create_texture", "classrender__target.html#a01377a5273d3809b9828b9bc0740e477", null ],
+    [ "create_texture", "classrender__target.html#abb4438d7c34a0a32642a554211e655af", null ],
     [ "draw", "classrender__target.html#aca8baa98104bf95765865ea208f1a87f", null ],
     [ "draw_line", "classrender__target.html#a062666a5e8745f5a249f51863fded67a", null ],
     [ "end_frame", "classrender__target.html#a6ee2ff0d21911ad120e9f0370998ddf4", null ],

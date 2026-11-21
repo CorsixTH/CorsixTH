@@ -51,6 +51,6 @@ var searchData=
   ['crash_48',['crash',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadcaa9fd4f23aaf0c29f540becf35b46f',1,'th_map.h']]],
   ['create_5ffrom_5fsprite_49',['create_from_sprite',['../classcursor.html#a31ea9390f5dbfcb2806bf42094e2ea74',1,'cursor']]],
   ['create_5fpalettized_5ftexture_50',['create_palettized_texture',['../classrender__target.html#a4ae1ea0d2b4c6dc9d740023828135307',1,'render_target']]],
-  ['create_5ftexture_51',['create_texture',['../classrender__target.html#a01377a5273d3809b9828b9bc0740e477',1,'render_target']]],
+  ['create_5ftexture_51',['create_texture',['../classrender__target.html#a01377a5273d3809b9828b9bc0740e477',1,'render_target::create_texture(int iWidth, int iHeight, const uint32_t *pPixels, uint32_t sprite_flags) const'],['../classrender__target.html#abb4438d7c34a0a32642a554211e655af',1,'render_target::create_texture(SDL_Surface *surface, uint32_t sprite_flags) const']]],
   ['cursor_52',['cursor',['../classcursor.html',1,'cursor'],['../classsprite__sheet.html#a2b9fbf16302036cf7138a173a7f162cd',1,'sprite_sheet::cursor()'],['../classcursor.html#a11e92dc451433dc687e949b2985aa540',1,'cursor::cursor()'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a1791a97a8403730ee0760489a2aeb992',1,'cursor:&#160;th_lua_internal.h']]]
 ];

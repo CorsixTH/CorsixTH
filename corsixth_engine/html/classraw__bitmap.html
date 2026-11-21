@@ -106,6 +106,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:af8a16d6aa082c17e690366dd9187c54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the palette of the image.  <br /></td></tr>
 <tr class="memitem:a43f4b8a009df37e785561638376895b1" id="r_a43f4b8a009df37e785561638376895b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a43f4b8a009df37e785561638376895b1">load_from_th_file</a> (const uint8_t *pPixelData, size_t iPixelDataLength, int iWidth, <a class="el" href="classrender__target.html">render_target</a> *pEventualCanvas, uint32_t spriteFlags)</td></tr>
 <tr class="memdesc:a43f4b8a009df37e785561638376895b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the image from the supplied pixel data.  <br /></td></tr>
+<tr class="memitem:ac5de9e839ba6b2c24d508b9aa7d61acc" id="r_ac5de9e839ba6b2c24d508b9aa7d61acc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5de9e839ba6b2c24d508b9aa7d61acc">load_from_png</a> (const uint8_t *pixelData, size_t pixelDataLength, <a class="el" href="classrender__target.html">render_target</a> *eventualCanvas, uint32_t spriteFlags)</td></tr>
+<tr class="memdesc:ac5de9e839ba6b2c24d508b9aa7d61acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load the image from the supplied png file data.  <br /></td></tr>
 <tr class="memitem:a1b96a16b7266e4c6707c5058e9229aa6" id="r_a1b96a16b7266e4c6707c5058e9229aa6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b96a16b7266e4c6707c5058e9229aa6">draw</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, float iX, float iY)</td></tr>
 <tr class="memdesc:a1b96a16b7266e4c6707c5058e9229aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the image at a given position at the given canvas.  <br /></td></tr>
 <tr class="memitem:acc495254851f4d6ac76ae6cae376a186" id="r_acc495254851f4d6ac76ae6cae376a186"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc495254851f4d6ac76ae6cae376a186">draw</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, float iX, float iY, int iSrcX, int iSrcY, int iWidth, int iHeight)</td></tr>
@@ -250,6 +252,49 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ac5de9e839ba6b2c24d508b9aa7d61acc" name="ac5de9e839ba6b2c24d508b9aa7d61acc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5de9e839ba6b2c24d508b9aa7d61acc">&#9670;&#160;</a></span>load_from_png()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void raw_bitmap::load_from_png </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>pixelData</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>pixelDataLength</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classrender__target.html">render_target</a> *</td>          <td class="paramname"><span class="paramname"><em>eventualCanvas</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>spriteFlags</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Load the image from the supplied png file data. </p>
+<p>Loader uses the palette supplied before. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pixelData</td><td>Image data loaded from a TH file. </td></tr>
+    <tr><td class="paramname">pixelDataLength</td><td>Size of the loaded image data. </td></tr>
+    <tr><td class="paramname">eventualCanvas</td><td>Canvas to render the image to (eventually). </td></tr>
+    <tr><td class="paramname">spriteFlags</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Loading was a success. </dd></dl>
 
 </div>
 </div>

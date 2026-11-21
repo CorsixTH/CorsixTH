@@ -164,6 +164,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6f30868ba1e008b95d6ef7b3804995ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should bitmaps be scaled?  <br /></td></tr>
 <tr class="memitem:a4ae1ea0d2b4c6dc9d740023828135307" id="r_a4ae1ea0d2b4c6dc9d740023828135307"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ae1ea0d2b4c6dc9d740023828135307">create_palettized_texture</a> (int iWidth, int iHeight, const uint8_t *pPixels, const <a class="el" href="classpalette.html">::palette</a> *pPalette, uint32_t iSpriteFlags) const</td></tr>
 <tr class="memitem:a01377a5273d3809b9828b9bc0740e477" id="r_a01377a5273d3809b9828b9bc0740e477"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01377a5273d3809b9828b9bc0740e477">create_texture</a> (int iWidth, int iHeight, const uint32_t *pPixels, uint32_t sprite_flags) const</td></tr>
+<tr class="memitem:abb4438d7c34a0a32642a554211e655af" id="r_abb4438d7c34a0a32642a554211e655af"><td class="memItemLeft" align="right" valign="top">SDL_Texture *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb4438d7c34a0a32642a554211e655af">create_texture</a> (SDL_Surface *surface, uint32_t sprite_flags) const</td></tr>
 <tr class="memitem:aca8baa98104bf95765865ea208f1a87f" id="r_aca8baa98104bf95765865ea208f1a87f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca8baa98104bf95765865ea208f1a87f">draw</a> (SDL_Texture *pTexture, const SDL_Rect *prcSrcRect, const SDL_FRect *prcDstRect, int iFlags)</td></tr>
 <tr class="memitem:a062666a5e8745f5a249f51863fded67a" id="r_a062666a5e8745f5a249f51863fded67a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a062666a5e8745f5a249f51863fded67a">draw_line</a> (<a class="el" href="classline__sequence.html">line_sequence</a> *pLine, float iX, float iY)</td></tr>
 <tr class="memitem:ac9089bcb284f4f6b973144c1305a6b89" id="r_ac9089bcb284f4f6b973144c1305a6b89"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classrender__target_1_1scoped__buffer.html">scoped_buffer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9089bcb284f4f6b973144c1305a6b89">begin_intermediate_drawing</a> (int iX, int iY, int iWidth, int iHeight)</td></tr>
@@ -324,7 +325,7 @@ Friends</h2></td></tr>
 </div>
 </div>
 <a id="a01377a5273d3809b9828b9bc0740e477" name="a01377a5273d3809b9828b9bc0740e477"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01377a5273d3809b9828b9bc0740e477">&#9670;&#160;</a></span>create_texture()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a01377a5273d3809b9828b9bc0740e477">&#9670;&#160;</a></span>create_texture() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -343,6 +344,27 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const uint32_t *</td>          <td class="paramname"><span class="paramname"><em>pPixels</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>sprite_flags</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb4438d7c34a0a32642a554211e655af" name="abb4438d7c34a0a32642a554211e655af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb4438d7c34a0a32642a554211e655af">&#9670;&#160;</a></span>create_texture() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SDL_Texture * render_target::create_texture </td>
+          <td>(</td>
+          <td class="paramtype">SDL_Surface *</td>          <td class="paramname"><span class="paramname"><em>surface</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
