@@ -417,6 +417,8 @@ class render_target {
                                          uint32_t iSpriteFlags) const;
   SDL_Texture* create_texture(int iWidth, int iHeight, const uint32_t* pPixels,
                               uint32_t sprite_flags) const;
+  SDL_Texture* create_texture(SDL_Surface* surface,
+                              uint32_t sprite_flags) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
             const SDL_FRect* prcDstRect, int iFlags);
   void draw_line(line_sequence* pLine, float iX, float iY);
@@ -491,6 +493,18 @@ class raw_bitmap {
   void load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
                          int iWidth, render_target* pEventualCanvas,
                          uint32_t spriteFlags);
+
+  //! Load the image from the supplied png file data.
+  /*!
+      Loader uses the palette supplied before.
+      @param pixelData Image data loaded from a TH file.
+      @param pixelDataLength Size of the loaded image data.
+      @param eventualCanvas Canvas to render the image to (eventually).
+      @param spriteFlags
+      @return Loading was a success.
+  */
+  void load_from_png(const uint8_t* pixelData, size_t pixelDataLength,
+                     render_target* eventualCanvas, uint32_t spriteFlags);
 
   //! Draw the image at a given position at the given canvas.
   /*!

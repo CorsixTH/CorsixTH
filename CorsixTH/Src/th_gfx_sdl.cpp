@@ -953,6 +953,31 @@ SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
   return pTexture;
 }
 
+SDL_Texture* render_target::create_texture(SDL_Surface* surface,
+                                           uint32_t sprite_flags) const {
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+  if (!texture) {
+    throw std::runtime_error(SDL_GetError());
+  }
+
+  if (sprite_flags & thdf_nearest) {
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+  }
+
+  if (!SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND)) {
+    throw std::runtime_error(SDL_GetError());
+  }
+
+  if (!SDL_SetTextureColorMod(texture, 0xFF, 0xFF, 0xFF)) {
+    throw std::runtime_error(SDL_GetError());
+  }
+
+  if (!SDL_SetTextureAlphaMod(texture, 0xFF)) {
+    throw std::runtime_error(SDL_GetError());
+  }
+  return texture;
+}
+
 void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
                          const SDL_FRect* prcDstRect, int iFlags) {
   SDL_SetTextureAlphaMod(pTexture, 0xFF);
@@ -1068,6 +1093,25 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
   width = iWidth;
   height = iHeight;
   target = pEventualCanvas;
+}
+
+void raw_bitmap::load_from_png(const uint8_t* pixelData,
+                               const size_t pixelDataLength,
+                               render_target* eventualCanvas,
+                               uint32_t spriteFlags) {
+  if (eventualCanvas == nullptr) {
+    throw std::invalid_argument("pEventualCanvas cannot be null");
+  }
+
+  SDL_IOStream* pngStream = SDL_IOFromConstMem(pixelData, pixelDataLength);
+  SDL_Surface* s = SDL_LoadPNG_IO(pngStream, true);
+  texture = eventualCanvas->create_texture(s, spriteFlags);
+
+  width = s->w;
+  height = s->h;
+  target = eventualCanvas;
+
+  SDL_DestroySurface(s);
 }
 
 namespace {
