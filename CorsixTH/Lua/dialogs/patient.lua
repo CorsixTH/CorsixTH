@@ -19,14 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
   local s = TheApp.gfx:getUIScale()
   return (x - 55 * s)^2 + (y - 254 * s)^2 < (39 * s)^2
 end
-
-local Window = _G['Window'] ---@type Window
 
 --! Individual patient information dialog
 class "UIPatient" (Window)
@@ -315,6 +314,7 @@ end
 function UIPatient:viewQueue()
   for _, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
+      local UIQueue = cth_require("dialogs.queue_dialog")
       self.ui:addWindow(UIQueue(self.ui, action.queue))
       self.ui:playSound("selectx.wav")
       return
@@ -367,3 +367,5 @@ function UIPatient:afterLoad(old, new)
     self.font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font74V", nil, nil, { apply_ui_scale = true })
   end
 end
+
+return UIPatient

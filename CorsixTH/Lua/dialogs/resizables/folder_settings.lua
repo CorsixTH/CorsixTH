@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIInformation = cth_require("dialogs.information")
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Customise window used in the main menu and ingame.
 class "UIFolder" (UIResizable)
@@ -106,6 +107,7 @@ function UIFolder:resetMusicDir()
 end
 
 function UIFolder:buttonBrowseForFont()
+  local UIChooseFont = cth_require("dialogs.resizables.file_browsers.choose_font")
   local browser = UIChooseFont(self.ui, self.mode)
   self.ui:addWindow(browser)
 end
@@ -121,6 +123,7 @@ function UIFolder:buttonBrowseForSavegames()
       self.buttons.savegames:setLabel(app.config.savegames, self.built_in_font)
     end
   end
+  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
   self.ui:addWindow(browser)
 end
@@ -132,6 +135,7 @@ function UIFolder:buttonBrowseForTHInstall()
     app:saveConfig()
     app:reset()
   end
+  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.new_th_location, "InstallDirTreeNode", callback)
   self.ui:addWindow(browser)
 end
@@ -147,6 +151,7 @@ function UIFolder:buttonBrowseForScreenshots()
       self.buttons.screenshots:setLabel(app.config.screenshots, self.built_in_font)
     end
   end
+  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
   self.ui:addWindow(browser)
 end
@@ -167,12 +172,16 @@ function UIFolder:buttonBrowseForAudio_music()
     app.audio:reinitAudioSystem()
     self.buttons.audio_music:setLabel(app.config.audio_music, self.built_in_font)
   end
+  local UIDirectoryBrowser = cth_require("dialogs.resizables.directory_browser")
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
   self.ui:addWindow(browser)
 end
 
 function UIFolder:close()
   UIResizable.close(self)
+  local UIOptions = cth_require("dialogs.resizables.options")
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end
+
+return UIFolder

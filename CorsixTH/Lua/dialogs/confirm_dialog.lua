@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 --! This dialog is also used for errors and requires some special handling
@@ -135,3 +135,5 @@ function UIConfirmDialog:afterLoad(old, new)
     self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
   end
 end
+
+return UIConfirmDialog

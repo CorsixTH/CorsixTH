@@ -18,13 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local UIDropdown = cth_require("dialogs.resizables.dropdown")
+local UIInformation = cth_require("dialogs.information")
+local UIResizable = cth_require("dialogs.resizable")
 
-class "UIGraphicSettings" (UIResizable)
-
----@class UIGraphicSettings: UIResizable
----@operator call: UIGraphicSettings
-local UIGraphicSettings = _G["UIGraphicSettings"] ---@type UIGraphicSettings
+local App = _G['App'] ---@type App
 
 local col = {
   bg = Colours.PanelDefault,
@@ -127,6 +126,95 @@ local available_cursor_scales = function()
   end
   return res
 end
+
+--! A custom window size selection window
+class "UIWindowSize" (UIResizable)
+
+---@class UIWindowSize: UIResizable
+---@operator call: UIWindowSize
+local UIWindowSize = _G["UIWindowSize"] ---@type UIWindowSize
+
+function UIWindowSize:UIWindowSize(ui, callback)
+  self:UIResizable(ui, 200, 140, col.bg)
+
+  local app = ui.app
+  self.modal_class = "window_size"
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+
+  self.callback = callback
+
+  -- Window parts definition
+  -- Title
+  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.graphics_window.window_size)
+    .lowered = true
+
+  -- Textboxes
+  self:addBevelPanel(20, 40, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.graphics_window.width)
+  self.width_textbox = self:addBevelPanel(100, 40, 80, 20, col.textbox, col.bg, col.bg)
+    :setTooltip(_S.tooltip.graphics_window.width)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.width))
+
+  self:addBevelPanel(20, 60, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.graphics_window.height)
+  self.height_textbox = self:addBevelPanel(100, 60, 80, 20, col.textbox, col.bg, col.bg)
+    :setTooltip(_S.tooltip.graphics_window.height)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.height))
+
+  -- Apply and cancel
+  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.graphics_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.graphics_window.apply)
+  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.graphics_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.graphics_window.cancel)
+end
+
+function UIWindowSize:cancel()
+  self:close(false)
+end
+
+function UIWindowSize:ok()
+  local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
+  local min_w = App.MIN_WINDOW_WIDTH
+  local min_h = App.MIN_WINDOW_HEIGHT
+  if width < min_w or height < min_h then
+    local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
+    self.ui:addWindow(UIInformation(self.ui, err))
+  elseif width > 3000 or height > 2000 then
+    self.ui:addWindow(UIConfirmDialog(self.ui, false,
+      _S.confirmation.maximum_screen_size,
+      --[[persistable:maximum_screen_size_confirm_dialog]]function()
+      self:close(true)
+      self:close(false)
+      end
+      ))
+  else
+    self:close(true)
+  end
+end
+
+function UIWindowSize:onMouseUp(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseUp(self, button, x, y)
+end
+
+--! Closes the window size dialog
+--!param ok (boolean or nil) whether the window size entry was confirmed (true) or aborted (false)
+function UIWindowSize:close(ok)
+  UIResizable.close(self)
+  if ok and self.callback then
+    self.callback(tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0)
+  end
+end
+
+class "UIGraphicSettings" (UIResizable)
+
+---@class UIGraphicSettings: UIResizable
+---@operator call: UIGraphicSettings
+local UIGraphicSettings = _G["UIGraphicSettings"] ---@type UIGraphicSettings
 
 function UIGraphicSettings:UIGraphicSettings(ui, mode)
   self:UIResizable(ui, 305, 370, col.bg)
@@ -333,90 +421,9 @@ end
 --! Close window
 function UIGraphicSettings:close()
   UIResizable.close(self)
+  local UIOptions = cth_require("dialogs.resizables.options")
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
---! A custom window size selection window
-class "UIWindowSize" (UIResizable)
-
----@class UIWindowSize: UIResizable
----@operator call: UIWindowSize
-local UIWindowSize = _G["UIWindowSize"] ---@type UIWindowSize
-
-function UIWindowSize:UIWindowSize(ui, callback)
-  self:UIResizable(ui, 200, 140, col.bg)
-
-  local app = ui.app
-  self.modal_class = "window_size"
-  self.on_top = true
-  self.esc_closes = true
-  self.resizable = false
-  self:setDefaultPosition(0.5, 0.5)
-  self.default_button_sound = "selectx.wav"
-
-  self.callback = callback
-
-  -- Window parts definition
-  -- Title
-  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.graphics_window.window_size)
-    .lowered = true
-
-  -- Textboxes
-  self:addBevelPanel(20, 40, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.graphics_window.width)
-  self.width_textbox = self:addBevelPanel(100, 40, 80, 20, col.textbox, col.bg, col.bg)
-    :setTooltip(_S.tooltip.graphics_window.width)
-    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.width))
-
-  self:addBevelPanel(20, 60, 80, 20, col.caption, col.bg, col.bg):setLabel(_S.graphics_window.height)
-  self.height_textbox = self:addBevelPanel(100, 60, 80, 20, col.textbox, col.bg, col.bg)
-    :setTooltip(_S.tooltip.graphics_window.height)
-    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.height))
-
-  -- Apply and cancel
-  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.graphics_window.apply)
-    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.graphics_window.apply)
-  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.graphics_window.cancel)
-    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.graphics_window.cancel)
-end
-
-function UIWindowSize:cancel()
-  self:close(false)
-end
-
-function UIWindowSize:ok()
-  local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
-  local min_w = App.MIN_WINDOW_WIDTH
-  local min_h = App.MIN_WINDOW_HEIGHT
-  if width < min_w or height < min_h then
-    local err = {_S.errors.minimum_screen_size:format(min_w, min_h)}
-    self.ui:addWindow(UIInformation(self.ui, err))
-  elseif width > 3000 or height > 2000 then
-    self.ui:addWindow(UIConfirmDialog(self.ui, false,
-      _S.confirmation.maximum_screen_size,
-      --[[persistable:maximum_screen_size_confirm_dialog]]function()
-      self:close(true)
-      self:close(false)
-      end
-      ))
-  else
-    self:close(true)
-  end
-end
-
-function UIWindowSize:onMouseUp(button, x, y)
-  if not self:hitTest(x, y) then
-    self:close(false)
-  end
-  UIResizable.onMouseUp(self, button, x, y)
-end
-
---! Closes the window size dialog
---!param ok (boolean or nil) whether the window size entry was confirmed (true) or aborted (false)
-function UIWindowSize:close(ok)
-  UIResizable.close(self)
-  if ok and self.callback then
-    self.callback(tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0)
-  end
-end
-
+return UIGraphicSettings

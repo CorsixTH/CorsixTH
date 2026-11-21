@@ -19,10 +19,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
-local Window = _G['Window'] ---@type Window
 
 --! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)
@@ -634,7 +634,7 @@ local function audio_options(menu, game)
       :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
   end
   if app.audio.has_bg_music then
-    local UIJukebox = _G["UIJukebox"] ---@type UIJukebox
+    local UIJukebox = cth_require("dialogs.jukebox")
     menu:appendMenu(_S.menu_options.music_vol, appendVolume("music"))
       :appendItem(_S.menu_options.jukebox:format(hotkey_value_label("ingame_jukebox", hotkeys)),
           function() app.ui:addWindow(UIJukebox(app)) end)
@@ -729,8 +729,8 @@ function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
 
-  local UILoadGame = _G["UILoadGame"] ---@type UILoadGame
-  local UISaveGame = _G["UISaveGame"] ---@type UISaveGame
+  local UILoadGame = cth_require("dialogs.resizables.file_browsers.load_game")
+  local UISaveGame = cth_require("dialogs.resizables.file_browsers.save_game")
   menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu", hotkeys)), function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu", hotkeys)), function() self.ui:addWindow(UISaveGame(self.ui)) end)
     :appendItem(_S.menu_file.restart:format(hotkey_value_label("ingame_restartLevel", hotkeys)), function() app:restart() end)
@@ -800,8 +800,8 @@ function UIMenuBar:makeGameMenu(app)
 
   self:addMenu(_S.menu.options, options)
 
-  local UIMachineMenu = _G["UIMachineMenu"] ---@type UIMachineMenu
-  local UIAdviserHistory = _G["UIAdviserHistory"] ---@type UIAdviserHistory
+  local UIMachineMenu = cth_require("dialogs.resizables.machine_menu")
+  local UIAdviserHistory = cth_require("dialogs.resizables.adviser_history")
   self:addMenu(_S.menu.charts, UIMenu()
     :appendItem(_S.menu_charts.bank_manager:format(hotkey_value_label("ingame_panel_bankManager", hotkeys)), function() self.ui.bottom_panel:dialogBankManager(true) end)
     :appendItem(_S.menu_charts.statement:format(hotkey_value_label("ingame_panel_bankStats", hotkeys)), function() self.ui.bottom_panel:dialogBankStats(true) end)
@@ -839,9 +839,9 @@ function UIMenuBar:makeGameMenu(app)
     end)
   end
   if self.ui.app.config.debug then
-    local UIMakeDebugPatient = _G["UIMakeDebugPatient"] ---@type UIMakeDebugPatient
-    local UILuaConsole = _G["UILuaConsole"] ---@type UILuaConsole
-    local UICallsDispatcher = _G["UICallsDispatcher"] ---@type UICallsDispatcher
+    local UIMakeDebugPatient = cth_require("dialogs.resizables.menu_list_dialogs.make_debug_patient")
+    local UILuaConsole = cth_require("dialogs.resizables.lua_console")
+    local UICallsDispatcher = cth_require("dialogs.resizables.calls_dispatcher")
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
       :appendMenu(_S.menu_debug.allow_blocking_off_areas, UIMenu()
@@ -888,3 +888,5 @@ function UIMenuBar:unlockCheats()
       function() self.ui:addWindow(UICheats(self.ui)) end))
   app.cheats_menu_unlocked = true
 end
+
+return UIMenuBar

@@ -18,8 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local UIInformation = cth_require("dialogs.information")
+local UIFullscreen = cth_require("dialogs.fullscreen")
+local Window = cth_require("window")
 local math_floor = math.floor
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 
 --! Staff management screen
 class "UIStaffManagement" (UIFullscreen)
@@ -539,6 +542,7 @@ function UIStaffManagement:onMouseUp(code, x, y)
       -- Hit in the view of the staff.
       local ui = self.ui
       ui:scrollMapTo(self:getStaffPosition())
+      local UIStaff = cth_require("dialogs.staff_dialog")
       ui:addWindow(UIStaff(ui, self.staff_members[self.category][self.selected_staff]))
       self:close()
     end
@@ -671,6 +675,7 @@ function UIStaffManagement:fire()
       local current_category = self.staff_members[self.category]
       current_category[self.selected_staff]:fire()
       -- Close the staff window if open
+      local UIStaff = cth_require("dialogs.staff_dialog")
       local staff_window = self.ui:getWindow(UIStaff)
       if staff_window and staff_window.staff == current_category[self.selected_staff] then
         staff_window:close()
@@ -685,6 +690,7 @@ end
 
 function UIStaffManagement:close()
   UIFullscreen.close(self)
+  local UIBottomPanel = cth_require("dialogs.bottom_panel")
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
@@ -705,3 +711,5 @@ function UIStaffManagement:afterLoad(old, new)
 
   UIFullscreen.afterLoad(self, old, new)
 end
+
+return UIStaffManagement

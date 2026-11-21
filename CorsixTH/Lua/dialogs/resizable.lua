@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Class for resizable windows.
 --! If resizable is set to true, the user can resize by clicking and dragging
@@ -428,3 +428,5 @@ function UIResizable:afterLoad(old, new)
     self.min_height = 50
   end
 end
+
+return UIResizable

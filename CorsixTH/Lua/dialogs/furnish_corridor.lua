@@ -20,9 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 local math_floor
     = math.floor
-local Window = _G['Window'] ---@type Window
 
 --! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)
@@ -201,6 +201,7 @@ function UIFurnishCorridor:confirm()
     if #to_purchase == 0 then
       self:close()
     else
+      local UIPlaceObjects = cth_require("dialogs.place_objects")
       self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase))
     end
   end
@@ -278,3 +279,5 @@ function UIFurnishCorridor:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
+
+return UIFurnishCorridor

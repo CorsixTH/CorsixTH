@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIMenuList = _G['UIMenuList'] ---@type UIMenuList
+local UIMenuList = cth_require("dialogs.resizables.menu_list_dialog")
 
 --! Custom Campaign Window
 class "UICustomCampaign" (UIMenuList)
@@ -157,3 +157,5 @@ function UICustomCampaign:draw(canvas, x, y)
               x + 270 * s, y + 40 * s, details_width * s, nil, 13, self.description_offset)
   end
 end
+
+return UICustomCampaign

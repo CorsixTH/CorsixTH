@@ -18,14 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
+local Window = cth_require("window")
+
 -- Test for hit within the view circle
 local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
   local s = TheApp.gfx:getUIScale()
   local circle_center_y = is_handyman and 276 * s or 248 * s
   return (x - 55 * s)^2 + (y - circle_center_y)^2 < (39 * s)^2
 end
-
-local Window = _G['Window'] ---@type Window
 
 --! Individual staff information dialog
 class "UIStaff" (Window)
@@ -62,8 +63,8 @@ function UIStaff:getParcelText()
 end
 
 function UIStaff:UIStaff(ui, staff)
-  local Handyman = _G["Handyman"] ---@type Handyman
-  local Doctor = _G["Doctor"] ---@type Doctor
+  local Handyman = cth_require("entities.humanoids.staff.handyman")
+  local Doctor = cth_require("entities.humanoids.staff.doctor")
 
   self:Window()
 
@@ -235,7 +236,7 @@ function UIStaff:draw(canvas, x_, y_)
     end
   end
 
-  local Doctor = _G["Doctor"] ---@type Doctor
+  local Doctor = cth_require("entities.humanoids.staff.doctor")
   if class.is(self.staff, Doctor) then
     -- Junior / Doctor / Consultant marker
     if profile.is_junior then
@@ -261,7 +262,7 @@ function UIStaff:draw(canvas, x_, y_)
 end
 
 function UIStaff:onMouseDown(button, x, y)
-  local Handyman = _G["Handyman"] ---@type Handyman
+  local Handyman = cth_require("entities.humanoids.staff.handyman")
   self.do_scroll = button == "left" and is_in_view_circle(x, y, class.is(self.staff, Handyman))
   return Window.onMouseDown(self, button, x, y)
 end
@@ -274,7 +275,7 @@ function UIStaff:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
   local s = TheApp.gfx:getUIScale()
   -- Test for hit within the view circle and name box
-  local Handyman = _G["Handyman"] ---@type Handyman
+  local Handyman = cth_require("entities.humanoids.staff.handyman")
   local hit_namebox = x > self.tooltip_regions[1].x * s and x < self.tooltip_regions[1].r * s
                       and y > self.tooltip_regions[1].y * s and y < self.tooltip_regions[1].b * s
   if button == "right" and is_in_view_circle(x, y, class.is(self.staff, Handyman))
@@ -313,7 +314,7 @@ function UIStaff:onMouseUp(button, x, y)
 end
 
 function UIStaff:onMouseMove(x, y, dx, dy)
-  local Handyman = _G["Handyman"] ---@type Handyman
+  local Handyman = cth_require("entities.humanoids.staff.handyman")
   self.do_scroll = self.do_scroll and is_in_view_circle(x, y, class.is(self.staff, Handyman))
   return Window.onMouseMove(self, x, y, dx, dy)
 end
@@ -334,7 +335,6 @@ function UIStaff:pickupStaff()
 end
 
 function UIStaff:fireStaff()
-  local UIConfirmDialog = _G["UIConfirmDialog"] ---@type UIConfirmDialog
   self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.sack_staff, --[[persistable:staff_dialog_confirm_sack]] function()
     self.staff:fire()
   end))
@@ -400,7 +400,7 @@ function UIStaff:doMoreRepairing()
 end
 
 function UIStaff:openStaffManagement()
-  local UIStaffManagement = _G["UIStaffManagement"] ---@type UIStaffManagement
+  local UIStaffManagement = cth_require("dialogs.fullscreen.staff_management")
   local dlg = UIStaffManagement(self.ui)
   -- Make sure that the dialog managed to create itself properly.
   -- For example, if using the demo files closed will be true because the dialog could not be loaded.
@@ -412,7 +412,7 @@ function UIStaff:openStaffManagement()
 end
 
 function UIStaff:hitTest(x, y)
-  local Handyman = _G["Handyman"] ---@type Handyman
+  local Handyman = cth_require("entities.humanoids.staff.handyman")
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y, class.is(self.staff, Handyman))
 end
 
@@ -427,3 +427,5 @@ function UIStaff:afterLoad(old, new)
     self.face_parts = TheApp.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat", false, { flags = DrawFlags.Nearest })
   end
 end
+
+return UIStaff

@@ -19,7 +19,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIInformation = cth_require("dialogs.information")
+local UIResizable = cth_require("dialogs.resizable")
 
 --! A dialog for activating cheats
 class "UICheats" (UIResizable)
@@ -158,3 +159,5 @@ function UICheats:afterLoad(old, new)
   self:close()
   UIResizable.afterLoad(self, old, new)
 end
+
+return UICheats

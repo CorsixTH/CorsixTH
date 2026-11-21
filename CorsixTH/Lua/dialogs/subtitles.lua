@@ -18,7 +18,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
+
+--! First in, first out queue for concurrently displayed subtitles
+class "SubtitleQueue"
+
+---@class SubtitleQueue
+---@operator call: SubtitleQueue
+local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
+
+--! SubtitleQueue constructor
+function SubtitleQueue:SubtitleQueue()
+  self.count = 0
+  self.subtitles = {}
+end
+
+--! Pushes subtitle text to the queue for display
+--!param subtitle (string) Subtitle text to display
+function SubtitleQueue:push(subtitle)
+  table.insert(self.subtitles, subtitle)
+  self.count = self.count + 1
+end
+
+--! Removes subtitle text at the top of the queue
+function SubtitleQueue:pop()
+  if self.subtitles[1] ~= nil then
+    table.remove(self.subtitles, 1)
+    self.count = self.count - 1
+  end
+end
+
+--! Returns true if the queue is empty, false otherwise
+function SubtitleQueue:isEmpty()
+  return self.count == 0
+end
 
 --! UI display area for announcer subtitles
 class "Subtitles" (Window)
@@ -34,7 +67,6 @@ function Subtitles:Subtitles()
   self.y = 0
   self.white_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 
-  local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
   self.queue = SubtitleQueue()
 end
 
@@ -82,39 +114,7 @@ function Subtitles:onTick()
 end
 
 function Subtitles:afterLoad(old, new)
-  local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
   self.queue = SubtitleQueue()
 end
 
---! First in, first out queue for concurrently displayed subtitles
-class "SubtitleQueue"
-
----@class SubtitleQueue
----@operator call: SubtitleQueue
-local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
-
---! SubtitleQueue constructor
-function SubtitleQueue:SubtitleQueue()
-  self.count = 0
-  self.subtitles = {}
-end
-
---! Pushes subtitle text to the queue for display
---!param subtitle (string) Subtitle text to display
-function SubtitleQueue:push(subtitle)
-  table.insert(self.subtitles, subtitle)
-  self.count = self.count + 1
-end
-
---! Removes subtitle text at the top of the queue
-function SubtitleQueue:pop()
-  if self.subtitles[1] ~= nil then
-    table.remove(self.subtitles, 1)
-    self.count = self.count - 1
-  end
-end
-
---! Returns true if the queue is empty, false otherwise
-function SubtitleQueue:isEmpty()
-  return self.count == 0
-end
+return Subtitles

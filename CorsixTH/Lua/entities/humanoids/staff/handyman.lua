@@ -230,3 +230,4 @@ function Handyman:afterLoad(old, new)
   Staff.afterLoad(self, old, new)
 end
 
+return Handyman

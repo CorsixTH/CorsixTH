@@ -112,3 +112,5 @@ function Receptionist:afterLoad(old, new)
   end
   Staff.afterLoad(self, old, new)
 end
+
+return Receptionist

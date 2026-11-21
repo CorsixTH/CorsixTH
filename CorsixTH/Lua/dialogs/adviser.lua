@@ -19,8 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! The (ideally) helpful advisor who pops up from the bottom dialog during a game.
 class "UIAdviser" (Window)
@@ -349,3 +348,5 @@ function UIAdviser:afterLoad(old, new)
   end
   Window.afterLoad(self, old, new)
 end
+
+return UIAdviser

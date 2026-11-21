@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Dropdown "window" used for selection of one item from a list.
 class "UIDropdown" (UIResizable)
@@ -208,3 +208,5 @@ function UIDropdown:onMouseMove(x, y, dx, dy)
   end
   return UIResizable.onMouseMove(self, x, y, dx, dy)
 end
+
+return UIDropdown

@@ -19,9 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
+local Window = cth_require("window")
 local ipairs, math_floor
     = ipairs, math.floor
-local Window = _G['Window'] ---@type Window
 
 -- Visually, it looks better to have the object being placed not attached to a
 -- tile (so that it is always on top of walls, etc.), but for debugging it can
@@ -749,6 +749,7 @@ function UIPlaceObjects:_placementAvailableHereAndOtherObjectsDoNotInterfere(
   local world = self.world
   local player_id = self.ui.hospital:getPlayerIndex()
   local direction = self.object_orientation
+  local Object = cth_require("entities.object")
   local direction_parameters = Object.directionParameters()
   local optional_tiles = 0
   for _, tile in ipairs(object_footprint) do
@@ -953,6 +954,7 @@ function UIPlaceObjects:_isSideObjectPlacementValid(x, y, room_id, passable_flag
   else
     to_check_x = to_check_x + (passable_flag == "travelEast" and 1 or -1)
   end
+  local Object = cth_require("entities.object")
   local opposite_passable_flag = Object.getComplementaryPassableFlag(passable_flag)
 
   local function hasNoConnectingPath(x1, y1, x2, y2)
@@ -1132,3 +1134,5 @@ function UIPlaceObjects:afterLoad(old, new)
     self.blue_font = self.app.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   end
 end
+
+return UIPlaceObjects
