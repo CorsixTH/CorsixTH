@@ -198,22 +198,21 @@ tooltip = {
   },
   audio_window = {
     audio_button = "Slå av eller på all lyd",
-    audio_toggle = "Slå av eller på",
+    audio = "Slå av eller på",
   },
   folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
-    browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
+    browse_font = "Se etter en annen font-fil",
     screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
-    browse_music = "Se etter en annen lokasjon for musikk ( nåværende beliggenhet: %1% ) ",
-    music_location = "Velg en lokasjon for mp3-musikk. Mappen må være laget på forhånd.",
-    data_location = "Banen til den originale Theme Hospital-installasjonen, som du trenger for å spille CorsixTH",
-    browse_data = "Se etter en annen lokasjon for Theme Hospital-installasjonen ( nåværende beliggenhet: %1%)",
-    savegames_location = "Normalt er de lagrede spillene lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
+    browse_music = "Se etter en annen lokasjon for musikk",
+    audio_music = "Velg en lokasjon for mp3-musikk. Mappen må være laget på forhånd.",
+    theme_hospital_install = "Banen til den originale Theme Hospital-installasjonen, som du trenger for å spille CorsixTH",
+    savegames = "Normalt er de lagrede spillene lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
     back = "Lukk denne menyen og gå tilbake",
-    browse_saves = "Se etter en annen lokasjon for dine lagrede spill  ( nåværende beliggenhet: %1% ) ",
+    browse_saves = "Se etter en annen lokasjon for dine lagrede spill ",
     browse = "Se etter mappelokasjon",
-    browse_screenshots = "Se etter en annen lokasjon for skjermdumper  ( nåværende beliggenhet: %1% ) ",
+    browse_screenshots = "Se etter en annen lokasjon for skjermdumper ",
     not_specified = "Ingen mappe er valgt enda!",
-    font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
+    unicode_font = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
     reset_to_default = "Tilbakestill mappen til standard lokasjon ( %1% )",
     default = "Standard lokasjon",
     no_font_specified = "Ingen font-fil er valgt enda!",
@@ -860,16 +859,16 @@ audio_window = {
 
 folders_window = {
   screenshots_location = "Velg banen du vil bruke for skjermdumper",
-  music_label = "MP3", --todo: annet ordvalg? "MP3's"
+  audio_music = "MP3", --todo: annet ordvalg? "MP3's"
   back = "Tilbake",
-  savegames_label = "Lagrede spill", --todo: annet ordvalg? "saves"
+  savegames = "Lagrede spill", --todo: annet ordvalg? "saves"
   caption = "Mappebane", --todo: annet ordvalg? "folder locations"
   savegames_location = "Velg banen du vil bruke for lagrede spill",
-  font_label = "Font",
+  unicode_font = "Font",
   new_th_location = "Her kan du spesifisere en ny bane for Theme Hospital. Spillet startes på nytt når du velger en ny bane.",
   screenshots_label = "Skjermdumper",
   music_location = "Velg banen du vil bruke for musikk",
-  data_label = "TH-data", --todo: annet ordvalg? "TH Data"
+  theme_hospital_install = "TH-data", --todo: annet ordvalg? "TH Data"
 }
 
 

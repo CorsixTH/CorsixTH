@@ -3428,7 +3428,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "开关所有的声音",
-  audio_toggle = "切换开关",
+  audio = "切换开关",
 }
 
 customise_window = {
@@ -3458,11 +3458,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "文件夹位置",
-  data_label = "TH 数据",
-  font_label = "字体",
-  music_label = "音乐",
-  savegames_label = "存档",
-  screenshots_label = "截图",
+  theme_hospital_install = "TH 数据",
+  unicode_font = "字体",
+  audio_music = "音乐",
+  savegames = "存档",
+  screenshots = "截图",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "您可以在此处指定新的主题医院安装目录。选择新目录后，游戏将重新启动。",
   savegames_location = "选择要用于保存的目录",
@@ -3473,16 +3473,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "浏览文件夹位置",
-  data_location = "原版主题医院安装的目录，CorsixTH 运行所必需",
-  font_location = "选择可以显示您的语言所需 Unicode 字体的位置。如果没有指定，您将不能使用原游戏提供字体之外的语言，例如中文和俄语。（你一定已经选了，要不怎么可以看到这句话呢？）",
+  theme_hospital_install = "原版主题医院安装的目录，CorsixTH 运行所必需",
+  unicode_font = "选择可以显示您的语言所需 Unicode 字体的位置。如果没有指定，您将不能使用原游戏提供字体之外的语言，例如中文和俄语。（你一定已经选了，要不怎么可以看到这句话呢？）",
   savegames_location = "默认情况下，游戏存档存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
   screenshots_location = "默认情况下，屏幕快照存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
-  music_location = "选择存储音乐文件的位置。此目录必须已经存在，然后才能浏览到刚创建的目录。",
-  browse_data = "浏览另一处主题医院安装位置（当前位置：%1%）",
-  browse_font = "浏览另一个字体（当前位置：%1%）",
-  browse_saves = "浏览另一处游戏存档储存位置（当前位置：%1%）",
-  browse_screenshots = "浏览另一处屏幕截图储存位置（当前位置：%1%）",
-  browse_music = "浏览另一处音乐储存位置（当前位置：%1%）",
+  audio_music = "选择存储音乐文件的位置。此目录必须已经存在，然后才能浏览到刚创建的目录。",
+  browse_font = "浏览另一个字体",
+  browse_saves = "浏览另一处游戏存档储存位置",
+  browse_screenshots = "浏览另一处屏幕截图储存位置",
+  browse_music = "浏览另一处音乐储存位置",
   no_font_specified = "没有指定字体的位置！",
   not_specified = "没有指定文件夹位置！",
   default = "默认位置",

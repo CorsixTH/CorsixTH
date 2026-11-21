@@ -101,11 +101,11 @@ save_game_window = {
 
 folders_window = {
   caption = "フォルダの場所",
-  data_label = "テーマホスピタルのデータ",
-  font_label = "フォント",
-  music_label = "ミュージック",
-  savegames_label = "セーブデータ",
-  screenshots_label = "スクリーンショット",
+  theme_hospital_install = "テーマホスピタルのデータ",
+  unicode_font = "フォント",
+  audio_music = "ミュージック",
+  savegames = "セーブデータ",
+  screenshots = "スクリーンショット",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "ここで、新しくテーマホスピタルが インストールされたディレクトリ または ISOファイルを指定できます。 新しいディレクトリを選択するとすぐにゲームが再起動されます。 ファイル拡張子は現在表示されません。",
   savegames_location = "保存に使用するディレクトリを選択してください",
@@ -116,16 +116,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "フォルダの場所を参照",
-  data_location = "CorsixTHを実行するために必要な、元のテーマホスピタルをインストールしたディレクトリまたはISOファイルの場所",
-  font_location = "選択した言語に必要なUnicode文字を表示できるフォントファイルの場所 。これを指定しない場合、元のゲームで提供されている文字種よりも多くの文字を必要とする言語を選択できなくなります。 例: 日本語、ロシア語や中国語",
-  savegames_location = "デフォルトでは、保存ディレクトリは設定ファイルの隣にあり、セーブデータを保存するために使用されます。 または、使用するディレクトリを参照して独自のディレクトリを選択することもできます。",
-  screenshots_location = "デフォルトでは、スクリーンショットは設定ファイルの隣にあるフォルダに保存されます。 または、使用するディレクトリを参照して独自のディレクトリを選択することもできます。",
-  music_location = "ディレクトリを参照して音楽ファイルの場所を選択します。 (ディレクトリは既に存在している必要があります)",
-  browse_data = "テーマホスピタルがインストールされている別の場所を選択します (現在の場所: %1% ) ",
-  browse_font = "別のフォントを選択します ( 現在の場所: %1% ) ",
-  browse_saves = "セーブデータを保存する別の場所を選択します ( 現在の場所: %1% ) ",
-  browse_screenshots = "スクリーンショットを保存する別の場所を選択します ( 現在の場所: %1% ) ",
-  browse_music = "音楽に使用する別の場所を選択します ( 現在の場所: %1% ) ",
+  theme_hospital_install = "CorsixTHを実行するために必要な、元のテーマホスピタルをインストールしたディレクトリまたはISOファイルの場所",
+  unicode_font = "選択した言語に必要なUnicode文字を表示できるフォントファイルの場所 。これを指定しない場合、元のゲームで提供されている文字種よりも多くの文字を必要とする言語を選択できなくなります。 例: 日本語、ロシア語や中国語",
+  savegames = "デフォルトでは、保存ディレクトリは設定ファイルの隣にあり、セーブデータを保存するために使用されます。 または、使用するディレクトリを参照して独自のディレクトリを選択することもできます。",
+  screenshots = "デフォルトでは、スクリーンショットは設定ファイルの隣にあるフォルダに保存されます。 または、使用するディレクトリを参照して独自のディレクトリを選択することもできます。",
+  audio_music = "ディレクトリを参照して音楽ファイルの場所を選択します。 (ディレクトリは既に存在している必要があります)",
+  browse_font = "別のフォントを選択します",
+  browse_saves = "セーブデータを保存する別の場所を選択します",
+  browse_screenshots = "スクリーンショットを保存する別の場所を選択します",
+  browse_music = "音楽に使用する別の場所を選択します",
   no_font_specified = "フォントが設定されていません！",
   not_specified = "フォルダが設定されていません！",
   default = "デフォルト設定のまま",
@@ -235,7 +234,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "すべての音楽をオン/オフする",
-  audio_toggle = "オン / オフを設定してください",
+  audio = "オン / オフを設定してください",
   jukebox = "ジュークボックスを開く",
 }
 

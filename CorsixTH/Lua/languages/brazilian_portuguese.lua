@@ -511,7 +511,7 @@ audio_window = {
 
 tooltip.audio_window = {
   audio_button = "Ligar ou desligar todo o áudio do jogo",
-  audio_toggle = "Ativar ou desativar",
+  audio = "Ativar ou desativar",
   jukebox = "Abrir a Jukebox para controlar a música",
 }
 
@@ -560,11 +560,11 @@ tooltip.customise_window = {
 
 folders_window = {
   caption = "Localizaçäo de Pastas",
-  data_label = "Dados do TH",
-  font_label = "Fonte",
-  music_label = "Músicas",
-  savegames_label = "Jogos Salvos",
-  screenshots_label = "Capturas de Tela",
+  theme_hospital_install = "Dados do TH",
+  unicode_font = "Fonte",
+  audio_music = "Músicas",
+  savegames = "Jogos Salvos",
+  screenshots = "Capturas de Tela",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "Aqui pode especificar uma nova pasta de instalaçäo do Theme Hospital. O jogo será reiniciado assim que selecionar a nova pasta.",
   savegames_location = "Selecione a pasta que quer utilizar para seus jogos salvos.",
@@ -575,16 +575,15 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Procurar a localizaçäo da pasta",
-  data_location = "A pasta com a instalaçäo do Theme Hospital original, necessário para executar o CorsixTH",
-  font_location = "A localizaçäo de uma fonte de letra capaz de mostrar caracteres Unicode necessários para seu idioma. Se näo for indicado, näo poderá selecionar idiomas que tenham mais caracteres dos que o jogo original tem, por exemplo, russo e chinês.",
-  savegames_location = "A pasta de jogos salvos é localizada por padräo junto com o arquivo de configuraçäo e é utilizado para armazenar os jogos salvo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
-  screenshots_location = "As capturas de tela säo guardadas por padräo em uma pasta junto com o arquivo de configuraçäo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
-  music_location = "Selecione uma pasta com seus arquivos de música. Necessita de uma pasta já existente, entäo poderá procurá-la.",
-  browse_data = "Procurar outra localizaçäo com uma instalaçäo do Theme Hospital. (Localizaçäo atual: %1%)",
-  browse_font = "Procurar outro arquivo de fonte de letra. (Localizaçäo atual: %1%)",
-  browse_saves = "Procurar outra localizaçäo para sua pasta de jogos salvos. (Localizaçäo atual: %1%) ",
-  browse_screenshots = "Procurar outra localizaçäo para sua pasta de capturas de tela. (Localizaçäo atual: %1%) ",
-  browse_music = "Procurar outra localizaçäo para sua pasta de música. (Localizaçäo atual: %1%) ",
+  theme_hospital_install = "A pasta com a instalaçäo do Theme Hospital original, necessário para executar o CorsixTH",
+  unicode_font = "A localizaçäo de uma fonte de letra capaz de mostrar caracteres Unicode necessários para seu idioma. Se näo for indicado, näo poderá selecionar idiomas que tenham mais caracteres dos que o jogo original tem, por exemplo, russo e chinês.",
+  savegames = "A pasta de jogos salvos é localizada por padräo junto com o arquivo de configuraçäo e é utilizado para armazenar os jogos salvo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
+  screenshots = "As capturas de tela säo guardadas por padräo em uma pasta junto com o arquivo de configuraçäo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
+  audio_music = "Selecione uma pasta com seus arquivos de música. Necessita de uma pasta já existente, entäo poderá procurá-la.",
+  browse_font = "Procurar outro arquivo de fonte de letra.",
+  browse_saves = "Procurar outra localizaçäo para sua pasta de jogos salvos. ",
+  browse_screenshots = "Procurar outra localizaçäo para sua pasta de capturas de tela. ",
+  browse_music = "Procurar outra localizaçäo para sua pasta de música. ",
   no_font_specified = "Pasta de fontes näo especificada!",
   not_specified = "Pasta näo especificada!",
   default = "Localizaçäo padräo",
