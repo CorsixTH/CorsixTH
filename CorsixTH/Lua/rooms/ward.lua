@@ -20,36 +20,37 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "ward"
-room.vip_must_visit = true
-room.level_config_id = 9
-room.class = "WardRoom"
-room.name = _S.rooms_short.ward
-room.tooltip = _S.tooltip.rooms.ward
-room.long_name = _S.rooms_long.ward
-room.objects_additional = {
-  "extinguisher",
-  "radiator",
-  "plant",
-  "desk",
-  "bin",
-  "bed" }
-room.objects_needed = { desk = 1, bed = 1 }
-room.build_preview_animation = 910
-room.categories = {
-  treatment = 2,
-  diagnosis = 9,
+---@type RoomProperties
+local room_properties = {
+  id = "ward",
+  vip_must_visit = true,
+  level_config_id = 9,
+  class = "WardRoom",
+  name = _S.rooms_short.ward,
+  tooltip = _S.tooltip.rooms.ward,
+  long_name = _S.rooms_long.ward,
+  objects_additional = {
+    "extinguisher",
+    "radiator",
+    "plant",
+    "desk",
+    "bin",
+    "bed" },
+  objects_needed = { desk = 1, bed = 1 },
+  build_preview_animation = 910,
+  categories = {
+    treatment = 2,
+    diagnosis = 9,
+  },
+  minimum_size = 6,
+  wall_type = "white",
+  floor_tile = 21,
+  swing_doors = true,
+  required_staff = {
+    Nurse = 1,
+  },
+  call_sound = "reqd009.wav",
 }
-room.minimum_size = 6
-room.wall_type = "white"
-room.floor_tile = 21
-room.swing_doors = true
-room.required_staff = {
-  Nurse = 1,
-}
-
-room.call_sound = "reqd009.wav"
 
 class "WardRoom" (Room)
 
@@ -266,4 +267,4 @@ function WardRoom:afterLoad(old, new)
   Room.afterLoad(self, old, new)
 end
 
-return room
+return room_properties

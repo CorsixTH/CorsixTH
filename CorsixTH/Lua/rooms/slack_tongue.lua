@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "slack_tongue"
-room.vip_must_visit = false
-room.level_config_id = 20
-room.class = "SlackTongueRoom"
-room.name = _S.rooms_short.tongue_clinic
-room.long_name = _S.rooms_long.tongue_clinic
-room.tooltip = _S.tooltip.rooms.tongue_clinic
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { slicer = 1 }
-room.build_preview_animation = 932
-room.categories = {
-  clinics = 2,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "slack_tongue",
+  vip_must_visit = false,
+  level_config_id = 20,
+  class = "SlackTongueRoom",
+  name = _S.rooms_short.tongue_clinic,
+  long_name = _S.rooms_long.tongue_clinic,
+  tooltip = _S.tooltip.rooms.tongue_clinic,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { slicer = 1 },
+  build_preview_animation = 932,
+  categories = {
+    clinics = 2,
+  },
+  minimum_size = 4,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd005.wav",
+  handyman_call_sound = "maint004.wav",
 }
-room.minimum_size = 4
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd005.wav"
-room.handyman_call_sound = "maint004.wav"
 
 class "SlackTongueRoom" (Room)
 
@@ -83,4 +86,4 @@ function SlackTongueRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

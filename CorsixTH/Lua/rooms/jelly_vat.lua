@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "jelly_vat"
-room.vip_must_visit = false
-room.level_config_id = 24
-room.class = "JellyVatRoom"
-room.name = _S.rooms_short.jelly_vat
-room.long_name = _S.rooms_long.jelly_vat
-room.tooltip = _S.tooltip.rooms.jelly_vat
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { jelly_moulder = 1 }
-room.build_preview_animation = 928
-room.categories = {
-  clinics = 7,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "jelly_vat",
+  vip_must_visit = false,
+  level_config_id = 24,
+  class = "JellyVatRoom",
+  name = _S.rooms_short.jelly_vat,
+  long_name = _S.rooms_long.jelly_vat,
+  tooltip = _S.tooltip.rooms.jelly_vat,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { jelly_moulder = 1 },
+  build_preview_animation = 928,
+  categories = {
+    clinics = 7,
+  },
+  minimum_size = 4,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd020.wav",
+  handyman_call_sound = "maint009.wav",
 }
-room.minimum_size = 4
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd020.wav"
-room.handyman_call_sound = "maint009.wav"
 
 class "JellyVatRoom" (Room)
 
@@ -75,4 +78,4 @@ function JellyVatRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

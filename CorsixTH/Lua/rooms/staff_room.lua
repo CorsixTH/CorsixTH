@@ -20,24 +20,26 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "staff_room"
-room.vip_must_visit = false
-room.level_config_id = 25
-room.class = "StaffRoom"
-room.name = _S.rooms_short.staffroom
-room.long_name = _S.rooms_long.staffroom
-room.tooltip = _S.tooltip.rooms.staffroom
-room.objects_additional = { "extinguisher", "radiator", "plant", "sofa", "pool_table", "tv", "video_game" }
-room.objects_needed = { sofa = 1 }
-room.build_preview_animation = 5066
-room.categories = {
-  facilities = 1,
+---@type RoomProperties
+local room_properties = {
+  id = "staff_room",
+  vip_must_visit = false,
+  level_config_id = 25,
+  class = "StaffRoom",
+  name = _S.rooms_short.staffroom,
+  long_name = _S.rooms_long.staffroom,
+  tooltip = _S.tooltip.rooms.staffroom,
+  objects_additional = { "extinguisher", "radiator", "plant", "sofa", "pool_table", "tv", "video_game" },
+  objects_needed = { sofa = 1 },
+  build_preview_animation = 5066,
+  categories = {
+    facilities = 1,
+  },
+  minimum_size = 4,
+  wall_type = "green",
+  floor_tile = 17,
+  has_no_queue_dialog = true,
 }
-room.minimum_size = 4
-room.wall_type = "green"
-room.floor_tile = 17
-room.has_no_queue_dialog = true
 
 class "StaffRoom" (Room)
 
@@ -73,4 +75,4 @@ function StaffRoom:testStaffCriteria(criteria, extra_humanoid)
   end
 end
 
-return room
+return room_properties

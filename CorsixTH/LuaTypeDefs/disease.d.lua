@@ -35,4 +35,5 @@ SOFTWARE. --]]
 ---@field initPatient fun(Patient): nil
 ---@field diagnosis_rooms string[] Names of rooms to aid in diagnosis.
 ---@field treatment_rooms string[] Names of rooms to visit for treating the illness
+---@field requires_machine boolean? Whether a machine is required for the disease.
 local Disease = {}

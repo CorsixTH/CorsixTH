@@ -20,31 +20,34 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "scanner"
-room.vip_must_visit = false
-room.level_config_id = 13
-room.class = "ScannerRoom"
-room.name = _S.rooms_short.scanner
-room.long_name = _S.rooms_long.scanner
-room.tooltip = _S.tooltip.rooms.scanner
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { scanner = 1, console = 1, screen = 1 }
-room.build_preview_animation = 920
-room.categories = {
-  diagnosis = 4,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "scanner",
+  vip_must_visit = false,
+  level_config_id = 13,
+  class = "ScannerRoom",
+  name = _S.rooms_short.scanner,
+  long_name = _S.rooms_long.scanner,
+  tooltip = _S.tooltip.rooms.scanner,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { scanner = 1, console = 1, screen = 1 },
+  build_preview_animation = 920,
+  categories = {
+    diagnosis = 4,
+  },
+  minimum_size = 5,
+  wall_type = "yellow",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd002.wav",
+  -- Handyman is called to "diagnosis machine", all other diagnosis rooms have
+  --  their own, more specific handyman call though
+  -- handyman_call_sound = "maint011.wav"
 }
-room.minimum_size = 5
-room.wall_type = "yellow"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd002.wav"
--- Handyman is called to "diagnosis machine", all other diagnosis rooms have
--- their own, more specific handyman call though
---room.handyman_call_sound = "maint011.wav"
 
 class "ScannerRoom" (Room)
 
@@ -154,4 +157,4 @@ function ScannerRoom:shouldHavePatientReenter(patient)
   return not patient:isLeaving()
 end
 
-return room
+return room_properties

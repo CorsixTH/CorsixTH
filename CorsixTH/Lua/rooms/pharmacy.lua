@@ -20,28 +20,31 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "pharmacy"
-room.vip_must_visit = false
-room.level_config_id = 11
-room.class = "PharmacyRoom"
-room.name = _S.rooms_short.pharmacy
-room.long_name = _S.rooms_long.pharmacy
-room.tooltip = _S.tooltip.rooms.pharmacy
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { pharmacy_cabinet = 1 }
-room.build_preview_animation = 5088
-room.categories = {
-  treatment = 4,
+---@type StaffRequirements
+local needed_staff = { Nurse = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "pharmacy",
+  vip_must_visit = false,
+  level_config_id = 11,
+  class = "PharmacyRoom",
+  name = _S.rooms_short.pharmacy,
+  long_name = _S.rooms_long.pharmacy,
+  tooltip = _S.tooltip.rooms.pharmacy,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { pharmacy_cabinet = 1 },
+  build_preview_animation = 5088,
+  categories = {
+    treatment = 4,
+  },
+  minimum_size = 4,
+  wall_type = "white",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd012.wav",
 }
-room.minimum_size = 4
-room.wall_type = "white"
-room.floor_tile = 19
-room.required_staff = {
-  Nurse = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd012.wav"
 
 class "PharmacyRoom" (Room)
 
@@ -102,4 +105,4 @@ function PharmacyRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

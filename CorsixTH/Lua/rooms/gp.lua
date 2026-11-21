@@ -20,28 +20,31 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "gp"
-room.vip_must_visit = false
-room.level_config_id = 7
-room.class = "GPRoom"
-room.name = _S.rooms_short.gps_office
-room.long_name = _S.rooms_long.gps_office
-room.tooltip = _S.tooltip.rooms.gps_office
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { desk = 1, cabinet = 1, chair = 1 }
-room.build_preview_animation = 900
-room.categories = {
-  diagnosis = 1,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "gp",
+  vip_must_visit = false,
+  level_config_id = 7,
+  class = "GPRoom",
+  name = _S.rooms_short.gps_office,
+  long_name = _S.rooms_long.gps_office,
+  tooltip = _S.tooltip.rooms.gps_office,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { desk = 1, cabinet = 1, chair = 1 },
+  build_preview_animation = 900,
+  categories = {
+    diagnosis = 1,
+  },
+  minimum_size = 4,
+  wall_type = "white",
+  floor_tile = 18,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd008.wav",
 }
-room.minimum_size = 4
-room.wall_type = "white"
-room.floor_tile = 18
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd008.wav"
 
 class "GPRoom" (Room)
 
@@ -210,4 +213,4 @@ function GPRoom:roomFinished()
   return Room.roomFinished(self)
 end
 
-return room
+return room_properties

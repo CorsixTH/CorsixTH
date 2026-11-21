@@ -16,46 +16,48 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local disease = {}
-disease.id = "pregnant"
-disease.expertise_id = 14
-disease.visuals_id = 12
-disease.name = _S.diseases.pregnancy.name
-disease.cause = _S.diseases.pregnancy.cause
-disease.symptoms = _S.diseases.pregnancy.symptoms
-disease.cure = _S.diseases.pregnancy.cure
-disease.cure_price = 200
-disease.emergency_sound = "emerg021.wav"
-disease.emergency_number = 8
-disease.contagious = false
-disease.initPatient = function(patient)
-  patient:setType("Standard Female Patient")
-  patient:setLayer(0, math.random(1, 4) * 2)
-  patient:setLayer(2, 0)
-  patient:setLayer(1, math.random(0, 3) * 2)
-  patient:setLayer(3, 0)
-  patient:setLayer(4, 0)
-end
+---@type Disease
+local disease = {
+  id = "pregnant",
+  expertise_id = 14,
+  visuals_id = 12,
+  name = _S.diseases.pregnancy.name,
+  cause = _S.diseases.pregnancy.cause,
+  symptoms = _S.diseases.pregnancy.symptoms,
+  cure = _S.diseases.pregnancy.cure,
+  cure_price = 200,
+  emergency_sound = "emerg021.wav",
+  emergency_number = 8,
+  contagious = false,
+  initPatient = function(patient)
+    patient:setType("Standard Female Patient")
+    patient:setLayer(0, math.random(1, 4) * 2)
+    patient:setLayer(2, 0)
+    patient:setLayer(1, math.random(0, 3) * 2)
+    patient:setLayer(3, 0)
+    patient:setLayer(4, 0)
+  end,
 
--- Diagnosis rooms are the rooms other than the GPs office which can be visited
--- to aid in diagnosis. They need not be visited, and if they are visited, the
--- order in which they are visited is not fixed.
-disease.diagnosis_rooms = {
-  "general_diag",
-  "cardiogram",
-  "scanner",
-  "ultrascan",
-  "blood_machine",
-  "x_ray",
-  "psych",
-  "ward",
-}
+  -- Diagnosis rooms are the rooms other than the GPs office which can be visited
+  -- to aid in diagnosis. They need not be visited, and if they are visited, the
+  -- order in which they are visited is not fixed.
+  diagnosis_rooms = {
+    "general_diag",
+    "cardiogram",
+    "scanner",
+    "ultrascan",
+    "blood_machine",
+    "x_ray",
+    "psych",
+    "ward",
+  },
 
--- Treatment rooms are the rooms which must be visited, in the given order, to
--- cure the disease.
-disease.treatment_rooms = {
-  "ward",
-  "operating_theatre",
+  -- Treatment rooms are the rooms which must be visited, in the given order, to
+  -- cure the disease.
+  treatment_rooms = {
+    "ward",
+    "operating_theatre",
+  },
 }
 
 return disease

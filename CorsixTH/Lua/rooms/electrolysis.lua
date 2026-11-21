@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "electrolysis"
-room.vip_must_visit = false
-room.level_config_id = 23
-room.class = "ElectrolysisRoom"
-room.name = _S.rooms_short.electrolysis
-room.long_name = _S.rooms_long.electrolysis
-room.tooltip = _S.tooltip.rooms.electrolysis
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { electrolyser = 1, console = 1 }
-room.build_preview_animation = 930
-room.categories = {
-  clinics = 5,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "electrolysis",
+  vip_must_visit = false,
+  level_config_id = 23,
+  class = "ElectrolysisRoom",
+  name = _S.rooms_short.electrolysis,
+  long_name = _S.rooms_long.electrolysis,
+  tooltip = _S.tooltip.rooms.electrolysis,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { electrolyser = 1, console = 1 },
+  build_preview_animation = 930,
+  categories = {
+    clinics = 5,
+  },
+  minimum_size = 5,
+  wall_type = "blue",
+  floor_tile = 17,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd019.wav",
+  handyman_call_sound = "maint008.wav",
 }
-room.minimum_size = 5
-room.wall_type = "blue"
-room.floor_tile = 17
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd019.wav"
-room.handyman_call_sound = "maint008.wav"
 
 class "ElectrolysisRoom" (Room)
 
@@ -112,4 +115,4 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties

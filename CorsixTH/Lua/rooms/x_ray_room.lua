@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "x_ray"
-room.vip_must_visit = false
-room.level_config_id = 16
-room.class = "XRayRoom"
-room.name = _S.rooms_short.x_ray
-room.long_name = _S.rooms_long.x_ray
-room.tooltip = _S.tooltip.rooms.x_ray
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { x_ray = 1, radiation_shield = 1 }
-room.build_preview_animation = 5076
-room.categories = {
-  diagnosis = 7,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "x_ray",
+  vip_must_visit = false,
+  level_config_id = 16,
+  class = "XRayRoom",
+  name = _S.rooms_short.x_ray,
+  long_name = _S.rooms_long.x_ray,
+  tooltip = _S.tooltip.rooms.x_ray,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { x_ray = 1, radiation_shield = 1 },
+  build_preview_animation = 5076,
+  categories = {
+    diagnosis = 7,
+  },
+  minimum_size = 6,
+  wall_type = "yellow",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd013.wav",
+  handyman_call_sound = "maint005.wav",
 }
-room.minimum_size = 6
-room.wall_type = "yellow"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd013.wav"
-room.handyman_call_sound = "maint005.wav"
 
 class "XRayRoom" (Room)
 
@@ -92,4 +95,4 @@ function XRayRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-return room
+return room_properties
