@@ -144,6 +144,38 @@ function TH.stringProxy.sub(str, ...)
   return result
 end
 
-for _, method_name in ipairs({"gsub", "format", "find", "sub"}) do
+--! Wrapper for the lua string.upper function with Turkish dotted-I handling.
+function TH.stringProxy.upper(str)
+  local orig_str = str
+  local str_was_proxy
+  str, str_was_proxy = _unwrap(str)
+  local result = str
+  if TheApp and TheApp.strings and TheApp.strings:getLangCode() == "tr" then
+    result = result:gsub("i", "\196\176") -- i -> İ
+  end
+  result = result:upper()
+  if str_was_proxy then
+    result = TH.stringProxy(result, TH.stringProxy.upper, orig_str)
+  end
+  return result
+end
+
+--! Wrapper for the lua string.lower function with Turkish dotless-I handling.
+function TH.stringProxy.lower(str)
+  local orig_str = str
+  local str_was_proxy
+  str, str_was_proxy = _unwrap(str)
+  local result = str
+  if TheApp and TheApp.strings and TheApp.strings:getLangCode() == "tr" then
+    result = result:gsub("I", "\196\177") -- I -> ı
+  end
+  result = result:lower()
+  if str_was_proxy then
+    result = TH.stringProxy(result, TH.stringProxy.lower, orig_str)
+  end
+  return result
+end
+
+for _, method_name in ipairs({"gsub", "format", "find", "sub", "upper", "lower"}) do
   permanent("TH.stringProxy." .. method_name, TH.stringProxy[method_name])
 end
