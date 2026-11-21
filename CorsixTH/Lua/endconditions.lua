@@ -49,10 +49,10 @@ class "EndConditions"
 ---@operator call: EndConditions
 local EndConditions = _G["EndConditions"] ---@type EndConditions
 
---! Collect the end conditions for this level, if they exist
---!param level_config (table) The map's level_config, containing criteria.
---!param level_number (integer) The number of the map, if playing a campaign.
---!param freebuild (boolean) The free build status of the world
+--- Collect the end conditions for this level, if they exist
+---@param level_config (table) The map's level_config, containing criteria.
+---@param level_number (integer) The number of the map, if playing a campaign.
+---@param freebuild (boolean) The free build status of the world
 function EndConditions:EndConditions(level_config, level_number, freebuild)
   self.win_goals, self.lose_goals, self.highest_group = {}, {}, 0
   if freebuild then return end
@@ -71,15 +71,15 @@ function EndConditions:EndConditions(level_config, level_number, freebuild)
   self:_loadGoals(level_config.lose_criteria, self.lose_goals, start)
 end
 
---! Load conditions (goals) to win and lose from the level config,
--- and store them in self.win_goals and self.lose_goals in their groups.
--- Put the highest number of group of conditions in self.highest_group.
--- These groups are often incomplete, possibly empty
--- ie more groups of conditions that lead to loss than win.
---!param criteria_tbl (table) The map's win or lose criteria.
---!param goals (table) The class table to fill
---!param start (table) The starting values of the hospital attributes
---!param win (boolean) If the win goals are being filled this time
+--- Load conditions (goals) to win and lose from the level config,
+--- and store them in self.win_goals and self.lose_goals in their groups.
+--- Put the highest number of group of conditions in self.highest_group.
+--- These groups are often incomplete, possibly empty
+--- ie more groups of conditions that lead to loss than win.
+---@param criteria_tbl (table) The map's win or lose criteria.
+---@param goals (table) The class table to fill
+---@param start (table) The starting values of the hospital attributes
+---@param win (boolean?) If the win goals are being filled this time
 function EndConditions:_loadGoals(criteria_tbl, goals, start, win)
   for _, values in pairs(criteria_tbl) do
     if local_criteria_variable[values.Criteria] then
@@ -106,11 +106,10 @@ function EndConditions:_loadGoals(criteria_tbl, goals, start, win)
   end
 end
 
---! Checks if the player has won or lost by meeting all of any one group.
---!param hospital (Hospital) The hospital of the tests.
---!return state (string) "win" or "nothing", or
---!return reason (string) If the player lost, the latest criteria met
---!return limit (number) If the player lost, the number limit which the player passed
+--- Checks if the player has won or lost by meeting all of any one group.
+---@param hospital (Hospital) The hospital of the tests.
+---@return "win" | "nothing" # If the player has won, or has not won or lost yet
+---@overload fun(): (reason: string, limit: number) # If the player lost: the latest criteria met, and the number limit passed
 function EndConditions:checkEndGame(hospital)
   -- If there are no goals at all, do nothing.
   if (not self.win_goals or #self.win_goals == 0) and
@@ -123,19 +122,19 @@ function EndConditions:checkEndGame(hospital)
   end
   for _, tbl in pairs(self.lose_goals) do
     local reason, limit = self:_checkLoseGroup(hospital, tbl)
-    if reason then return reason, limit end
+    if reason and limit then return reason, limit end
   end
 
   -- No win or lose group was met, or player has a loan preventing a win
   return "nothing"
 end
 
---! Generate table for the Progress Report dialog and progress advice.
---!param hospital (Hospital) The hospital of the tests.
---!param baseline_start (boolean) Use the start attribute for calculating progress, not boundary
---!return report_table (table) Maximum five fields (unless baseline_start) of
--- lose criteria with the smallest gap between current value and boundary,
--- then fill up to five (unlimited when baseline_start is true) with win criteria in the best group.
+--- Generate table for the Progress Report dialog and progress advice.
+---@param hospital (Hospital) The hospital of the tests.
+---@param baseline_start (boolean) Use the start attribute for calculating progress, not boundary
+---@return (table) # Maximum five fields (unless baseline_start) of
+--- lose criteria with the smallest gap between current value and boundary,
+--- then fill up to five (unlimited when baseline_start is true) with win criteria in the best group.
 function EndConditions:generateReportTable(hospital, baseline_start)
   local count, lose_table, key_lose_goals_table, report_table, unique_criteria_set = 0, {}, {}, {}, {}
   local win_group = self.win_goals[self:_findBestWinGroup(hospital)] or {}
@@ -179,12 +178,13 @@ function EndConditions:generateReportTable(hospital, baseline_start)
   return report_table
 end
 
---!param hospital (Hospital) The hospital of the tests.
---!param lose_table (table) A group of lose conditions from level_config.
---!param report (boolean) Whether a report table will be returned.
---!param baseline_start (boolean) Use the start attribute for calculating progress, not boundary
---!return Losing criteria name and the limit breached,
--- or if report is true, the report table.
+---@param hospital (Hospital) The hospital of the tests.
+---@param lose_table (table) A group of lose conditions from level_config.
+---@param report? (boolean) Whether a report table will be returned.
+---@param baseline_start? (boolean) Use the start attribute for calculating progress, not boundary
+---@return string? # Losing criteria name
+---@return number? # The limit breached
+---@overload fun(report: true): table # Report table if requested instead
 function EndConditions:_checkLoseGroup(hospital, lose_table, report, baseline_start)
   local report_table, met_count, total_count = {}, 0, 0
   local reason, limit
@@ -214,9 +214,9 @@ function EndConditions:_checkLoseGroup(hospital, lose_table, report, baseline_st
   end
 end
 
---!param hospital (Hospital) The hospital of the tests.
---!param win_table (table) A group of win conditions from level_config
---!return (number 0-1) The score of this group. 0 is no goals met, 1 is all met
+---@param hospital (Hospital) The hospital of the tests.
+---@param win_table (table) A group of win conditions from level_config
+---@return number # The score of this group on a scale of 0 is no goals met, 1 is all met
 function EndConditions:_checkWinGroup(hospital, win_table)
   local met_count, total_count = 0, 0
   for crit_name, crit_table in pairs(win_table) do
@@ -233,8 +233,8 @@ function EndConditions:_checkWinGroup(hospital, win_table)
 end
 
 -- Find the group of win conditions best met by the hospital.
---!param hospital (Hospital) The hospital of the tests.
---!return best (number) The number of the best group.
+---@param hospital (Hospital) The hospital of the tests.
+---@return integer # The number of the best group.
 function EndConditions:_findBestWinGroup(hospital)
   local score, best = 0, 1
   for group = 1, self.highest_group do
@@ -259,8 +259,12 @@ end
 
 -- Judge the hospital's measure of the criterion from start (or 0) to target
 -- Good progress (towards win or away from lose) is positive.
--- params measure, target, start are integer, ise_lose_goal is bool, max_min is 0 or 1
--- Return the judgement as an integer on a scale of -3 to 4
+---@param measure number # Current measured value
+---@param target integer # Target value to reach
+---@param start integer # Starting baseline value
+---@param is_lose_goal boolean # Whether this is a lose goal
+---@param max_min 0 | 1 # 0 for minimum, 1 for maximum
+---@return -3 | -2 | -1 | 0 | 1 | 2 | 3 | 4 # The judgement on a scale of -3 to 4
 local function get_progress(measure, target, start, is_lose_goal, max_min)
   if measure == target and not is_lose_goal then return 4 end
   if start then
@@ -336,9 +340,9 @@ local format_map = {
 }
 
 -- Generate advice for this hospital on achieving the world goals
---!param hospital (hospital) The player's hospital
---!return (table) All relevant advice
---!return (table) All high priority and relevant advice
+---@param hospital Hospital # The player's hospital
+---@return table # All relevant advice
+---@return table # All high priority and relevant advice
 function EndConditions:generateAdvice(hospital)
   local advice_tbl, priority_advice_tbl = {}, {}
   local function add_advice(id, target, gap, measure, step)
