@@ -417,6 +417,8 @@ class render_target {
                                          uint32_t iSpriteFlags) const;
   SDL_Texture* create_texture(int iWidth, int iHeight, const uint32_t* pPixels,
                               uint32_t sprite_flags) const;
+  SDL_Texture* create_texture(SDL_Surface* surface,
+                              uint32_t sprite_flags) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
             const SDL_FRect* prcDstRect, int iFlags);
   void draw_line(line_sequence* pLine, float iX, float iY);
