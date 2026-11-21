@@ -479,7 +479,9 @@ void pathfinder::set_default_map(const level_map* pMap) { default_map = pMap; }
 
 void pathfinder::allocate_node_cache(int iWidth, int iHeight) {
   if (node_cache_width != iWidth || node_cache_height != iHeight) {
-    nodes = std::vector<path_node>(iWidth * iHeight);
+    const std::size_t node_count =
+        static_cast<std::size_t>(iWidth) * static_cast<std::size_t>(iHeight);
+    nodes = std::vector<path_node>(node_count);
     for (int iY = 0; iY < iHeight; ++iY) {
       for (int iX = 0; iX < iWidth; ++iX) {
         path_node& node = nodes[iY * iWidth + iX];
@@ -492,7 +494,7 @@ void pathfinder::allocate_node_cache(int iWidth, int iHeight) {
       }
     }
     delete[] dirty_node_list;
-    dirty_node_list = new path_node*[iWidth * iHeight];
+    dirty_node_list = new path_node*[node_count];
     node_cache_width = iWidth;
     node_cache_height = iHeight;
   } else {

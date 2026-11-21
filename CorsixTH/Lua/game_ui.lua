@@ -457,8 +457,8 @@ function GameUI:onCursorWorldPositionChange()
   local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
   local is_near_rat = false
-  local overwindow = self:hitTest(self.cursor_x, self.cursor_y)
-  if self.do_world_hit_test and not overwindow then
+  local over_window = self:overWindow(self.cursor_x, self.cursor_y)
+  if self.do_world_hit_test and not over_window then
     entity = self.app.map.th:hitTestObjects(x, y)
     if self.do_world_hit_test ~= true then
       -- limit to non-door objects in room
@@ -467,7 +467,7 @@ function GameUI:onCursorWorldPositionChange()
           entity:getRoom() == room and entity ~= room.door and entity
     end
   end
-  if entity == nil and self.do_world_hit_test and not overwindow then
+  if entity == nil and self.do_world_hit_test and not over_window then
     is_near_rat = self.app.world:isNearRat(x, y)
   end
   if entity ~= self.cursor_entity or is_near_rat ~= self.cursor_near_rat then
@@ -520,7 +520,7 @@ function GameUI:onCursorWorldPositionChange()
   wx = math.floor(wx)
   wy = math.floor(wy)
   local room
-  if not overwindow and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
+  if not over_window and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
   -- Find the room associated with the current entity (Usually only applies to doors)
@@ -583,6 +583,24 @@ function GameUI:onCursorWorldPositionChange()
   end
 
   return Window.onCursorWorldPositionChange(self, self.cursor_x, self.cursor_y)
+end
+
+function GameUI:overWindow(x, y)
+  if self:hitTest(x, y) then
+    -- Over open window
+    return true
+  end
+  if self.menu_bar:hitTestBar(x, y) then
+    -- Over top menu bar
+    return true
+  end
+  for i = #self.menu_bar.open_menus, 1, -1 do
+    if self.menu_bar.open_menus[i]:hitTest(x, y, 0) then
+      -- Over open top menu
+      return true
+    end
+  end
+  return false
 end
 
 local UpdateCursorPosition = TH.cursor.setPosition
