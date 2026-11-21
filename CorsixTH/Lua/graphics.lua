@@ -378,7 +378,7 @@ end
 --- @param name (string) The file name of the png without the .png extension
 --- @param width? (integer) The width of the bitmap. Defaults to 640
 --- @param height? (integer) The height of the bitmap. Defaults to 480
---- @param dir? (string) The directory of the bitmap. Defaults to QData
+--- @param dir? (string) The directory of the bitmap. Defaults to Bitmap
 --- @param flags? (table) Additional flags for loading the bitmap
 function Graphics:loadPNG(name, width, height, dir, flags)
   if self.cache.raw[name] then

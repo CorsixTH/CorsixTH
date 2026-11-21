@@ -1104,14 +1104,14 @@ void raw_bitmap::load_from_png(const uint8_t* pixelData,
   }
 
   SDL_IOStream* pngStream = SDL_IOFromConstMem(pixelData, pixelDataLength);
-  SDL_Surface* bmp = SDL_LoadPNG_IO(pngStream, true);
-  texture = eventualCanvas->create_texture(bmp, spriteFlags);
+  SDL_Surface* s = SDL_LoadPNG_IO(pngStream, true);
+  texture = eventualCanvas->create_texture(s, spriteFlags);
 
-  width = bmp->w;
-  height = bmp->h;
+  width = s->w;
+  height = s->h;
   target = eventualCanvas;
 
-  SDL_DestroySurface(bmp);
+  SDL_DestroySurface(s);
 }
 
 namespace {
