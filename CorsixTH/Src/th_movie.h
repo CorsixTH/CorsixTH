@@ -340,6 +340,20 @@ class movie_player {
   //! thread.
   void togglePause();
 
+  //! Skip ahead to the given time of the playing movie
+  //!
+  //! The frames before it are still decoded, as each can build on the one
+  //! before it, but only the last of them is shown. Once that frame is on the
+  //! screen, the playback clock (get_playback_time) jumps to the time
+  //! (movie_player::refresh). The movie goes on from there without its sound.
+  //!
+  //! This method is not thread safe, it should only be called from the event
+  //! thread.
+  //!
+  //! \param ms The time to skip to, in milliseconds from the start, by the
+  //! playback clock
+  void skip_to(double ms);
+
   //! Return the original height of the movie
   int get_native_height() const;
 
@@ -412,6 +426,16 @@ class movie_player {
 
   void play_audio();
 
+  //! Get the playback clock, in milliseconds from the start of the movie
+  //!
+  //! movie_player::refresh shows each video frame once this clock reaches the
+  //! frame's presentation time (pts). The clock is the presentation time of
+  //! the last audio frame decoded (#current_sync_pts, from the audio stream)
+  //! plus the SDL ticks since then (#current_sync_pts_system_time), stopped
+  //! while paused. A movie without sound counts from play(). After skip_to,
+  //! the sound no longer moves it, and it counts from the time skipped to.
+  double get_playback_time() const;
+
   //! Get the time the given frame should be played (from the start of the
   //! stream)
   //!
@@ -456,6 +480,19 @@ class movie_player {
   //! Indicate that playback is paused
   std::atomic<bool> paused{};
   uint64_t pause_start_time{};  ///< The time in SDL ticks at which we paused
+
+  //! The time skipped to (movie_player::skip_to) in seconds from the start, or
+  //! 0: on the scale of the frames' presentation times
+  //! (get_presentation_time_for_frame). The video frames before it are not
+  //! shown, except the last of them.
+  std::atomic<double> skip_pts{};
+
+  //! Indicate that the playback clock is yet to jump to skip_pts, once its
+  //! frame is on the screen. Only used on the event thread.
+  bool skip_pending{};
+
+  //! Indicate that the sound is not played any more, after a skip
+  std::atomic<bool> sound_skipped{};
 
   AVFormatContext* format_context;  ///< Information related to the loaded
                                     ///< movie and all of its streams

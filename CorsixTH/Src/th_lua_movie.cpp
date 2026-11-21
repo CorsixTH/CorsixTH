@@ -105,6 +105,14 @@ int l_movie_toggle_pause(lua_State* L) {
   return 0;
 }
 
+int l_movie_skip_to(lua_State* L) {
+  ZoneScoped;
+
+  movie_player* pMovie = luaT_testuserdata<movie_player>(L);
+  pMovie->skip_to(luaL_checknumber(L, 2));
+  return 0;
+}
+
 int l_movie_get_native_height(lua_State* L) {
   movie_player* pMovie = luaT_testuserdata<movie_player>(L);
   lua_pushinteger(L, pMovie->get_native_height());
@@ -171,6 +179,7 @@ void lua_register_movie(const lua_register_state* pState) {
   lcb.add_function(l_movie_play, "play");
   lcb.add_function(l_movie_stop, "stop");
   lcb.add_function(l_movie_toggle_pause, "togglePause");
+  lcb.add_function(l_movie_skip_to, "skipTo");
   lcb.add_function(l_movie_get_native_height, "getNativeHeight");
   lcb.add_function(l_movie_get_native_width, "getNativeWidth");
   lcb.add_function(l_movie_has_audio_track, "hasAudioTrack");
