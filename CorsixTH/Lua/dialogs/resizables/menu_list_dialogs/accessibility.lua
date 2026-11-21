@@ -20,13 +20,6 @@ SOFTWARE. --]]
 
 local UIResizable = cth_require("dialogs.resizable")
 
---! Accessibility window used in the main menu and ingame.
-class "UIAccessibility" (UIResizable)
-
----@class UIAccessibility: UIResizable
----@operator call: UIAccessibility
-local UIAccessibility = _G["UIAccessibility"] ---@type UIAccessibility
-
 local col = {
    bg = Colours.PanelDefault,
    setting = Colours.Setting,
@@ -35,6 +28,226 @@ local col = {
    button = Colours.PanelDefault,
    textbox = Colours.Textbox
 }
+
+--! Window to set the zoom speed of the scroll wheel while in-game.
+class "UIZoomSpeed" (UIResizable)
+
+---@class UIZoomSpeed: UIResizable
+---@operator call: UIZoomSpeed
+local UIZoomSpeed = _G["UIZoomSpeed"] ---@type UIZoomSpeed
+
+function UIZoomSpeed:UIZoomSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col.bg)
+
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.zoomspeed_temp = 80
+
+  self.callback = callback
+
+  --
+  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.accessibility_window.zoom_speed).lowered = true
+
+  --
+  self:addBevelPanel(20, 50, 90, 20, col.caption, col.bg, col.bg):setLabel(_S.accessibility_window.zoom_speed)
+
+  --
+  self.zoomspeed_textbox = self:addBevelPanel(110, 50, 70, 20, col.textbox, col.bg, col.bg)
+    :setTooltip(_S.tooltip.accessibility_window.zoom_speed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText( tostring(self.ui.app.config.zoom_speed) )
+
+  --Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.accessibility_window.apply_zoomspeed)
+  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.accessibility_window.cancel_zoomspeed)
+end
+
+function UIZoomSpeed:ok()
+  self.zoomspeed_temp = tonumber( self.zoomspeed_textbox.text ) or 80
+
+  if self.zoomspeed_temp < 10 then
+    self.zoomspeed_temp = 10
+  elseif self.zoomspeed_temp > 1000 then
+    self.zoomspeed_temp = 1000
+  end
+
+  self:close(true)
+end
+
+function UIZoomSpeed:cancel()
+  self:close(false)
+end
+
+function UIZoomSpeed:onMouseUp(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseUp(self, button, x, y)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIZoomSpeed:close(ok)
+  UIResizable.close(self)
+
+  if ok then
+    self.zoomspeed_textbox.text = self.zoomspeed_temp or 2
+    self.ui.app.config.zoom_speed = self.zoomspeed_textbox.text
+    self.callback(self.zoomspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.zoom_speed)
+  end
+end
+
+--! A window for setting the scroll speed of the camera.
+class "UIScrollSpeed" (UIResizable)
+
+---@class UIScrollSpeed: UIResizable
+---@operator call: UIScrollSpeed
+local UIScrollSpeed = _G["UIScrollSpeed"] ---@type UIScrollSpeed
+
+function UIScrollSpeed:UIScrollSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col.bg)
+
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.scrollspeed_temp = 2
+
+  self.callback = callback
+
+  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.accessibility_window.scroll_speed).lowered = true
+
+  self:addBevelPanel(20, 50, 90, 20, col.caption, col.bg, col.bg):setLabel(_S.accessibility_window.scroll_speed)
+
+  self.scrollspeed_textbox = self:addBevelPanel(110, 50, 70, 20, col.textbox, col.bg, col.bg)
+    :setTooltip(_S.tooltip.accessibility_window.scroll_speed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(self.ui.app.config.scroll_speed))
+
+  -- Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.accessibility_window.apply_scrollspeed)
+  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.accessibility_window.cancel_scrollspeed)
+end
+
+function UIScrollSpeed:ok()
+  self.scrollspeed_temp = tonumber(self.scrollspeed_textbox.text) or 2
+
+  if self.scrollspeed_temp < 1 then
+    self.scrollspeed_temp = 1
+  elseif self.scrollspeed_temp > 10 then
+    self.scrollspeed_temp = 10
+  end
+
+  self:close(true)
+end
+
+function UIScrollSpeed:cancel()
+  self:close(false)
+end
+
+function UIScrollSpeed:onMouseUp(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseUp(self, button, x, y)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIScrollSpeed:close(ok)
+  UIResizable.close(self)
+
+  if ok then
+    self.scrollspeed_textbox.text = self.scrollspeed_temp or 2
+    self.ui.app.config.scroll_speed = self.scrollspeed_textbox.text
+    self.callback(self.scrollspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.scroll_speed)
+  end
+end
+
+--! A window for setting the scroll speed of the camera while pressing the SHIFT key..
+class "UIShiftScrollSpeed" (UIResizable)
+
+---@class UIShiftScrollSpeed: UIResizable
+---@operator call: UIShiftScrollSpeed
+local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"] ---@type UIShiftScrollSpeed
+
+function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col.bg)
+
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.shift_scrollspeed_temp = 4
+
+  self.callback = callback
+
+  self:addBevelPanel(20, 10, 160, 20, col.title):setLabel(_S.accessibility_window.shift_scroll_speed).lowered = true
+
+  self:addBevelPanel(20, 50, 120, 20, col.caption, col.bg, col.bg):setLabel(_S.accessibility_window.shift_scroll_speed)
+  --
+  self.shift_scrollspeed_textbox = self:addBevelPanel(140, 50, 40, 20, col.textbox, col.bg, col.bg)
+    :setTooltip(_S.tooltip.accessibility_window.shift_scroll_speed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(self.ui.app.config.shift_scroll_speed))
+
+  --Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col.button):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.accessibility_window.apply_shift_scrollspeed)
+  self:addBevelPanel(100, 90, 80, 40, col.button):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.accessibility_window.cancel_shift_scrollspeed)
+end
+
+function UIShiftScrollSpeed:ok()
+  self.shift_scrollspeed_temp = tonumber(self.shift_scrollspeed_textbox.text) or 4
+
+  if self.shift_scrollspeed_temp < 1 then
+    self.shift_scrollspeed_temp = 1
+  elseif self.shift_scrollspeed_temp > 10 then
+    self.shift_scrollspeed_temp = 10
+  end
+
+  self:close(true)
+end
+
+function UIShiftScrollSpeed:cancel()
+  self:close(false)
+end
+
+function UIShiftScrollSpeed:onMouseUp(button, x, y)
+  if not self:hitTest(x, y) then
+    self:close(false)
+  end
+  UIResizable.onMouseUp(self, button, x, y)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIShiftScrollSpeed:close(ok)
+  UIResizable.close(self)
+
+  if ok then
+    self.shift_scrollspeed_textbox.text = self.shift_scrollspeed_temp or 4
+    self.ui.app.config.shift_scroll_speed = self.shift_scrollspeed_textbox.text
+    self.callback(self.shift_scrollspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.shift_scroll_speed)
+  end
+end
+
+--! Accessibility window used in the main menu and ingame.
+class "UIAccessibility" (UIResizable)
+
+---@class UIAccessibility: UIResizable
+---@operator call: UIAccessibility
+local UIAccessibility = _G["UIAccessibility"] ---@type UIAccessibility
 
 function UIAccessibility:UIAccessibility(ui, mode)
   self:UIResizable(ui, 320, 280, col.bg)
@@ -76,7 +289,6 @@ function UIAccessibility:buttonScrollSpeed()
     self.buttons.scroll_speed:setToggleState(false)
   end
 
-  local UIScrollSpeed = cth_require("dialogs.resizables.scroll_speed")
   self.ui:addWindow(UIScrollSpeed(self.ui, callback))
 end
 
@@ -90,7 +302,6 @@ function UIAccessibility:buttonShiftScrollSpeed()
     self.buttons.shift_scroll_speed:setToggleState(false)
   end
 
-  local UIShiftScrollSpeed = cth_require("dialogs.resizables.shift_scroll_speed")
   self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
 end
 
@@ -100,7 +311,6 @@ function UIAccessibility:buttonZoomSpeed()
     self.buttons.zoom_speed:setToggleState(false)
   end
 
-  local UIZoomSpeed = cth_require("dialogs.resizables.zoom_speed")
   self.ui:addWindow(UIZoomSpeed(self.ui, callback) )
 end
 

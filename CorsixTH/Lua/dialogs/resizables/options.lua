@@ -266,33 +266,6 @@ function UIOptions:buttonAccessibility()
   self.ui:addWindow(window)
 end
 
-function UIOptions:buttonScrollSpeed()
-  local callback = function(scrollspeed_number)
-    self.buttons.scroll_speed:setLabel(tostring(scrollspeed_number)):setToggleState(false)
-  end
-
-  local UIScrollSpeed = cth_require("dialogs.resizables.scroll_speed")
-  self.ui:addWindow(UIScrollSpeed(self.ui, callback))
-end
-
-function UIOptions:buttonShiftScrollSpeed()
-  local callback = function(shift_scrollspeed_number)
-    self.buttons.shift_scroll_speed:setLabel(tostring(shift_scrollspeed_number)):setToggleState(false)
-  end
-
-  local UIShiftScrollSpeed = cth_require("dialogs.resizables.shift_scroll_speed")
-  self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
-end
-
-function UIOptions:buttonZoomSpeed()
-  local callback = function(zoomspeed_number)
-    self.buttons.zoom_speed:setLabel(tostring(zoomspeed_number)):setToggleState(false)
-  end
-
-  local UIZoomSpeed = cth_require("dialogs.resizables.zoom_speed")
-  self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
-end
-
 function UIOptions:close()
   UIResizable.close(self)
   if self.mode == "menu" then
