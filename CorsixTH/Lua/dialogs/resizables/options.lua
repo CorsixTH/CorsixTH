@@ -64,9 +64,7 @@ local current_autosave_frequency = function()
 end
 
 function UIOptions:UIOptions(ui, mode)
-  local width = 620
-  local height = 360
-  self:UIResizable(ui, width, height, col.bg)
+  self:UIResizable(ui, 335, 370, col.bg)
 
   local app = ui.app
   self.mode = mode
