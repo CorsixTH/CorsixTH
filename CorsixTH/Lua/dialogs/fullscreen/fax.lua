@@ -19,9 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 cth_require("announcer")
+local UIFullscreen = cth_require("dialogs.fullscreen")
 
 local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPriority]]
-local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 
 class "UIFax" (UIFullscreen)
 
@@ -186,6 +186,7 @@ function UIFax:choice(choice_number)
   local vip_ignores_refusal = math.random(1, 2)
   if choice == "accept_emergency" then
     self.ui.app.world:newObject("helicopter", "north")
+    local UIWatch = cth_require("dialogs.watch")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
@@ -270,6 +271,7 @@ function UIFax:validate()
   if code == "24328" then
     -- Original game cheat code
     self.ui.adviser:say(_A.cheats.th_cheat)
+    local UICheats = cth_require("dialogs.resizables.cheats_dialog")
     self.ui:addWindow(UICheats(self.ui))
     if not self.ui.app.cheats_menu_unlocked then
       self.ui.app.cheats_menu_unlocked = true
@@ -317,3 +319,5 @@ function UIFax:afterLoad(old, new)
     self:close()
   end
 end
+
+return UIFax

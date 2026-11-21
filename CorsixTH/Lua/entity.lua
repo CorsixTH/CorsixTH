@@ -379,3 +379,5 @@ end
 function Entity:getDrawingLayer()
   return DrawingLayers.Entity
 end
+
+return Entity

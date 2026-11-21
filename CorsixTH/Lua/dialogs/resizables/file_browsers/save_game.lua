@@ -18,7 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
+local UIInformation = cth_require("dialogs.information")
+local UIFileBrowser = cth_require("dialogs.resizables.file_browser")
+local FilteredFileTreeNode = UIFileBrowser.FilteredFileTreeNode
 
 --! Save Game Window
 class "UISaveGame" (UIFileBrowser)
@@ -94,6 +96,7 @@ end
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
   if lfs.attributes(filename, "size") ~= nil then
+    local UIConfirmDialog = cth_require("dialogs.confirm_dialog")
     self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
     self:doSave(filename)
@@ -118,3 +121,5 @@ end
 function UISaveGame:afterLoad()
   self:close()
 end
+
+return UISaveGame

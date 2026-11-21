@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 class "UIMapEditor" (UIResizable)
 
@@ -576,10 +576,12 @@ function UIMapEditor:UIMapEditor(ui)
 end
 
 function UIMapEditor:openLoad()
+  local UILoadMap = cth_require("dialogs.resizables.file_browsers.load_map")
   self.ui:addWindow(UILoadMap(self.ui, "map"))
 end
 
 function UIMapEditor:openSave()
+  local UISaveMap = cth_require("dialogs.resizables.file_browsers.save_map")
   self.ui:addWindow(UISaveMap(self.ui))
 end
 
@@ -593,6 +595,7 @@ end
 
 function UIMapEditor:openJukebox()
   if self.ui.app.config.audio then
+    local UIJukebox = cth_require("dialogs.jukebox")
     self.ui:addWindow(UIJukebox(self.ui.app))
   end
 end
@@ -1608,3 +1611,4 @@ function UIMapEditor:onMouseUp(button, x, y)
   return repaint
 end
 
+return UIMapEditor

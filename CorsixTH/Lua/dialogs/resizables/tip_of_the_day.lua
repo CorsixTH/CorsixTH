@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
+local Window = cth_require("window")
 
 --! Tip of the Day Window
 class "UITipOfTheDay" (UIResizable)
@@ -103,3 +104,5 @@ function UITipOfTheDay:onChangeResolution()
   self.ui:addWindow(UITipOfTheDay(self.ui))
   Window.onChangeResolution(self)
 end
+
+return UITipOfTheDay

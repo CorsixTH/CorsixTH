@@ -19,8 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 class "UIBuildRoom" (Window)
 
@@ -189,6 +188,7 @@ function UIBuildRoom:buildRoom(index)
     if fullscreen then
       fullscreen:close()
     end
+    local UIEditRoom = cth_require("dialogs.edit_room")
     local edit_dlg = UIEditRoom(self.ui, self.list[index])
     self.ui:addWindow(edit_dlg)
   else
@@ -251,3 +251,5 @@ function UIBuildRoom:afterLoad(old, new)
     self.blue_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font02V", nil, nil, {ttf_color = selected_label_color, apply_ui_scale = true })
   end
 end
+
+return UIBuildRoom

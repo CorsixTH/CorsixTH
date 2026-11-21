@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local Window = _G['Window'] ---@type Window
+local Window = cth_require("window")
 
 --! Dialog that informs the player of for example what the goals for the level are.
 class "UIInformation" (Window)
@@ -170,3 +170,5 @@ function UIInformation:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
+
+return UIInformation

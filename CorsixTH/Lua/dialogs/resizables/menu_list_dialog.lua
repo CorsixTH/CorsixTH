@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIResizable = cth_require("dialogs.resizable")
 
 --! A menu list with a scrollbar. Used by load_game, save_game and custom_game.
 class "UIMenuList" (UIResizable)
@@ -133,7 +133,9 @@ end
 function UIMenuList:close()
   UIResizable.close(self)
   if self.mode == "menu" then
+    local UIMainMenu = cth_require("dialogs.resizables.main_menu")
     self.ui:addWindow(UIMainMenu(self.ui))
   end
 end
 
+return UIMenuList

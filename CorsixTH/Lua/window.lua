@@ -24,6 +24,11 @@ cth_require("persistance")
 class "Window"
 
 ---@class Window
+---@field Panel Panel
+---@field Button Button
+---@field Scrollbar Scrollbar
+---@field Textbox Textbox
+---@field HotkeyBox HotkeyBox
 ---@operator call: Window
 local Window = _G["Window"] ---@type Window
 
@@ -2190,3 +2195,11 @@ function Window:afterLoad(old, new)
     end
   end
 end
+
+Window.Panel = Panel
+Window.Button = Button
+Window.Scrollbar = Scrollbar
+Window.Textbox = Textbox
+Window.HotkeyBox = HotkeyBox
+
+return Window

@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local UIResizable = _G['UIResizable'] ---@type UIResizable
+local UIDropdown = cth_require("dialogs.resizables.dropdown")
+local UIResizable = cth_require("dialogs.resizable")
 
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
@@ -230,62 +231,47 @@ function UIOptions:buttonMouseCapture()
 end
 
 function UIOptions:buttonCustomise()
+  local UICustomise = cth_require("dialogs.resizables.customise")
   local window = UICustomise(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonFolder()
+  local UIFolder = cth_require("dialogs.resizables.folder_settings")
   local window = UIFolder(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonHotkey()
+  local UIHotkeyAssign = cth_require("dialogs.resizables.hotkey_assign")
   local window = UIHotkeyAssign(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonSound()
+  local UISoundSettings = cth_require("dialogs.resizables.sound_setting")
   local window = UISoundSettings(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonGraphics()
+  local UIGraphicSettings = cth_require("dialogs.resizables.graphics_settings")
   local window = UIGraphicSettings(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
 function UIOptions:buttonAccessibility()
+  local UIAccessibility = cth_require("dialogs.resizables.menu_list_dialogs.accessibility")
   local window = UIAccessibility(self.ui, "menu")
   self.ui:addWindow(window)
-end
-
-function UIOptions:buttonScrollSpeed()
-  local callback = function(scrollspeed_number)
-    self.buttons.scroll_speed:setLabel(tostring(scrollspeed_number)):setToggleState(false)
-  end
-
-  self.ui:addWindow(UIScrollSpeed(self.ui, callback))
-end
-
-function UIOptions:buttonShiftScrollSpeed()
-  local callback = function(shift_scrollspeed_number)
-    self.buttons.shift_scroll_speed:setLabel(tostring(shift_scrollspeed_number)):setToggleState(false)
-  end
-
-  self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
-end
-
-function UIOptions:buttonZoomSpeed()
-  local callback = function(zoomspeed_number)
-    self.buttons.zoom_speed:setLabel(tostring(zoomspeed_number)):setToggleState(false)
-  end
-
-  self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
 end
 
 function UIOptions:close()
   UIResizable.close(self)
   if self.mode == "menu" then
+    local UIMainMenu = cth_require("dialogs.resizables.main_menu")
     self.ui:addWindow(UIMainMenu(self.ui))
   end
 end
+
+return UIOptions
