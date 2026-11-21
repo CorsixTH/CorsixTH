@@ -492,6 +492,18 @@ class raw_bitmap {
                          int iWidth, render_target* pEventualCanvas,
                          uint32_t spriteFlags);
 
+  //! Load the image from the supplied png file data.
+  /*!
+      Loader uses the palette supplied before.
+      @param pixelData Image data loaded from a TH file.
+      @param pixelDataLength Size of the loaded image data.
+      @param eventualCanvas Canvas to render the image to (eventually).
+      @param spriteFlags
+      @return Loading was a success.
+  */
+  void load_from_png(const uint8_t* pixelData, size_t pixelDataLength,
+                     render_target* eventualCanvas, uint32_t spriteFlags);
+
   //! Draw the image at a given position at the given canvas.
   /*!
       @param pCanvas Canvas to draw at.

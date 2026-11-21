@@ -1070,6 +1070,24 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
   target = pEventualCanvas;
 }
 
+void raw_bitmap::load_from_png(const uint8_t* pixelData,
+                                const size_t pixelDataLength,
+                               render_target* eventualCanvas, uint32_t spriteFlags) {
+  if (eventualCanvas == nullptr) {
+    throw std::invalid_argument("pEventualCanvas cannot be null");
+  }
+
+  SDL_IOStream* pngStream = SDL_IOFromConstMem(pixelData, pixelDataLength);
+  SDL_Surface* bmp = SDL_LoadPNG_IO(pngStream, true);
+  texture = eventualCanvas->create_texture(bmp->w, bmp->h, static_cast<uint32_t*>(bmp->pixels), spriteFlags);
+
+  width = bmp->w;
+  height = bmp->h;
+  target = eventualCanvas;
+
+  SDL_DestroySurface(bmp);
+}
+
 namespace {
 
 /**

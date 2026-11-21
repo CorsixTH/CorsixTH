@@ -67,6 +67,12 @@ local charsets = {
   ["mik"] = 2
 }
 
+---@enum BitmapType
+local BitmapType = {
+  th_pal = 0,
+  png = 1
+}
+
 function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
@@ -368,15 +374,47 @@ function Graphics:loadGhost(dir, name, index)
   return cached:sub(index * 256 + 1, index * 256 + 256)
 end
 
+--- Load a bitmap from a png file
+--- @param name (string) The file name of the png without the .png extension
+--- @param width? (integer) The width of the bitmap. Defaults to 640
+--- @param height? (integer) The height of the bitmap. Defaults to 480
+--- @param dir? (string) The directory of the bitmap. Defaults to QData
+--- @param flags? (table) Additional flags for loading the bitmap
+function Graphics:loadPNG(name, width, height, dir, flags)
+  if self.cache.raw[name] then
+    return self.cache.raw[name]
+  end
+  dir = dir or "Bitmap"
+  width = width or 640
+  height = height or 480
+
+  flags = flags or {}
+  flags.type = BitmapType.png
+
+  local data = self.app:readDataFile(dir, name .. ".png")
+  local bitmap = TH.bitmap()
+  assert(bitmap:load(data, width, self.target, flags))
+
+  local function bitmap_reloader(bm)
+    local bitmap_data = self.app:readDataFile(dir, name .. ".png")
+    assert(bm:load(bitmap_data, width, self.target, flags))
+  end
+  self.reload_functions[bitmap] = bitmap_reloader
+
+  self.cache.raw[name] = bitmap
+  self.load_info[bitmap] = {self.loadPNG, self, name, width, height, dir, flags}
+  return bitmap
+end
+
 --- Load a bitmap from a dat file and palette
 --- @param name (string) The file name of the bitmap without the .dat extension
---- @param width (integer) The width of the bitmap. Defaults to 640
---- @param height (integer) The height of the bitmap. Defaults to 480
---- @param dir (string) The directory of the bitmap. Defaults to QData
---- @param _paldir (string) ignored
---- @param pal (string) The name of the palette
---- @param _transparent_255 (boolean) ignored
---- @param flags (table) Additional flags for loading the bitmap
+--- @param width? (integer) The width of the bitmap. Defaults to 640
+--- @param height? (integer) The height of the bitmap. Defaults to 480
+--- @param dir? (string) The directory of the bitmap. Defaults to QData
+--- @param _paldir? (string) ignored
+--- @param pal? (string) The name of the palette
+--- @param _transparent_255? (boolean) ignored
+--- @param flags? (table) Additional flags for loading the bitmap
 function Graphics:loadRaw(name, width, height, dir, _paldir, pal, _transparent_255, flags)
   if self.cache.raw[name] then
     return self.cache.raw[name]
