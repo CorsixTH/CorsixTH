@@ -676,7 +676,18 @@ case(0x84, 0x8E) -- a-umlaut
 case(0x86, 0x8F) -- a-ring
 case(0x94, 0x99) -- o-umlaut
 case(0xA4, 0xA5) -- n-tilde
-local case_pattern = "\195[\128-\191]" -- Unicode range [0xC0, 0xFF] as UTF-8
+
+local function utf8_case(lower, upper)
+  lower_to_upper[lower] = upper
+  lower_to_upper[upper] = upper
+  upper_to_lower[lower] = lower
+  upper_to_lower[upper] = lower
+end
+utf8_case("\196\159", "\196\158") -- ğ / Ğ
+utf8_case("\197\159", "\197\158") -- ş / Ş
+lower_to_upper["\196\177"] = "I"  -- ı -> I
+upper_to_lower["\196\176"] = "i"  -- İ -> i
+local case_pattern = "[\195-\197][\128-\191]" -- Unicode range [0xC0, 0x17F] as UTF-8
 
 local orig_upper = string.upper
 function string.upper(s) -- luacheck: ignore 122
