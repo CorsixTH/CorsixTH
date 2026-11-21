@@ -40,9 +40,9 @@
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_button_label">_getButtonLabel</a>(<span class="p">value</span>, <span class="p">name</span>, <span class="p">custom_labels</span>, <span class="p">default_string</span>)
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1__get_option_y_pos">_getOptionYPos</a>()
- (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_option_y_pos">UIResizable:_getOptionYPos</a>)
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_option_y_pos">_getOptionYPos</a>()
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__start_new_column">_startNewColumn</a>()
@@ -112,7 +112,7 @@
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">unicode</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
  <li class="inherited">
@@ -299,7 +299,6 @@
  (*)
  </li>
  <li><span class="p">autoclip</span>
- (*)
  </li>
  <li><span class="p">background_panel</span>
  (*)
@@ -326,12 +325,10 @@
  (*)
  </li>
  <li><span class="p">btn_width</span>
- (*)
  </li>
  <li><span class="p">built_in_font</span>
  </li>
  <li><span class="p">buttons</span>
- (*)
  </li>
  <li><span class="p">buttons_down</span>
  (*)
@@ -355,6 +352,7 @@
  (*)
  </li>
  <li><span class="p">default_button_sound</span>
+ (*)
  </li>
  <li><span class="p">draggable</span>
  (*)
@@ -363,14 +361,12 @@
  (*)
  </li>
  <li><span class="p">entry_list</span>
- (*)
  </li>
  <li><span class="p">esc_closes</span>
+ (*)
  </li>
  <li><span class="p">extra_height</span>
  (*)
- </li>
- <li><span class="p">fonts_panel</span>
  </li>
  <li><span class="p">height</span>
  (*)
@@ -403,9 +399,8 @@
  </li>
  <li><span class="p">mode</span>
  </li>
- <li><span class="p">music_panel</span>
- </li>
  <li><span class="p">on_top</span>
+ (*)
  </li>
  <li><span class="p">panel_sprites</span>
  (*)
@@ -420,16 +415,12 @@
  (*)
  </li>
  <li><span class="p">resizable</span>
- </li>
- <li><span class="p">saves_panel</span>
- </li>
- <li><span class="p">screenshots_panel</span>
+ (*)
  </li>
  <li><span class="p">scrollbars</span>
  (*)
  </li>
  <li><span class="p">strings_ref</span>
- (*)
  </li>
  <li><span class="p">textboxes</span>
  (*)
@@ -486,71 +477,62 @@
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L53">line 53 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1__get_option_y_pos">function UIFolder:_getOptionYPos()</a></h5>
- <p>
- Calculates the Y position for the dialog box in the option menu
-and increments along the current position for the next element<br/><br/>
- <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1__get_option_y_pos">UIResizable:_getOptionYPos</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L38">line 38 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_browse_for_audio__music">function UIFolder:buttonBrowseForAudio_music()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L249">line 249 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L154">line 154 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_browse_for_font">function UIFolder:buttonBrowseForFont()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L203">line 203 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L108">line 108 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_browse_for_savegames">function UIFolder:buttonBrowseForSavegames()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L208">line 208 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L113">line 113 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_browse_for_screenshots">function UIFolder:buttonBrowseForScreenshots()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L234">line 234 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L139">line 139 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1button_browse_for_t_h_install">function UIFolder:buttonBrowseForTHInstall()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L223">line 223 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L128">line 128 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1close">function UIFolder:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L269">line 269 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L174">line 174 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1reset_music_dir">function UIFolder:resetMusicDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L189">line 189 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L94">line 94 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1reset_savegame_dir">function UIFolder:resetSavegameDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L167">line 167 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L72">line 72 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_folder_1reset_screenshot_dir">function UIFolder:resetScreenshotDir()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L178">line 178 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L83">line 83 of Lua/dialogs/resizables/folder_settings.lua</a>.
  </p>
  </div>
 </div>

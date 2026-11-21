@@ -92,7 +92,7 @@ any of the corners.
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1create_options_element">createOptionsElement</a>(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">unicode</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)
  </li>
  <li class="self">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -466,7 +466,7 @@ any of the corners.
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L398">line 398 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L400">line 400 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -510,7 +510,7 @@ any of the corners.
  <p>
  Calculates the Y position for the dialog box in the option menu
 and increments along the current position for the next element<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L380">line 380 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L382">line 382 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -518,7 +518,7 @@ and increments along the current position for the next element<br/><br/>
  <p>
  Resets the index to start at the top of a new column, below the title,
 for the Y position calculation.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L391">line 391 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L393">line 393 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -544,7 +544,7 @@ for the Y position calculation.<br/><br/>
  </table>
  </p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L421">line 421 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L423">line 423 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -592,18 +592,19 @@ This function uses the contents of the self.entry_list table, which is a list of
  default_value - A value for a setting that is not held in the config file (eg savegame folder)
  reset_func - The reset button's function which clears a setting and resets the label and button.
  This also marks an entry where false should mean unset, not off.
- new_column - Boolean, in the first item of the new column<br/><br/>
+ new_column - Boolean, in the first item of the new column
+ unicode -- Boolean, to display the value in a unicode font, rather than the builtin font<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L272">line 272 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_resizable_1button_back">function UIResizable:buttonBack()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L417">line 417 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L419">line 419 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_resizable_1create_options_element">function UIResizable:createOptionsElement(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)</a></h5>
+ <h5><a name="_0_1_u_i_resizable_1create_options_element">function UIResizable:createOptionsElement(<span class="p">option_label</span>, <span class="p">option_tooltip</span>, <span class="p">setting_label</span>, <span class="p">setting_tooltip</span>, <span class="p">setting_colours</span>, <span class="p">unicode</span>, <span class="p">callback</span>, <span class="p">toggle_state</span>, <span class="p">default_value</span>, <span class="p">reset_func</span>)</a></h5>
  <p>
  Create our setting items. This create a caption/label for the setting
 and the setting itself. We return both elements of the setting (panel
@@ -641,6 +642,11 @@ and the button made from the panel)<br/><br/>
  <td class="d">?</td>
  </tr>
  <tr>
+ <td class="n">unicode</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
  <td class="n">callback</td>
  <td class="t">?</td>
  <td class="d">?</td>
@@ -662,7 +668,7 @@ and the button made from the panel)<br/><br/>
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L339">line 339 of Lua/dialogs/resizable.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizable.lua#L340">line 340 of Lua/dialogs/resizable.lua</a>.
  </p>
  </div>
  <div class="method">
