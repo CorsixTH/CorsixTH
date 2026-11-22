@@ -410,8 +410,8 @@ end
 --! Show the 'Gates to hell' animation.
 --!param entity (Entity) Gates to hell.
 function PlayerHospital:showGatesToHell(entity)
-  local anim_func = --[[persistable:lava_hole_spawn_animation_end]]
-    function(anim_entity)
+  local anim_func =
+    --[[persistable:lava_hole_spawn_animation_end]] function(anim_entity)
       anim_entity:setAnimation(1602)
     end
 
