@@ -516,7 +516,15 @@ void movie_player::skip_to(double ms) {
   }
   skip_pts = ms / 1000.0;
   skip_pending = true;
-  // The sound would be out of step, and it would set the clock back
+  // The sound would be out of step, and it would set the clock back.
+  //
+  // This is not a race with the clock jump in refresh: skip_pending is only
+  // handled later, by refresh on this same thread, once the frame for
+  // skip_pts is on the screen. From the moment sound_skipped is set, the audio
+  // callback no longer sets the clock (decode_audio_frame). Only an audio
+  // frame that was already being decoded at that moment can still set it,
+  // once. In practice that decode ends well before refresh runs again on the
+  // next frame drawn, so the jump in refresh comes after it.
   sound_skipped = true;
 }
 
@@ -567,7 +575,9 @@ double movie_player::refresh(const SDL_Rect& destination_rect) {
   if (skip_pending) {
     // Go through the frames on the way to the time skipped to (skip_to). Once
     // the frame for that time is on the screen, the playback clock jumps there
-    // (and stays there if paused).
+    // (and stays there if paused). skip_pending and the clock are only set on
+    // this thread now: the audio callback stopped setting the clock when
+    // skip_to set sound_skipped.
     double dNextPts = movie_picture_buffer.get_next_pts();
     while (dNextPts > 0 && dNextPts <= skip_pts) {
       movie_picture_buffer.advance();
@@ -666,7 +676,9 @@ void movie_player::run_video() {
     dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
 
     // The frames before the time skipped to are not shown, except the last
-    // of them: the one on the screen at that time.
+    // of them: the one on the screen at that time. skip_pts is set on the
+    // event thread (skip_to), and it is atomic. A frame decoded just before it
+    // is set goes to the picture buffer as usual, and refresh skips it.
     if (dClockPts < skip_pts) {
       av_frame_unref(pSkippedFrame.get());
       av_frame_move_ref(pSkippedFrame.get(), pFrame.get());
@@ -765,7 +777,9 @@ void movie_player::copy_audio_to_stream(SDL_AudioStream* stream,
 size_t movie_player::decode_audio_frame(size_t requested_size) {
   size_t stream_size = std::min(requested_size, audio_chunk_buffer.size());
 
-  // If we are paused, or the sound was skipped (skip_to), return silence
+  // If we are paused, or the sound was skipped (skip_to), return silence.
+  // After a skip this also leaves the playback clock below to the event
+  // thread (refresh).
   if (paused.load() || sound_skipped.load()) {
     std::memset(audio_chunk_buffer.data(),
                 SDL_GetSilenceValueForFormat(audio_format), stream_size);

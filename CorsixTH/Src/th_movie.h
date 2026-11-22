@@ -348,7 +348,10 @@ class movie_player {
   //! (movie_player::refresh). The movie goes on from there without its sound.
   //!
   //! This method is not thread safe, it should only be called from the event
-  //! thread.
+  //! thread, the same thread that calls refresh. It tells the other threads
+  //! through two atomics: skip_pts for the video thread (run_video), and
+  //! sound_skipped for the audio callback (decode_audio_frame) and the stream
+  //! thread (read_streams).
   //!
   //! \param ms The time to skip to, in milliseconds from the start, by the
   //! playback clock
@@ -484,14 +487,19 @@ class movie_player {
   //! The time skipped to (movie_player::skip_to) in seconds from the start, or
   //! 0: on the scale of the frames' presentation times
   //! (get_presentation_time_for_frame). The video frames before it are not
-  //! shown, except the last of them.
+  //! shown, except the last of them. Written on the event thread, read on the
+  //! event and video threads.
   std::atomic<double> skip_pts{};
 
   //! Indicate that the playback clock is yet to jump to skip_pts, once its
-  //! frame is on the screen. Only used on the event thread.
+  //! frame is on the screen. Only used on the event thread (skip_to and
+  //! refresh), so it needs no atomic.
   bool skip_pending{};
 
-  //! Indicate that the sound is not played any more, after a skip
+  //! Indicate that the sound is not played any more, after a skip. Written on
+  //! the event thread, read by the audio callback and the stream thread. Once
+  //! it is set, the audio callback no longer sets the playback clock
+  //! (#current_sync_pts), so the event thread is the only one left to set it.
   std::atomic<bool> sound_skipped{};
 
   AVFormatContext* format_context;  ///< Information related to the loaded
