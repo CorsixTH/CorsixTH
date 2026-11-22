@@ -277,7 +277,7 @@ function MoviePlayer:playWinLevelMovie(callback, paragraphs, choose)
   letter:onMouseMove(ui and ui.cursor_x, ui and ui.cursor_y)
 
   -- The letter shows once the paper has settled, and the movie is held on it
-  -- until it is answered or skipped: its very last frame is its first one
+  -- until it is answered or stopped: its very last frame is its first one
   -- again (a Smacker ring frame, for looping, which shows the casebook). It is
   -- paused again if the pause key lets it run on.
   local shows_at = self.movie_length - LETTER_SHOWS_MS
@@ -303,12 +303,17 @@ function MoviePlayer:onMouseMove(x, y)
 end
 
 --- A mouse button is pressed while a movie plays: the left button stops the
---- movie, unless the win letter takes the click (WinLetter:onMouseDown).
+--- movie, unless the win letter takes the click (WinLetter:onMouseDown). A
+--- click before the letter shows skips the movie to it.
 --- @param button (string) the mouse button ("left", "right", ...)
 --- @param x (number) x on the screen
 --- @param y (number) y on the screen
 function MoviePlayer:onMouseDown(button, x, y)
-  if self.win_letter and self.win_letter:onMouseDown(button, x, y) then
+  local letter = self.win_letter
+  if letter and letter:onMouseDown(button, x, y) then
+    if not letter.shown then
+      self.moviePlayer:skipTo(self.movie_length - LETTER_SHOWS_MS)
+    end
     return
   end
   if button == "left" then

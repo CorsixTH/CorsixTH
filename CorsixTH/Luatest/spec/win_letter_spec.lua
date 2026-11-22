@@ -1,3 +1,23 @@
+--[[ Copyright (c) 2026 Jan Bakalar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. --]]
+
 require("class_test_base")
 -- (No SDL in the unit tests: the clock of the typing is not used here.)
 package.loaded["sdl"] = package.loaded["sdl"] or
@@ -64,9 +84,11 @@ describe("The win letter's buttons", function()
     assert.is_true(click(win_letter, at(390, 360))) -- above the tick
     assert.is_false(win_letter:onMouseDown("right", at(390, 401)))
     win_letter:onMouseUp("right", at(390, 401))
-    -- Before the letter shows, a click on the tick's place does nothing.
+    -- Before the letter shows, a click on the tick's place has it come typed
+    -- out in full, without an answer.
     local early, early_chosen = letter(false)
     assert.is_true(click(early, at(390, 401)))
+    assert.is_true(early.typed)
     assert.same({}, chosen)
     assert.same({}, early_chosen)
   end)
@@ -86,12 +108,15 @@ describe("The win letter's buttons", function()
   it("are not there without an answer to give", function()
     local win_letter = letter(false)
     win_letter.choose = nil
-    -- Before the letter shows, the click is left to the movie.
-    assert.is_false(win_letter:onMouseDown("left", 100, 100))
+    -- Before the letter shows, a click has it come typed out in full.
+    assert.is_true(win_letter:onMouseDown("left", 100, 100))
+    assert.is_true(win_letter.typed)
     win_letter.shown = true
-    assert.is_true(win_letter:onMouseDown("left", 100, 100)) -- typing: finished
     assert.is_false(win_letter:onMouseDown("left", 100, 100)) -- typed: left to the movie
     assert.is_nil(win_letter:buttonAt(at(390, 401)))
+    win_letter.typed = false
+    assert.is_true(win_letter:onMouseDown("left", 100, 100)) -- typing: finished
+    assert.is_false(win_letter:onMouseDown("left", 100, 100))
   end)
 end)
 
@@ -168,6 +193,15 @@ describe("The win letter's typewriter", function()
     run(win_letter, 1000)
     assert.is_true(win_letter.typed)
     assert.equal(before, #strikes)
+  end)
+
+  it("does not strike for a letter typed out by a click before it shows", function()
+    local win_letter, strikes = letter(true, "Dear player")
+    win_letter:onMouseDown("left", 0, 0)
+    run(win_letter, 1000)
+    assert.is_true(win_letter.shown)
+    assert.equal(11, win_letter.struck) -- (all of it, at once)
+    assert.same({}, strikes)
   end)
 
   it("is silent with sound effects off", function()

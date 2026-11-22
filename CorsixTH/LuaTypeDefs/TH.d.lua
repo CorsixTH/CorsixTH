@@ -1090,6 +1090,11 @@ function THMoviePlayer:stop() end
 --- Pause or unpause the movie
 function THMoviePlayer:togglePause() end
 
+--- Skip ahead to the given time of the movie, which goes on from there
+--- without its sound
+---@param ms number milliseconds from the start
+function THMoviePlayer:skipTo(ms) end
+
 --- Get the height of the video frame in pixels
 ---@return integer height
 function THMoviePlayer:getNativeHeight() end

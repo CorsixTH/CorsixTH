@@ -1,3 +1,23 @@
+--[[ Copyright (c) 2026 Jan Bakalar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. --]]
+
 require("corsixth")
 require("class_test_base")
 -- (No SDL in the unit tests: the clock of the typing is not used here.)
@@ -27,7 +47,7 @@ describe("Clicks on a movie", function()
   it("go to the win letter first, which may keep the movie going", function()
     local movie, stopped = player()
     local takes = true
-    movie.win_letter = {onMouseDown = function() return takes end}
+    movie.win_letter = {shown = true, onMouseDown = function() return takes end}
     movie:onMouseDown("left", 100, 100)
     assert.is_false(stopped())
     takes = false
@@ -38,10 +58,15 @@ end)
 
 describe("The level won movie", function()
   -- The movie, as if it played, with graphics that load but draw nothing.
+  -- The times it is skipped to are noted.
   local function winMovie()
     local movie, stopped = player()
     movie.playMovie = function(self) self.playing = true end
     movie.movie_length = 10000
+    movie.skips = {}
+    movie.moviePlayer = {skipTo = function(_, ms)
+      movie.skips[#movie.skips + 1] = ms
+    end}
     local loaded = {}
     movie.app = {gfx = {
       getPalette = function() return {} end,
@@ -69,6 +94,25 @@ describe("The level won movie", function()
     assert.equal(1, chosen)
     assert.is_true(stopped())
     assert.is_nil(movie.win_letter)
+  end)
+
+  it("skips to its letter, typed out in full, on a click before it shows", function()
+    local movie, stopped = winMovie()
+    movie:playWinLevelMovie(nil, {"Dear player"}, function() end)
+    local letter = movie.win_letter
+    movie:onMouseDown("right", 100, 100)
+    assert.same({}, movie.skips)
+    movie:onMouseDown("left", 100, 100)
+    movie:onMouseUp("left", 100, 100)
+    assert.same({9750}, movie.skips) -- (where the letter shows)
+    assert.is_true(letter.typed)
+    assert.is_false(stopped())
+    -- Once it shows, a click does not skip.
+    letter.shown = true
+    letter.x, letter.y, letter.vs = 240, 0, 2.25
+    movie:onMouseDown("left", 100, 100)
+    assert.same({9750}, movie.skips)
+    assert.is_false(stopped())
   end)
 
   it("has no letter without paragraphs", function()
