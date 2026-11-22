@@ -18,6 +18,7 @@ var classmovie__player =
     [ "refresh", "classmovie__player.html#a267f954dded274d634ff9a52bab8e43d", null ],
     [ "run_video", "classmovie__player.html#a3e76aa43db63f7792efefa3b316fd269", null ],
     [ "set_renderer", "classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d", null ],
+    [ "skip_to", "classmovie__player.html#ab053ff13cc8ac21124f072de9c5cc41d", null ],
     [ "stop", "classmovie__player.html#a7db3b2490cb81125a4458f5b9fbd7a25", null ],
     [ "togglePause", "classmovie__player.html#aff5b3626729ff1cc6d608a51daa7b619", null ],
     [ "unload", "classmovie__player.html#a4c4cadbccf413c6918a9573493b64b8b", null ]

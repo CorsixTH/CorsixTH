@@ -112,6 +112,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7db3b2490cb81125a4458f5b9fbd7a25" id="r_a7db3b2490cb81125a4458f5b9fbd7a25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7db3b2490cb81125a4458f5b9fbd7a25">stop</a> ()</td></tr>
 <tr class="memdesc:a7db3b2490cb81125a4458f5b9fbd7a25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the currently playing movie.  <br /></td></tr>
 <tr class="memitem:aff5b3626729ff1cc6d608a51daa7b619" id="r_aff5b3626729ff1cc6d608a51daa7b619"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff5b3626729ff1cc6d608a51daa7b619">togglePause</a> ()</td></tr>
+<tr class="memitem:ab053ff13cc8ac21124f072de9c5cc41d" id="r_ab053ff13cc8ac21124f072de9c5cc41d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab053ff13cc8ac21124f072de9c5cc41d">skip_to</a> (double ms)</td></tr>
 <tr class="memitem:a9893adbca9285b593cc9315d3dbbf40a" id="r_a9893adbca9285b593cc9315d3dbbf40a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9893adbca9285b593cc9315d3dbbf40a">get_native_height</a> () const</td></tr>
 <tr class="memdesc:a9893adbca9285b593cc9315d3dbbf40a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the original height of the movie.  <br /></td></tr>
 <tr class="memitem:a0f35745df45cd54ffa6f815d2b09d583" id="r_a0f35745df45cd54ffa6f815d2b09d583"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f35745df45cd54ffa6f815d2b09d583">get_native_width</a> () const</td></tr>
@@ -506,6 +507,32 @@ Up to the size of the picture buffer frames may be lost during this process. </d
 </div><div class="memdoc">
 <p>Assign the renderer on which to draw the movie.</p>
 <p><a class="el" href="classmovie__player.html">movie_player</a> does not take ownership of the render, it is up to the caller to delete it, after deleting <a class="el" href="classmovie__player.html">movie_player</a> or setting a different renderer. </p>
+
+</div>
+</div>
+<a id="ab053ff13cc8ac21124f072de9c5cc41d" name="ab053ff13cc8ac21124f072de9c5cc41d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab053ff13cc8ac21124f072de9c5cc41d">&#9670;&#160;</a></span>skip_to()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void movie_player::skip_to </td>
+          <td>(</td>
+          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>ms</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Skip ahead to the given time of the playing movie</p>
+<p>The frames before it are still decoded, as each can build on the one before it, but only the last of them is shown. Once that frame is on the screen, the playback clock (get_playback_time) jumps to the time (<a class="el" href="#a267f954dded274d634ff9a52bab8e43d">movie_player::refresh</a>). The movie goes on from there without its sound.</p>
+<p>This method is not thread safe, it should only be called from the event thread, the same thread that calls refresh. It tells the other threads through two atomics: skip_pts for the video thread (run_video), and sound_skipped for the audio callback (decode_audio_frame) and the stream thread (read_streams).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ms</td><td>The time to skip to, in milliseconds from the start, by the playback clock </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
