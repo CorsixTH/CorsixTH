@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>ReputationAccount Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">ReputationAccount Class</h2>
+<h3 class="class">The weighted reputation accounting of the original game: credit and weight
+accumulate, and the visible rating is derived as clamp(trunc(500*credit/weight)).</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L21">line 21 of Lua/reputation.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1accounting_for_rating">accountingForRating</a>(<span class="p">rating</span>, <span class="p">outcomes</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1apply_delta">applyDelta</a>(<span class="p">delta_credit</span>, <span class="p">delta_weight</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1apply_event">applyEvent</a>(<span class="p">event</span>, <span class="p">weight</span>, <span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1calculate">calculate</a>(<span class="p">credit</span>, <span class="p">weight</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1event_delta">eventDelta</a>(<span class="p">event</span>, <span class="p">weight</span>, <span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1points_to_credit">pointsToCredit</a>(<span class="p">points</span>, <span class="p">weight</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reputation_account.html#_0_1_reputation_account_1rating">rating</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">credit</span>
+ </li>
+ <li><span class="p">weight</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1_reputation_account">function ReputationAccount:ReputationAccount(<span class="p">credit</span>, <span class="p">weight</span>)</a></h5>
+ <p>
+ Create an account.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">credit</td>
+ <td class="t">integer</td>
+ <td class="d"> The starting credit, defaulting to 20</td>
+ </tr>
+ <tr>
+ <td class="n">weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The starting weight, defaulting to 20</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L211">line 211 of Lua/reputation.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1accounting_for_rating">function ReputationAccount.accountingForRating(<span class="p">rating</span>, <span class="p">outcomes</span>)</a></h5>
+ <p>
+ A credit and weight that show a given rating at a plausible scale.
+Calculate a credit and a weight based on a known rating and outcomes.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">rating</td>
+ <td class="t">integer</td>
+ <td class="d"> The rating to reproduce, defaulting to neutral</td>
+ </tr>
+ <tr>
+ <td class="n">outcomes</td>
+ <td class="t">integer</td>
+ <td class="d"> How many outcomes have been seen, which sets the
+scale.</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer, integer</td>
+ <td class="d">The credit and the weight to restore</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L182">line 182 of Lua/reputation.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1apply_delta">function ReputationAccount:applyDelta(<span class="p">delta_credit</span>, <span class="p">delta_weight</span>)</a></h5>
+ <p>
+ Move the accounting by a given amount.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">delta_credit</td>
+ <td class="t">integer</td>
+ <td class="d"> The change to credit</td>
+ </tr>
+ <tr>
+ <td class="n">delta_weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The change to weight</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer</td>
+ <td class="d">The rating after the change</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L225">line 225 of Lua/reputation.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1apply_event">function ReputationAccount:applyEvent(<span class="p">event</span>, <span class="p">weight</span>, <span class="p">amount</span>)</a></h5>
+ <p>
+ Apply one reputation event to this account.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">event</td>
+ <td class="t">integer</td>
+ <td class="d"> The event identifier, 0 to 24</td>
+ </tr>
+ <tr>
+ <td class="n">weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The weight to scale a percentage event from</td>
+ </tr>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">integer</td>
+ <td class="d"> The caller's signed figure, for the events that use one</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">ReputationAccount</td>
+ <td class="d">This account, for chaining</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L235">line 235 of Lua/reputation.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1calculate">function ReputationAccount.calculate(<span class="p">credit</span>, <span class="p">weight</span>)</a></h5>
+ <p>
+ The rating a given credit and weight produce.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">credit</td>
+ <td class="t">integer</td>
+ <td class="d"> The accumulated credit</td>
+ </tr>
+ <tr>
+ <td class="n">weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The accumulated weight</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer</td>
+ <td class="d">The rating, 0 to 1000</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L120">line 120 of Lua/reputation.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1event_delta">function ReputationAccount.eventDelta(<span class="p">event</span>, <span class="p">weight</span>, <span class="p">amount</span>)</a></h5>
+ <p>
+ The change an event makes to the accounting.
+The delta is calculated from the weight *before* the event, and it is
+returned rather than applied so that the same figure can be given to the
+hospital and, when the event names a disease, to that disease. Their two
+histories differ, so the same delta produces two different rating changes.
+The weight to scale from is the caller's choice. Percentage events use the
+hospital's weight.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">event</td>
+ <td class="t">integer</td>
+ <td class="d"> The event identifier, 0 to 24</td>
+ </tr>
+ <tr>
+ <td class="n">weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The weight to scale a percentage event from</td>
+ </tr>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">integer</td>
+ <td class="d"> The caller's signed figure, for the events that use one</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer, integer</td>
+ <td class="d">The change to credit and the change to weight</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L138">line 138 of Lua/reputation.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1points_to_credit">function ReputationAccount.pointsToCredit(<span class="p">points</span>, <span class="p">weight</span>)</a></h5>
+ <p>
+ The credit that moves a rating by a given number of points.
+The rating is `500 * credit / weight`, so one point of rating is worth
+`weight / 500` of credit.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr>
+ <th class="n">Name</th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n">points</td>
+ <td class="t">integer</td>
+ <td class="d"> The signed number of rating points</td>
+ </tr>
+ <tr>
+ <td class="n">weight</td>
+ <td class="t">integer</td>
+ <td class="d"> The weight to convert against</td>
+ </tr>
+ </table>
+ <strong>&nbsp;Returns:</strong>
+ <table class="return">
+ <tr>
+ <th class="n"></th>
+ <th class="t">Type</th>
+ <th>Description</th>
+ </tr>
+ <tr>
+ <td class="n"></td>
+ <td class="t">integer</td>
+ <td class="d">The change to credit that moves the rating by that much</td>
+ </tr>
+ </table>
+ </p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L171">line 171 of Lua/reputation.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reputation_account_1rating">function ReputationAccount:rating()</a></h5>
+ <p>
+ The rating this account currently shows.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/reputation.lua#L219">line 219 of Lua/reputation.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

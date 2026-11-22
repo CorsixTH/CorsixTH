@@ -24,7 +24,7 @@
  <h2 class="class">Vip Class</h2>
 <h3 class="class">A `Vip` who is in the hospital to evaluate the hospital and produce a report</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L60">line 60 of Lua/entities/humanoids/vip.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L61">line 61 of Lua/entities/humanoids/vip.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_vip.html">Vip</a>
  » <a href="_0_1_humanoid.html">Humanoid</a>
  » <a href="_0_1_entity.html">Entity</a>
@@ -101,6 +101,9 @@
  </li>
  <li class="self">
  <a href="_0_1_vip.html#_0_1_vip_1get_next_room">getNextRoom</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_vip.html#_0_1_vip_1get_reputation_event">getReputationEvent</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_humanoid.html#_0_1_humanoid_1get_room">getRoom</a>()
@@ -495,8 +498,6 @@
  <li><span class="p">remove_callbacks</span>
  (*)
  </li>
- <li><span class="p">rep_reward</span>
- </li>
  <li><span class="p">room_eval</span>
  </li>
  <li><span class="p">room_visit_chance</span>
@@ -586,7 +587,7 @@
  </tr>
  </table>
  </p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L67">line 67 of Lua/entities/humanoids/vip.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L68">line 68 of Lua/entities/humanoids/vip.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -612,7 +613,7 @@
  </table>
  </p><p>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">Humanoid:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L460">line 460 of Lua/entities/humanoids/vip.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L458">line 458 of Lua/entities/humanoids/vip.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -625,6 +626,14 @@
  <h5><a name="_0_1_vip_1get_next_room">function Vip:getNextRoom()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L138">line 138 of Lua/entities/humanoids/vip.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_vip_1get_reputation_event">function Vip:getReputationEvent()</a></h5>
+ <p>
+ from the appraisal alone, so a cash award and a good reputation event are not<br/><br/>
+ the same thing.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L228">line 228 of Lua/entities/humanoids/vip.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -641,7 +650,7 @@
  --VIP has left--<br/><br/>
  Called when the vip is out of the hospital grounds<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1on_destroy">Humanoid:onDestroy</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L228">line 228 of Lua/entities/humanoids/vip.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L243">line 243 of Lua/entities/humanoids/vip.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -655,7 +664,7 @@
  <div class="method">
  <h5><a name="_0_1_vip_1set_v_i_p_rating">function Vip:setVIPRating()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L247">line 247 of Lua/entities/humanoids/vip.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/vip.lua#L264">line 264 of Lua/entities/humanoids/vip.lua</a>.
  </p>
  </div>
  <div class="method">

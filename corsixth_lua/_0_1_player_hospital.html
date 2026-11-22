@@ -154,7 +154,7 @@
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_hospital.html#_0_1_hospital_1change_reputation">changeReputation</a>(<span class="p">reason</span>, <span class="p">disease</span>, <span class="p">valueChange</span>)
+ <a href="_0_1_hospital.html#_0_1_hospital_1change_reputation_by_points">changeReputationByPoints</a>(<span class="p">points</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
@@ -312,10 +312,6 @@
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_hospital.html#_0_1_hospital_1get_reputation_change_likelihood">getReputationChangeLikelihood</a>()
- (inherited from <a href="_0_1_hospital.html">Hospital</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1get_treatment_price">getTreatmentPrice</a>(<span class="p">disease</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
@@ -353,10 +349,6 @@
  </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1is_player_hospital">isPlayerHospital</a>()
- (inherited from <a href="_0_1_hospital.html">Hospital</a>)
- </li>
- <li class="inherited">
- <a href="_0_1_hospital.html#_0_1_hospital_1is_reputation_change_allowed">isReputationChangeAllowed</a>(<span class="p">amount</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
@@ -479,6 +471,14 @@
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1record_diagnosis">recordDiagnosis</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1register_patient">registerPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1remove_debug_patient">removeDebugPatient</a>(<span class="p">patient</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
@@ -512,6 +512,10 @@
  </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1remove_tile_object">removeTileObject</a>(<span class="p">object_category</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1reputation_event">reputationEvent</a>(<span class="p">event</span>, <span class="p">disease</span>, <span class="p">amount</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
@@ -571,10 +575,6 @@
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_hospital.html#_0_1_hospital_1unconditional_change_reputation">unconditionalChangeReputation</a>(<span class="p">valueChange</span>)
- (inherited from <a href="_0_1_hospital.html">Hospital</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1update_cured_counts">updateCuredCounts</a>(<span class="p">patient</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
@@ -584,6 +584,10 @@
  </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1update_percentages">updatePercentages</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_reputation">updateReputation</a>()
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
  </li>
  <li class="self">
@@ -817,6 +821,9 @@
  (*)
  </li>
  <li><span class="p">reputation_above_threshold</span>
+ (*)
+ </li>
+ <li><span class="p">reputation_account</span>
  (*)
  </li>
  <li><span class="p">reputation_max</span>
