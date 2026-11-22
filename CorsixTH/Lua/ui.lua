@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local Window = cth_require("window")
+local pathsep = package.config:sub(1, 1)
 
 --- Top-level container for all other user-interface components.
 class "UI" (Window)
@@ -185,11 +186,11 @@ function UI:UI(app, minimal)
   self.editing_allowed = true
 
   if not LOADED_DIALOGS then
-    app:loadLuaFolder("dialogs", true)
-    app:loadLuaFolder("dialogs/fullscreen", true)
-    app:loadLuaFolder("dialogs/resizables", true)
-    app:loadLuaFolder("dialogs/resizables/menu_list_dialogs", true)
-    app:loadLuaFolder("dialogs/resizables/file_browsers", true)
+    app:loadLuaFolder("dialogs", false)
+    app:loadLuaFolder("dialogs" .. pathsep .. "fullscreen", false)
+    app:loadLuaFolder("dialogs" ..pathsep .. "resizables", false)
+    app:loadLuaFolder("dialogs" ..pathsep .. "resizables" .. pathsep .. "menu_list_dialogs", false)
+    app:loadLuaFolder("dialogs" ..pathsep .. "resizables" .. pathsep .. "file_browsers", false)
     LOADED_DIALOGS = true
   end
 
