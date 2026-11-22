@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
 
+#include <cstdint>
 #include <type_traits>
 #include <vector>
 
@@ -34,6 +35,10 @@ struct lua_persist_int {};
 template <>
 struct lua_persist_int<int> {
   typedef unsigned int T;
+};
+template <>
+struct lua_persist_int<int64_t> {
+  typedef uint64_t T;
 };
 
 //! Interface used for persisting Lua objects

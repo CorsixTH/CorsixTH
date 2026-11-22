@@ -32,6 +32,13 @@ TEST_CASE("numbers load as they were saved", "[persist]") {
     local persist = require("persist")
     local numbers = {0, 7, 16383, 16384, 50000, -5, 0.5, 3.0, -2.0, 2^40, 1e300}
     if math.tointeger then
+      -- Integers are written in as many bytes as they need: test where
+      -- one more byte starts, for positive and negative numbers.
+      for _, edge in ipairs({63, 64, 8191, 8192, 1048575, 1048576}) do
+        numbers[#numbers + 1] = edge
+        numbers[#numbers + 1] = -edge
+        numbers[#numbers + 1] = -edge - 1
+      end
       numbers[#numbers + 1] = math.tointeger(2^40)
       numbers[#numbers + 1] = math.maxinteger
       numbers[#numbers + 1] = math.mininteger

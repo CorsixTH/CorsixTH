@@ -80,8 +80,8 @@ function UIProgressReport:UIProgressReport(ui)
       crit_table.red = true
       res_value = crit_table.lose_value
     end
-    -- FIXME: res_value and cur_value are depersisted as floating points, using
-    -- string.format("%.0f", x) is not suitable due to %d (num) param in _S string
+    -- Saves from older versions can hold res_value and cur_value as floats,
+    -- so math.floor below keeps them fit for the %d in the _S strings.
     local tooltip, direction
     if crit_table.two_tooltips then
       direction = crit_table.win_value and "over" or "under"
