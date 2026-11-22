@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 70,
-  revision = 2,
-  changelog_en = 'This is a bugfix release following 0.70.1. Dying patients can no longer be sent home. Fixed machine dynamic info bug. Fixed number pad crash. Fixed error when purchasing plots. Fixed patient dialog for epidemic patients.',
+  revision = 3,
+  changelog_en = 'This is a bugfix release following 0.70.2. Fixes a crash with some announcemements when not playing in English. Adds support for autodetecting Theme Hospital from Steam on Windows.',
   download_url = 'https://github.com/CorsixTH/CorsixTH/releases',
 }
