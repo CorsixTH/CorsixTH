@@ -91,12 +91,16 @@ function Helicopter:spawnPatient()
   patient:setDisease(hospital.emergency.disease)
   patient.diagnosis_progress = 1
   patient.is_emergency = self.spawned_patients
-  patient:setDiagnosed()
   patient:setMood("emergency", "activate")
   hospital.emergency_patients[self.spawned_patients] = patient
   local x, y = hospital:getHeliportSpawnPosition()
   patient:setNextAction(SpawnAction("spawn", {x = x, y = y}):setOffset({y = 1}))
   patient:setHospital(hospital)
+  -- Recorded as diagnosed only once the patient has a hospital: the record is
+  -- kept on the hospital's reputation account, so recording it beforehand
+  -- would find no hospital to apply it to. Skipping the spawn action that
+  -- follows would also leave the patient with no tile at all.
+  patient:setDiagnosed()
   -- TODO: If new combined diseases are added this will not work correctly anymore.
   patient.cure_rooms_visited = #patient.disease.treatment_rooms - 1
   local no_of_rooms = #patient.disease.treatment_rooms
