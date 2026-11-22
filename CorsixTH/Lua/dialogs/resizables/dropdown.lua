@@ -71,7 +71,6 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
   local show_scrollbar = #items > scrollbar_threshold
   self.num_rows = math.min(scrollbar_threshold, #items)
 
-
   local panel = parent_button.panel_for_sprite
 
   local width = panel.w
@@ -139,6 +138,14 @@ function UIDropdown:selectItem(number)
   end
 end
 
+function UIDropdown:close()
+  self.parent_button:setToggleState(false)
+  UIResizable.close(self)
+  if self.callback then
+    self.callback(self.parent_window, nil)
+  end
+end
+
 function UIDropdown:beginDrag(x, y)
   -- TODO: It may be undesirable anyway for dropdowns, but for dragging of sub-windows
   --       offsets are wrongly calculated (results in jump when dragging)
@@ -153,7 +160,6 @@ end
 --!return continue triggering parent function
 function UIDropdown:onMouseDown(button, x, y)
   if not self:hitTest(x, y) then
-    self.parent_button:toggle()
     self:close()
     return false
   end

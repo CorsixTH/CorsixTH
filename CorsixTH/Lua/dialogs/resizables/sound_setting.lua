@@ -219,6 +219,10 @@ end
 -- Sets the sound volume or turns sound off in the config.
 --!param index (number) the index of the option selected
 function UISoundSettings:selectSoundVolume(index)
+  self.volume_dropdown = nil
+  if index == nil then
+    return
+  end
   local vol = self.volume_options[index].volume
   if vol == 0 then
     self.app.audio:playSoundEffects(false)
@@ -234,6 +238,10 @@ end
 -- Sets the announcement volume or turns announcements off in the config.
 --!param index (number) the index of the option selected
 function UISoundSettings:selectAnnouncementVolume(index)
+  self.volume_dropdown = nil
+  if index == nil then
+    return
+  end
   local vol = self.volume_options[index].volume
   if vol == 0 then
     self.app.config.play_announcements = false
@@ -249,6 +257,10 @@ end
 -- Sets the music volume or turns announcements off in the config.
 --!param index (number) the index of the option selected
 function UISoundSettings:selectMusicVolume(index)
+  self.volume_dropdown = nil
+  if index == nil then
+    return
+  end
   local vol = self.volume_options[index].volume
   if vol == 0 then
     self.app.config.play_music = false
@@ -282,6 +294,10 @@ end
 -- since the MIDI port is specific to the selected API.
 --!param index (number) the index of the option selected
 function UISoundSettings:selectMidiApi(index)
+  self.midi_api_dropdown = nil
+  if index == nil then
+    return
+  end
   local value = self.midi_api_options[index].value
 
   self.app.config.midi_api = value
@@ -299,6 +315,10 @@ end
 -- Sets the MIDI port and resets the audio.
 --!param index (number) the index of the option selected
 function UISoundSettings:selectMidiPort(index)
+  self.midi_port_dropdown = nil
+  if index == nil then
+    return
+  end
   local value = self.midi_port_options[index].value
   self.app.config.midi_port = value
   self.app:saveConfig()
