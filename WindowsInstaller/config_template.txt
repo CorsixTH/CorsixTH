@@ -32,6 +32,7 @@
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+--  Turkish               / tr / tur
 --  Ukrainian             / uk / ukr
 --
 language = [[LANGUAGE_CHOSEN]]

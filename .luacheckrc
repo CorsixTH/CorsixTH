@@ -121,8 +121,8 @@ end
 for _, lng in ipairs({"brazilian_portuguese", "czech", "danish", "developer",
     "dutch", "english", "finnish", "french", "german", "greek", "hungarian",
     "iberic_portuguese", "italian", "japanese", "korean", "norwegian", "original_strings",
-    "polish", "russian", "simplified_chinese", "spanish", "swedish", "ukrainian",
-    "traditional_chinese"}) do
+    "polish", "russian", "simplified_chinese", "spanish", "swedish", "traditional_chinese",
+    "turkish", "ukrainian"}) do
   local filename = "CorsixTH/Lua/languages/" .. lng .. ".lua"
   add_ignore(filename, "111")
   add_ignore(filename, "112")
