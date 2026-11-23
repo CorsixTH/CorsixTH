@@ -1635,7 +1635,7 @@ end
 --! Because it moves both by one it pulls the rating towards neutral rather than
 --! far in either direction, so on its own a diagnosis barely moves the number.
 --!param patient (Patient) The diagnosed patient
-function Hospital:recordDiagnosis(patient)
+function Hospital:recordPatientDiagnosed(patient)
   if patient.is_debug then return end
   self:reputationEvent(ReputationAccount.event_patient_diagnosed, patient.disease)
   self:registerPatient(patient)
