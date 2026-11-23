@@ -522,51 +522,45 @@ function UI:_chooseMenuBackground()
   local _, screen_h = self.app.video:getRenderSize()
   local bitmap_dir = self.app:getFullPath("Bitmap", true)
 
-  local files = {}
+  local backgrounds = {} -- Usable backgrounds
+  local option_lookup = {} -- Helps group background sizes by option
 
-  local success, err = pcall(function()
+  local function findBackgrounds()
     for filename in lfs.dir(bitmap_dir) do
-      if filename:match("%.png$") then
-        files[#files + 1] = filename
+      local option, width, height =
+          filename:match("^mainmenu_(%d+)_(%d+)_(%d+)%.png$")
+
+      if option and width and height then
+        option = tonumber(option)
+        width = tonumber(width)
+        height = tonumber(height)
+
+        local background = option_lookup[option]
+
+        if not background then
+          background = {
+            option = option,
+            images = {},
+          }
+
+          option_lookup[option] = background
+          backgrounds[#backgrounds + 1] = background
+        end
+
+        background.images[#background.images + 1] = {
+          filename = filename:sub(1, -5),
+          width = width,
+          height = height,
+        }
       end
     end
-  end)
+  end
+
+  local success, err = pcall(findBackgrounds)
 
   if not success then
     print("Warning: Unable to retrieve contents of Bitmap directory: " .. err)
     return nil
-  end
-
-  local backgrounds = {} -- Usable backgrounds
-  local option_lookup = {} -- Helps groups background sizes by option
-
-  for _, filename in ipairs(files) do
-    local option, width, height =
-        filename:match("^mainmenu_(%d+)_(%d+)_(%d+)%.png$")
-
-    if option and width and height then
-      option = tonumber(option)
-      width = tonumber(width)
-      height = tonumber(height)
-
-      local background = option_lookup[option]
-
-      if not background then
-        background = {
-          option = option,
-          images = {},
-        }
-
-        option_lookup[option] = background
-        backgrounds[#backgrounds + 1] = background
-      end
-
-      background.images[#background.images + 1] = {
-        filename = filename:sub(1, -5),
-        width = width,
-        height = height,
-      }
-    end
   end
 
   if #backgrounds == 0 then
