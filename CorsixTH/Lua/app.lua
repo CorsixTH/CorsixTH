@@ -349,10 +349,10 @@ function App:init()
     local Object = _G["Object"] ---@type Object
 
     local objects = self:loadLuaFolder("objects")
-    self.objects = self:loadLuaFolder("objects/machines", nil, objects)
+    self.objects = self:loadLuaFolder("objects" .. pathsep .. "machines", nil, objects)
     -- Doors are in their own folder to ensure that the swing doors (which
     -- depend on the door) are loaded after the door object.
-    self.objects = self:loadLuaFolder("objects/doors", nil, objects)
+    self.objects = self:loadLuaFolder("objects" .. pathsep .. "doors", nil, objects)
     for _, v in ipairs(self.objects) do
       if v.slave_id then
         v.slave_type = self.objects[v.slave_id]
@@ -1703,10 +1703,11 @@ function App:loadLuaFolder(dir, no_results, append_to)
   if dir:sub(-1) ~= pathsep then dir = dir .. pathsep end
   local path = self:getFullPath({"Lua", dir}, true)
   local results = no_results and "" or (append_to or {})
+  local dotdir = dir:gsub(pathsep, '.')
 
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
-      local status, result = pcall(cth_require, dir .. file:sub(1, -5))
+      local status, result = pcall(cth_require, dotdir .. file:sub(1, -5))
       if not status then
         print("Error loading " .. dir .. file .. ":\n" .. tostring(result))
       else
