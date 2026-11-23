@@ -95,7 +95,7 @@ enum persist_type {
   PERSIST_TPERMANENT = LUA_TTHREAD + 1,
   PERSIST_TTRUE,
   PERSIST_TTABLE_WITH_META,
-  PERSIST_TSMALLINT,  // 0 to 16383 (Lua 5.1, LuaJIT and older saves)
+  PERSIST_TSMALLINT,  // 0 to 16383 (Lua 5.1, 5.2, LuaJIT and older saves)
   PERSIST_TPROTOTYPE,
   PERSIST_TINTEGER,    // Any integer (Lua 5.3 and later)
   PERSIST_TRESERVED2,  // Not currently used

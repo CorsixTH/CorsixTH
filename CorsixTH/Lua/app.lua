@@ -32,8 +32,8 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
--- Reputation is calculated from credit and weight
-local SAVEGAME_VERSION = 271
+-- Saves keep integers and floats apart
+local SAVEGAME_VERSION = 272
 
 --- Controls the main CorsixTH application
 class "App"
@@ -2086,6 +2086,13 @@ function App:afterLoad()
     Nothing to do here as it is handled by persistance.
     However, it introduces compatibility limitations between the demo and full game
     and should be noted.
+  end
+
+  if old < 272 then
+    From this version, saves made with Lua 5.3 or later keep integers and
+    floats apart. Nothing to do here as it is handled by persistance.
+    Numbers in older saves may still be floats where an integer is expected.
+    Saves from this version cannot be loaded by older versions.
   end
   ]] --
 
