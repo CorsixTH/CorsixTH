@@ -95,9 +95,9 @@ enum persist_type {
   PERSIST_TPERMANENT = LUA_TTHREAD + 1,
   PERSIST_TTRUE,
   PERSIST_TTABLE_WITH_META,
-  PERSIST_TINTEGER,  // 0 to 16383 (Lua 5.1, LuaJIT and older saves)
+  PERSIST_TSMALLINT,  // 0 to 16383 (Lua 5.1, LuaJIT and older saves)
   PERSIST_TPROTOTYPE,
-  PERSIST_TINTEGER64,  // Any integer (Lua 5.3 and later)
+  PERSIST_TINTEGER,    // Any integer (Lua 5.3 and later)
   PERSIST_TRESERVED2,  // Not currently used
   PERSIST_TCOUNT,      // must equal 16 (for compatibility)
 };
@@ -304,9 +304,9 @@ class lua_persist_basic_writer : public lua_persist_writer {
 #if LUA_VERSION_NUM >= 503
     if (lua_isinteger(L, iIndex)) {
       // Every integer, in as few bytes as its size needs
-      uint8_t iByte = PERSIST_TINTEGER64;
+      uint8_t iByte = PERSIST_TINTEGER;
       write_byte_stream(&iByte, 1);
-      write_int(static_cast<int64_t>(lua_tointeger(L, iIndex)));
+      write_int(lua_tointeger(L, iIndex));
       return;
     }
 #else
@@ -314,7 +314,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
       // Small integers are written as just a few bytes
       // NB: 16383 = 2^14-1, which is the maximum value which
       // can fit into two bytes of VUInt.
-      uint8_t iByte = PERSIST_TINTEGER;
+      uint8_t iByte = PERSIST_TSMALLINT;
       write_byte_stream(&iByte, 1);
       write_uint(static_cast<uint16_t>(fValue));
       return;
@@ -1004,16 +1004,16 @@ class lua_persist_basic_reader : public lua_persist_reader {
           }
           break;
         }
-        case PERSIST_TINTEGER: {
+        case PERSIST_TSMALLINT: {
           uint16_t iValue;
           if (!read_uint(iValue)) return false;
           lua_pushinteger(L, iValue);
           break;
         }
-        case PERSIST_TINTEGER64: {
-          int64_t iValue;
+        case PERSIST_TINTEGER: {
+          lua_Integer iValue;
           if (!read_int(iValue)) return false;
-          lua_pushinteger(L, static_cast<lua_Integer>(iValue));
+          lua_pushinteger(L, iValue);
           break;
         }
         default:
@@ -1031,8 +1031,8 @@ class lua_persist_basic_reader : public lua_persist_reader {
               case PERSIST_TTABLE_WITH_META:
                 lua_pushliteral(L, "table-with-metatable");
                 break;
-              case PERSIST_TINTEGER:
-                lua_pushliteral(L, "integer");
+              case PERSIST_TSMALLINT:
+                lua_pushliteral(L, "small-integer");
                 break;
               case PERSIST_TPROTOTYPE:
                 lua_pushliteral(L, "prototype");

@@ -24,21 +24,18 @@ SOFTWARE.
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
 
-#include <cstdint>
 #include <type_traits>
 #include <vector>
 
 #include "lua.hpp"
 
-template <class T>
-struct lua_persist_int {};
-template <>
-struct lua_persist_int<int> {
-  typedef unsigned int T;
-};
-template <>
-struct lua_persist_int<int64_t> {
-  typedef uint64_t T;
+//! The unsigned type that write_int and read_int use for a signed type S,
+//! such as int or lua_Integer.
+template <class S>
+struct lua_persist_int {
+  static_assert(std::is_integral<S>::value && std::is_signed<S>::value,
+                "S must be a signed integer type");
+  typedef typename std::make_unsigned<S>::type T;
 };
 
 //! Interface used for persisting Lua objects
