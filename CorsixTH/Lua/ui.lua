@@ -513,34 +513,107 @@ function UI:removeKeyHandler(keys, window)
   end
 end
 
---- Set the menu background image
----
---- The menu size closest to, but no larger than the height of the currently
---- set game window is selected. If no image fits that criteria the smallest
---- available image is used.
-function UI:setMenuBackground()
+--- Choose a menu background.
+--- Background images use the name format mainmenu_option_width_height.png.
+--- A background option is chosen at random. The largest image no taller than
+--- the current render height is selected. If all images are taller, the
+--- smallest image for that option is selected.
+---@return table? background # The selected background, or nil if none exist
+function UI:_chooseMenuBackground()
   local _, screen_h = self.app.video:getRenderSize()
-  local bg_size_idx = 1
+  local bitmap_dir = self.app:getFullPath("Bitmap", true)
 
-  -- Available mainmenu*.bmp sizes
-  local menu_bg_sizes = {
-    {640, 480},
-    {1280, 720},
-    {1920, 1080},
-  }
+  local backgrounds = {} -- Usable backgrounds
+  local option_lookup = {} -- Helps group background sizes by option
 
-  for i, bg_size in ipairs(menu_bg_sizes) do
-    if screen_h >= bg_size[2] then
-      bg_size_idx = i
+  local function findBackgrounds()
+    for filename in lfs.dir(bitmap_dir) do
+      local option, width, height =
+          filename:match("^mainmenu_(%d+)_(%d+)_(%d+)%.png$")
+
+      if option and width and height then
+        option = tonumber(option)
+        width = tonumber(width)
+        height = tonumber(height)
+
+        local background = option_lookup[option]
+
+        if not background then
+          background = {
+            option = option,
+            images = {},
+          }
+
+          option_lookup[option] = background
+          backgrounds[#backgrounds + 1] = background
+        end
+
+        background.images[#background.images + 1] = {
+          filename = filename:sub(1, -5),
+          width = width,
+          height = height,
+        }
+      end
+    end
+  end
+
+  local success, err = pcall(findBackgrounds)
+
+  if not success then
+    print("Warning: Unable to retrieve contents of Bitmap directory: " .. err)
+    return nil
+  end
+
+  if #backgrounds == 0 then
+    print("Warning: No menu background images were available.")
+    return nil
+  end
+
+  -- Keep result deterministic
+  table.sort(backgrounds, function(a, b)
+    return a.option < b.option
+  end)
+
+  local background =
+      backgrounds[math.cosmetic_random(1, #backgrounds)]
+
+  table.sort(background.images, function(a, b)
+    if a.height == b.height then
+      return a.width < b.width
+    end
+
+    return a.height < b.height
+  end)
+
+  local selected_image = background.images[1]
+
+  for _, image in ipairs(background.images) do
+    if screen_h >= image.height then
+      selected_image = image
     else
       break
     end
   end
 
-  local bg_size = menu_bg_sizes[bg_size_idx]
-  self.background_width = bg_size[1]
-  self.background_height = bg_size[2]
-  self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[2], bg_size[1], bg_size[2], "Bitmap")
+  return selected_image
+end
+
+--- Set the menu background image.
+function UI:setMenuBackground()
+  local background = self:_chooseMenuBackground()
+
+  if not background then
+    self.background = nil
+    self.background_width = 0
+    self.background_height = 0
+    return
+  end
+
+  self.background_width = background.width
+  self.background_height = background.height
+  self.background = self.app.gfx:loadPNG(
+      background.filename, background.width, background.height
+  )
 end
 
 function UI:onChangeResolution()
