@@ -168,6 +168,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.rats_created = 0
   self.rats_killed_ty = 0
   self.rats_created_ty = 0
+  self.rats_shot_at = 0
+  self.rats_shot_at_ty = 0
 
   self.ownedPlots = {1} -- Plots owned by the hospital
   self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
@@ -518,6 +520,8 @@ function Hospital:afterLoad(old, new)
     self.rats_created = self.rats_created or 0
     self.rats_killed_ty = self.rats_killed_ty or 0
     self.rats_created_ty = self.rats_created_ty or 0
+    self.rats_shot_at = self.rats_shot_at or 0
+    self.rats_shot_at_ty = self.rats_shot_at_ty or 0
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1083,6 +1087,7 @@ function Hospital:onEndYear()
   self.num_deaths_this_year = 0
   self.rats_killed_ty = 0
   self.rats_created_ty = 0
+  self.rats_shot_at_ty = 0
 
   self.has_impressive_reputation = true
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
@@ -1461,6 +1466,12 @@ end
 function Hospital:incrementRatsCreated()
   self.rats_created = self.rats_created + 1
   self.rats_created_ty = self.rats_created_ty + 1
+end
+
+--! Increment rats shot at counters (total and this year)
+function Hospital:incrementRatsShotAt()
+  self.rats_shot_at = self.rats_shot_at + 1
+  self.rats_shot_at_ty = self.rats_shot_at_ty + 1
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage

@@ -258,6 +258,7 @@ function Rat:onClick(ui, button)
   -- no splat; only mark the floor indoors.
   local hospital = self.world:getLocalPlayerHospital()
   if hospital then
+    hospital:incrementRatsShotAt()
     hospital:incrementRatsKilled()
     if hospital:isInHospital(tile_x, tile_y) then
       local splat = self.world:newObject("litter", tile_x, tile_y)

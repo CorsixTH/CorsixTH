@@ -60,6 +60,7 @@ describe("rat.lua: ", function()
       ratholes = opts.no_holes and {} or {hole_b},
       isInHospital = function() return true end,
       incrementRatsKilled = function() end,
+      incrementRatsShotAt = function() end,
     }
     rat.world = {
       map = map,
@@ -157,7 +158,7 @@ describe("rat.lua: ", function()
     local rat = createRat()
     rat.tile_x, rat.tile_y = 7, 8
     rat.world.getLocalPlayerHospital = function()
-      return {ratholes = {}, isInHospital = function() return false end, incrementRatsKilled = function() end}
+      return {ratholes = {}, isInHospital = function() return false end, incrementRatsKilled = function() end, incrementRatsShotAt = function() end}
     end
     stub(rat.world, "newObject")
     stub(rat.world, "destroyEntity")
@@ -174,7 +175,7 @@ describe("rat.lua: ", function()
     rat.world.getLocalPlayerHospital = function()
       return {ratholes = {}, isInHospital = function(_, x, y)
         return x == 10 and y == 10
-      end, incrementRatsKilled = function() end}
+      end, incrementRatsKilled = function() end, incrementRatsShotAt = function() end}
     end
     stub(rat.world, "newObject")
     stub(rat.world, "destroyEntity")

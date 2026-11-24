@@ -231,8 +231,8 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
     end
     -- Rats Accuracy Trophy (only if killed enough rats for absolute trophy)
     local min_for_accuracy = math.floor(prices.RatKillsAbsolute / 2)
-    if anybody_cured and hosp.rats_killed_ty >= min_for_accuracy and hosp.rats_created_ty > 0 then
-      local accuracy = math.floor((hosp.rats_killed_ty / hosp.rats_created_ty) * 100)
+    if anybody_cured and hosp.rats_killed_ty >= min_for_accuracy and hosp.rats_shot_at_ty > 0 then
+      local accuracy = math.floor((hosp.rats_killed_ty / hosp.rats_shot_at_ty) * 100)
       if accuracy > prices.RatKillsPercentage then
         local win_value = prices.RatKillsPercentageBonus
         self:addTrophy(_S.trophy_room.rats_accuracy.trophies[math.random(1, 3)], "money", win_value)

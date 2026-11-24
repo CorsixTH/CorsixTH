@@ -129,6 +129,8 @@ local function createMockHospital(opts)
     num_visitors_ty = 0,
     num_deaths_this_year = 0,
     value = 50000,
+    rats_shot_at = 0,
+    rats_shot_at_ty = 0,
   }, {__index = Hospital})
 
   return hospital
@@ -244,7 +246,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
 
   it("awards Rats Accuracy trophy when accuracy >11% and min kills met", function()
     hospital.rats_killed_ty = 30
-    hospital.rats_created_ty = 100
+    hospital.rats_shot_at_ty = 100
 
     report:checkTrophiesAndAwards(world)
 
@@ -260,7 +262,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
 
   it("does NOT award Rats Accuracy trophy when accuracy <=11%", function()
     hospital.rats_killed_ty = 10
-    hospital.rats_created_ty = 100
+    hospital.rats_shot_at_ty = 100
 
     report:checkTrophiesAndAwards(world)
 
@@ -276,7 +278,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
 
   it("does NOT award Rats Accuracy trophy when min kills not met", function()
     hospital.rats_killed_ty = 10
-    hospital.rats_created_ty = 100
+    hospital.rats_shot_at_ty = 100
 
     report:checkTrophiesAndAwards(world)
 
@@ -290,9 +292,9 @@ describe("annual_report.lua - rat trophy logic: ", function()
     assert.is_false(found, "Rats Accuracy trophy should NOT be awarded when min kills (12) not met")
   end)
 
-  it("does NOT award Rats Accuracy trophy when no rats created", function()
+  it("does NOT award Rats Accuracy trophy when no rats shot at", function()
     hospital.rats_killed_ty = 30
-    hospital.rats_created_ty = 0
+    hospital.rats_shot_at_ty = 0
 
     report:checkTrophiesAndAwards(world)
 
@@ -308,7 +310,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
 
   it("requires anybody_cured (num_cured_ty > 1)", function()
     hospital.rats_killed_ty = 30
-    hospital.rats_created_ty = 100
+    hospital.rats_shot_at_ty = 100
     hospital.num_cured_ty = 1
 
     report:checkTrophiesAndAwards(world)
@@ -324,9 +326,9 @@ describe("annual_report.lua - rat trophy logic: ", function()
   end)
 
   it("accuracy calculation uses floor", function()
-    -- 13 kills / 100 created = 13% -> floor = 13 > 11 = should award
+    -- 13 kills / 100 shot at = 13% -> floor = 13 > 11 = should award
     hospital.rats_killed_ty = 13
-    hospital.rats_created_ty = 100
+    hospital.rats_shot_at_ty = 100
     hospital.num_cured_ty = 10
 
     report:checkTrophiesAndAwards(world)
@@ -340,7 +342,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
     end
     assert.is_true(found, "13% accuracy (floor) should award trophy")
 
-    -- 12 kills / 100 created = 12% -> floor = 12 > 11 = should award
+    -- 12 kills / 100 shot at = 12% -> floor = 12 > 11 = should award
     hospital.rats_killed_ty = 12
     report = createMockAnnualReport(hospital)
     report:checkTrophiesAndAwards(world)
@@ -353,7 +355,7 @@ describe("annual_report.lua - rat trophy logic: ", function()
     end
     assert.is_true(found, "12% accuracy (floor) should award trophy")
 
-    -- 11 kills / 100 created = 11% -> floor = 11, NOT > 11 = should NOT award
+    -- 11 kills / 100 shot at = 11% -> floor = 11, NOT > 11 = should NOT award
     hospital.rats_killed_ty = 11
     report = createMockAnnualReport(hospital)
     report:checkTrophiesAndAwards(world)
