@@ -855,7 +855,7 @@ totd_window = {
     "Im Optionsmenü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
     "Haben Sie eine andere Sprache als Englisch ausgewählt, aber es erscheinen englische Texte? Helfen Sie uns, die Übersetzung zu vervollständigen, indem Sie fehlende Texte in Ihre Sprache übersetzten!",
     "Das CorsixTH-Team sucht Verstärkung! Haben Sie Interesse, beim Programmieren, Übersetzen oder der Grafikerstellung zu helfen? Kontaktieren Sie uns in unserem Forum, der Mailing-Liste oder unserem IRC-Kanal (#Corsix-TH auf Freenode).",
-    "Wenn Sie einen Bug finden, bitte melden Sie ihn in unserem Bug-Tracker: th-issues.corsix.org",
+    "Wenn Sie einen Bug finden, bitte melden Sie ihn in unserem Bug-Tracker: corsixth.com/issues",
     "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum Nächsten wechseln kann. Im Status-Fenster können Sie Ihren Fortschritt bezüglich der Levelziele sehen.",
     "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
     "Um aus einer Horde wartender Patienten diejenigen zu finden, die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",

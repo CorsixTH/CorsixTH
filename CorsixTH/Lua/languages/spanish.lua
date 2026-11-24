@@ -1541,7 +1541,7 @@ totd_window = {
     "Puedes ajustar algunos parámetros como la resolución y el idioma del juego en la ventana de opciones, que se encuentra tanto en el menú principal como dentro del juego.",
     "¿Has seleccionado el castellano, pero sigues viendo textos en inglés en algún lugar? ¡Avísanos de qué líneas de texto están en inglés para que podamos traducirlas!",
     "¡El equipo de CorsixTH busca refuerzos! ¿Te interesa programar, traducir o crear gráficos para CorsixTH? Contáctanos en nuestro foro, lista de correo o canal IRC (corsix-th en freenode).",
-    "Si encuentras un fallo, puedes enviarnos un informe en nuestro registro de fallos: th-issues.corsix.org",
+    "Si encuentras un fallo, puedes enviarnos un informe en nuestro registro de fallos: corsixth.com/issues",
     "Cada nivel tiene unos requisitos concretos que debes conseguir antes de poder avanzar al siguiente nivel. Mira en la ventana de estado para ver como llevas los objetivos del nivel.",
     "Si quieres editar o quitar una habitación ya existente, puedes hacerlo con el botón Editar habitación, en la barra de herramientas inferior.",
     "Cuando tengas muchos pacientes esperando, puedes averiguar quienes están esperando para una habitación en concreto pasando el cursor por encima de la habitación.",

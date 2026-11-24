@@ -1272,7 +1272,7 @@ totd_window = {
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais des textes en anglais s'affichent un peu partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
     "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé pour coder, traduire ou créer des graphismes pour CorsixTH ? Contactez-nous sur notre serveur Discord, Sub-Reddit ou serveur Matrix. Les liens sont sur notre site internet (CorsixTH.com).",
-    "Si vous rencontrez un bug, n'hésitez pas à nous le signaler à cette adresse : th-issues.corsix.org",
+    "Si vous rencontrez un bug, n'hésitez pas à nous le signaler à cette adresse : corsixth.com/issues",
     "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
     "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils inférieure.",
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
