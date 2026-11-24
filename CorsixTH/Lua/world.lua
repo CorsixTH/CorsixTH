@@ -1573,39 +1573,6 @@ function World:getIdleTile(x, y, idx, parcel_id)
   return cache.x[idx], cache.y[idx]
 end
 
---- This function checks if a tile has no entity on it and (optionally) if it is not
---- in a room.
---- @param x (integer) the queried tile's x coordinate.
---- @param y (integer) the queried tile's y coordinate.
---- @param not_in_room (boolean) If set, also check the tile is not in a room.
---- @return (boolean) # Whether all checks hold.
-function World:isTileEmpty(x, y, not_in_room)
-  if self:atLeastOneHumanoidLocatedAtTile(x, y) or
-    self:atLeastOneObjectLocatedAtTile(x, y) then
-    return false
-  end
-  if not_in_room then
-    return self:getRoom(x, y) == nil
-  end
-  return true
-end
-
---- Checks if any object is located on a tile.
---- @param x (integer) the queried tile's x coordinate.
---- @param y (integer) the queried tile's y coordinate.
---- @return (boolean) true if any object is located on a tile.
-function World:atLeastOneObjectLocatedAtTile(x, y)
-  return #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0
-end
-
---- Checks if any humanoid is located on a tile.
---- @param x (integer) the queried tile's x coordinate.
---- @param y (integer) the queried tile's y coordinate.
---- @return (boolean) true if any humanoid is located on a tile.
-function World:atLeastOneHumanoidLocatedAtTile(x, y)
-  return #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0
-end
-
 --- Сhecks whether a tile is occupied by any humanoid.
 --- @param x (integer) the queried tile's x coordinate.
 --- @param y (integer) the queried tile's y coordinate.
