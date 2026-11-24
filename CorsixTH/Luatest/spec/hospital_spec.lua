@@ -163,7 +163,7 @@ describe("hospital.lua: ", function()
     local hospital = createReputationHospital()
     hospital.disease_casebook.flu = {reputation_account = ReputationAccount()}
 
-    hospital:recordDiagnosis({disease = {id = "flu"}})
+    hospital:recordPatientDiagnosed({disease = {id = "flu"}})
 
     assert.are.equal(21, hospital.reputation_account.credit)
     assert.are.equal(21, hospital.reputation_account.weight)
@@ -172,7 +172,7 @@ describe("hospital.lua: ", function()
 
   it("does not record a diagnosis for a debug patient", function()
     local hospital = createReputationHospital()
-    hospital:recordDiagnosis({disease = {id = "flu"}, is_debug = true})
+    hospital:recordPatientDiagnosed({disease = {id = "flu"}, is_debug = true})
     assert.are.equal(20, hospital.reputation_account.credit)
     assert.are.equal(20, hospital.reputation_account.weight)
   end)
@@ -182,7 +182,7 @@ describe("hospital.lua: ", function()
     hospital.disease_casebook.flu = {reputation_account = ReputationAccount()}
     local patient = {disease = {id = "flu"}}
 
-    hospital:recordDiagnosis(patient)
+    hospital:recordPatientDiagnosed(patient)
     hospital:registerPatient(patient)
 
     assert.are.equal(21, hospital.reputation_account.weight)
@@ -198,7 +198,7 @@ describe("hospital.lua: ", function()
     hospital:updateReputation()
     assert.are.equal(250, hospital.reputation)
 
-    hospital:recordDiagnosis({disease = {id = "flu"}})
+    hospital:recordPatientDiagnosed({disease = {id = "flu"}})
 
     assert.are.equal(256, hospital.reputation) -- 21 over 41, truncated
   end)
@@ -232,7 +232,7 @@ describe("hospital.lua: ", function()
     hospital.num_deaths_this_year = 0
     local patient = {disease = {id = "flu"}}
 
-    hospital:recordDiagnosis(patient)
+    hospital:recordPatientDiagnosed(patient)
     hospital:humanoidDeath(patient)
 
     -- Registered once, at diagnosis: 20 + 1 diagnosis credit - 1 death credit.
