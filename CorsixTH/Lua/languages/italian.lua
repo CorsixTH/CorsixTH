@@ -759,7 +759,7 @@ totd_window = {
     "Il menu d'opzioni non è ancora implementato, ma puoi regolare le impostazioni modificando il file config.txt nella directory di gioco.",
     "Hai selezionato la tua lingua, ma è tutto in Inglese? Aiutaci a tradurre il gioco!",
     "Il team di CorsixTH sta cercando rinforzi!  Ti piacerebbe programmare, tradurre o creare nuovi elementi grafici per CorsixTH? Contattaci nei forum, tramite mail o sul canale IRC (corsix-th su freenode).",
-    "Hai trovato un bug? Vuoi segnalare un errore di qualsiasi genere? Invia una segnalazione al nostro bug tracker: th-issues.corsix.org",
+    "Hai trovato un bug? Vuoi segnalare un errore di qualsiasi genere? Invia una segnalazione al nostro bug tracker: corsixth.com/issues",
     "Ogni livello ha degli obiettivi da raggiungere prima di poter passare al successivo. Controlla la finestra di riepilogo per vedere a che punto sei.",
     "Se vuoi modificare o rimuovere una stanza esistente, puoi farlo con il tasto modifica stanza nella barra degli strumenti in basso.",
     "In un'orda di pazienti in attesa, puoi vedere velocemente chi sta aspettando il proprio turno per una stanza particolare spostando il mouse sulla stanza.",
