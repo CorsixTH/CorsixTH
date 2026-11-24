@@ -172,6 +172,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_cured_ty = 0
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
+  self.rats_adviser_shown = false
 
   self.ownedPlots = {1} -- Plots owned by the hospital
   self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
@@ -2132,6 +2133,12 @@ function Hospital:addRathole(x, y, wall, parcel)
     hole["object"] = self.world:newObject("rathole", hole.x, hole.y, hole.wall)
   end
   table.insert(self.ratholes, hole)
+
+  -- Trigger adviser message on first rathole placement
+  if self.adviser_data and not self.adviser_data.rats_adviser_shown then
+    self.adviser_data.rats_adviser_shown = true
+    self:giveAdvice({_A.information.initial_general_advice.rats_have_arrived})
+  end
 end
 
 --! Remove the provided rathole.

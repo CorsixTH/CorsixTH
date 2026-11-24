@@ -60,6 +60,14 @@ local Rathole = _G["Rathole"] ---@type Rathole
 
 function Rathole:Rathole(hospital, oject_type, x, y, direction, etc)
   self:Object(hospital, oject_type, x, y, direction, etc)
+
+  -- Trigger adviser message on first rathole placement
+  if not hospital.rats_adviser_shown then
+    hospital.rats_adviser_shown = true
+    if hospital.world and hospital.world.ui and hospital.world.ui.adviser then
+      hospital.world.ui.adviser:say(_A.information.initial_general_advice.rats_have_arrived)
+    end
+  end
 end
 
 function Rathole:getDrawingLayer()
