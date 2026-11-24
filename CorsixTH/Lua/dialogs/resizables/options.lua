@@ -179,6 +179,10 @@ function UIOptions:dropdownLanguage(activate)
 end
 
 function UIOptions:selectLanguage(number)
+  self.language_dropdown = nil
+  if number == nil then
+    return
+  end
   local lang = self.app.strings.languages_english[self.available_languages[number].name]
   local app = self.ui.app
   app.config.language = (lang)
@@ -201,6 +205,10 @@ function UIOptions:dropdownAutosaveFrequency(activate)
 end
 
 function UIOptions:selectAutosaveFrequency(number)
+  self.autosave_dropdown = nil
+  if number == nil then
+    return
+  end
   local option = available_autosave_frequency()[number]
   self.buttons.autosave_frequency:setLabel(option.text)
   TheApp.config.autosave_frequency = option.value

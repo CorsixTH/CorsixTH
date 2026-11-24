@@ -145,6 +145,10 @@ function UINewGame:dropdownDifficulty(activate, button)
 end
 
 function UINewGame:selectDifficulty(number)
+  self.difficulty_dropdown = nil
+  if number == nil then
+    return
+  end
   self.difficulty = number
 end
 

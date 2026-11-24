@@ -286,6 +286,10 @@ function UIGraphicSettings:dropdownWindowSize(activate)
 end
 
 function UIGraphicSettings:selectWindowSize(number)
+  self.window_size_dropdown = nil
+  if number == nil then
+    return
+  end
   local res = self.available_window_sizes[number]
 
   local callback = --[[persistable:options_resolution_callback]] function(width, height)
@@ -348,6 +352,10 @@ function UIGraphicSettings:updateUIScaleAvailabilityState()
 end
 
 function UIGraphicSettings:selectUIScale(number)
+  self.scale_ui_dropdown = nil
+  if number == nil then
+    return
+  end
   local res = self.available_ui_scales[number]
   TheApp.config.ui_scale = res.scale
   TheApp:saveConfig()
@@ -357,6 +365,10 @@ function UIGraphicSettings:selectUIScale(number)
 end
 
 function UIGraphicSettings:selectCursorScale(number)
+  self.cursor_scale_dropdown = nil
+  if number == nil then
+    return
+  end
   local res = self.available_cursor_scales[number]
   TheApp.config.cursor_scale = res.scale
   TheApp:saveConfig()
@@ -369,7 +381,7 @@ function UIGraphicSettings:dropdownOverrideResolution(activate)
     self:dropdownWindowSize(false)
     self:dropdownUIScale(false)
     self:dropdownCursorScale(false)
-    self.override_resolution_dropdown = UIDropdown(self.ui, self, self.buttons.window_size, self.override_resolutions, self.selectOverrideResolution, col.setting_active, col.scrollbar, col.disabled)
+    self.override_resolution_dropdown = UIDropdown(self.ui, self, self.buttons.override_resolution, self.override_resolutions, self.selectOverrideResolution, col.setting_active, col.scrollbar, col.disabled)
     self:addWindow(self.override_resolution_dropdown)
   else
     self.buttons.override_resolution:setToggleState(false)
@@ -381,6 +393,10 @@ function UIGraphicSettings:dropdownOverrideResolution(activate)
 end
 
 function UIGraphicSettings:selectOverrideResolution(number)
+  self.override_resolution_dropdown = nil
+  if number == nil then
+    return
+  end
   local res = self.override_resolutions[number]
   local config = TheApp.config
 
