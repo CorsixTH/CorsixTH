@@ -691,11 +691,6 @@ function UI:changeWindow(width, height)
   return true
 end
 
-function UI:toggleCaptureMouse()
-  self.app.capturemouse = not self.app.capturemouse
-  self.app.video:setCaptureMouse(self.app.capturemouse)
-end
-
 function UI:setMouseReleased(released)
   if released == self.mouse_released then
     return
@@ -1003,10 +998,6 @@ function UI:ableToClickEntity(entity)
   else
     return false
   end
-end
-
-function UI:getScreenOffset()
-  return self.screen_offset_x, self.screen_offset_y
 end
 
 local tooltip_ticks = 30 -- Amount of ticks until a tooltip is displayed

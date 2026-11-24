@@ -440,10 +440,6 @@ function GameUI:WorldToScreen(x, y)
   return x * zoom, y * zoom
 end
 
-function GameUI:getScreenOffset()
-  return self.screen_offset_x, self.screen_offset_y
-end
-
 --! Change if the World should be tested for entities under the cursor
 --!param mode (boolean or room) true to enable hit test (normal), false
 --! to disable, room to enable only for non-door objects in given room
