@@ -45,7 +45,8 @@ function UIFatalError:UIFatalError(ui, gamelog_dir, can_reset)
   self.draggable = false
   self.must_pause = true
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
-  self.white_font = app.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
+  self.white_font = app.gfx:loadMenuFont() -- Preferably Font01V
+  --    but we currently show a url with a forward slash
   self.file_path_font = app.gfx:loadMenuFont()
   self.default_cursor = app.gfx:loadMainCursor("default")
   self.file_path_cursor = app.gfx:loadMainCursor("kill_rat")
