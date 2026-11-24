@@ -1037,6 +1037,9 @@ class lua_persist_basic_reader : public lua_persist_reader {
               case PERSIST_TPROTOTYPE:
                 lua_pushliteral(L, "prototype");
                 break;
+              case PERSIST_TINTEGER:
+                lua_pushliteral(L, "integer");
+                break;
               case PERSIST_TRESERVED2:
                 lua_pushliteral(L, "reserved2");
                 break;
