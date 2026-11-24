@@ -634,6 +634,11 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
   if (fScale <= 0.000) {
     return false;
+  } else if (0.999 <= fScale && fScale <= 1.001) {
+    if (eWhatToScale == scaled_items::all) {
+      global_scale_factor = 1.0;
+    }
+    return true;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
     if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
@@ -667,8 +672,6 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     // When zoom_buffer is allocated with bScale = false, this is only used for
     // the scale to commit the zoom buffer back to the screen at.
     global_scale_factor = fScale;
-    return true;
-  } else if (0.999 <= fScale && fScale <= 1.001) {
     return true;
   } else if (eWhatToScale == scaled_items::bitmaps) {
     scale_bitmaps = true;
