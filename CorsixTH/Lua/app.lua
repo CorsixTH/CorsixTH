@@ -32,8 +32,8 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
--- Reputation is calculated from credit and weight
-local SAVEGAME_VERSION = 271
+-- Add emergency related end game criteria
+local SAVEGAME_VERSION = 272
 
 --- Controls the main CorsixTH application
 class "App"

@@ -183,6 +183,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   self.discovered_diseases = {} -- a list
+  self.emergency_count = 0
+  self.emergency_cured = 0
+  self.emergency_visitors = 0
 
   -- Create a cheats instance for each hospital. AIHospitals don't know how to cheat (we hope!)
   self.hosp_cheats = Cheats(self)
@@ -546,6 +549,11 @@ function Hospital:afterLoad(old, new)
     end
     self.reputation = nil
     self:updateReputation()
+  end
+  if old < 272 then
+    self.emergency_count = 0
+    self.emergency_cured = 0
+    self.emergency_visitors = 0
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1188,6 +1196,10 @@ function Hospital:resolveEmergency()
     self:reputationEvent(ReputationAccount.event_emergency_lost,
         emer.disease, total - rescued_patients)
   end
+  -- Increment counts for EndConditions
+  self.emergency_count = self.emergency_count + 1
+  self.emergency_cured = self.emergency_cured + rescued_patients
+  self.emergency_visitors = self.emergency_visitors + total
 
   self.world:nextEmergency()
 end
