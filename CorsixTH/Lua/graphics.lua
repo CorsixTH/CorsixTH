@@ -139,9 +139,6 @@ function Graphics:_loadPalettes(gfx_set)
   -- Load base palettes
   self:_loadPalette("Bitmap", "bootstrap_font.pal", true, false)
   self:_loadPalette("Bitmap", "lose.pl8", true, true)
-  self:_loadPalette("Bitmap", "mainmenu1080.pal", false, false)
-  self:_loadPalette("Bitmap", "mainmenu480.pal", false, false)
-  self:_loadPalette("Bitmap", "mainmenu720.pal", false, false)
   self:_loadPalette("Bitmap", "winlevel.pl8", true, true)
   self:_loadPalette("Bitmap", "tree_ctrl.pal", false, false)
 
