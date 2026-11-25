@@ -19,8 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require("TH")
-
-local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
+local HumanoidAction = cth_require("humanoid_action")
 
 class "UseObjectAction" (HumanoidAction)
 
