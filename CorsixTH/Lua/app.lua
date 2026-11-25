@@ -365,7 +365,7 @@ function App:init()
     self.rooms = self:loadLuaFolder("rooms")
 
     cth_require("humanoid_action")
-    self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
+    self.humanoid_actions = cth_require("humanoid_actions.all")
 
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
