@@ -18,30 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local wall = {}
-wall.id = "green"
-wall.inside_tiles = {
-  north = 88,
-  west = 89,
-}
-wall.outside_tiles = {
-  north = 96,
-  west = 97,
-}
-wall.window_tiles = {
-  north = 140,
-  west = 141,
-}
-wall.swing_inside_tiles = {
-  north_left = 104,
-  west_left = 105,
-  north_right = 146,
-  west_right = 147,
-}
-wall.swing_outside_tiles = {
-  north_left = 112,
-  west_left = 113,
-  north_right = 154,
-  west_right = 155,
+---@type InteriorWall
+local wall = {
+  id = "green",
+  inside_tiles = {
+    north = 88,
+    west = 89,
+  },
+  outside_tiles = {
+    north = 96,
+    west = 97,
+  },
+  window_tiles = {
+    north = 140,
+    west = 141,
+  },
+  swing_inside_tiles = {
+    north_left = 104,
+    west_left = 105,
+    north_right = 146,
+    west_right = 147,
+  },
+  swing_outside_tiles = {
+    north_left = 112,
+    west_left = 113,
+    north_right = 154,
+    west_right = 155,
+  },
 }
 return wall

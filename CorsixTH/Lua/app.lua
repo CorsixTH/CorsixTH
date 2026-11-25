@@ -340,7 +340,7 @@ function App:init()
 
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
-    self.walls = self:loadLuaFolder("walls")
+    self.walls = cth_require("walls.all")
     cth_require("entity")
     cth_require("entities.humanoid")
     cth_require("entities.object")

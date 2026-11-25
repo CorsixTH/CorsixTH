@@ -18,30 +18,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local wall = {}
-wall.id = "external"
-wall.inside_tiles = {
-  north = 122,
-  north_window_1 = 124,
-  north_window_2 = 126,
-  north_expansion = 144,
-  west = 123,
-  west_window_1 = 127,
-  west_window_2 = 125,
-  west_expansion = 145,
-}
-wall.outside_tiles = {
-  north = 114,
-  north_window_1 = 116,
-  north_window_2 = 118,
-  north_window_long = 120,
-  north_expansion = 142,
-  west = 115,
-  west_window_1 = 119,
-  west_window_2 = 117,
-  west_window_long = 121,
-  west_expansion = 143,
-}
-wall.window_tiles = {
+---@type ExteriorWall
+local wall = {
+  id = "external",
+  inside_tiles = {
+    north = 122,
+    north_window_1 = 124,
+    north_window_2 = 126,
+    north_expansion = 144,
+    west = 123,
+    west_window_1 = 127,
+    west_window_2 = 125,
+    west_expansion = 145,
+  },
+  outside_tiles = {
+    north = 114,
+    north_window_1 = 116,
+    north_window_2 = 118,
+    north_window_long = 120,
+    north_expansion = 142,
+    west = 115,
+    west_window_1 = 119,
+    west_window_2 = 117,
+    west_window_long = 121,
+    west_expansion = 143,
+  },
+  window_tiles = {}
 }
 return wall
