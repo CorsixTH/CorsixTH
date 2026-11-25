@@ -29,8 +29,8 @@ IsArabicNumerals(false)
 -- Search OVERRIDE and NEW STRINGS for workspace
 
 -------------------------------  OLD STRINGS  -------------------------------
--- Not generated from official Traditional Chinese datapack, as I don't know
--- if that ever exists...
+-- Aligned with the 1998 official Traditional Chinese Big5 release (LANG-0.DAT),
+-- while retaining Taiwan terminology and fixes for original mistranslations.
 
 misc = {
   hospital_open = "醫院開門營業",
@@ -90,15 +90,15 @@ tooltip = {
     psychiatrist = "精神病醫生",
     salary = "月薪",
     next_person = "查看後一個人",
-    nurses = "查看可僱用的護士",
+    nurses = "查看可雇用的護士",
     surgeon = "外科醫生",
-    handymen = "查看可僱用的清潔工人",
-    doctors = "查看可僱用的醫生",
+    handymen = "查看可雇用的清潔工人",
+    doctors = "查看可雇用的醫生",
     doctor_seniority = "醫生資歷（實習醫生，醫生，專家）",
-    hire = "僱用",
+    hire = "雇用",
     researcher = "科研人員",
     qualifications = "醫生的特殊技能",
-    receptionists = "查看可僱用的接待員",
+    receptionists = "查看可雇用的接待員",
     staff_ability = "員工能力",
   },
   handyman_window = {
@@ -122,14 +122,14 @@ tooltip = {
     detail = "細心程度",
     happiness = "顯示員工滿意程度",
     researcher_train = "已經接受了%d%%的研究技能培訓",
-    handymen = "查看醫院中被僱用清潔工人名單",
+    handymen = "查看醫院中被雇用清潔工人名單",
     tiredness = "顯示員工疲勞程度",
     researcher = "合格研究人員",
     happiness_2 = "員工士氣",
     pay_rise = "提高員工工資10%",
     bonus = "付給該員工10%獎金",
     prev_person = "上一頁",
-    nurses = "查看醫院中被僱用護士名單",
+    nurses = "查看醫院中被雇用護士名單",
     psychiatrist = "合格精神病醫生",
     salary = "該員工當前工資",
     ability = "顯示員工能力水準",
@@ -137,12 +137,12 @@ tooltip = {
     sack = "解僱員工",
     surgeon = "合格外科醫生",
     tiredness_2 = "員工的疲勞程度",
-    doctors = "查看醫院中被僱用醫生名單",
+    doctors = "查看醫院中被雇用醫生名單",
     doctor_seniority = "醫生資歷",
     view_staff = "查看員工工作情況",
     surgeon_train = "已經接受了%d%%的外科培訓",
     skills = "特殊技能",
-    receptionists = "查看醫院中被僱用接待員名單",
+    receptionists = "查看醫院中被雇用接待員名單",
     psychiatrist_train = "已經接受了%d%%的精神病治療培訓",
   },
   research = {
@@ -202,10 +202,10 @@ tooltip = {
     patient = "拖動病人將改變其排隊位置。右擊某個病人可以選擇將其遣送回家或遣送到競爭對手的醫院。",
     patient_dropdown = {
       send_home = "讓病人離開醫院",
-      hospital_2 = "將病人送到其他醫院",
+      hospital_2 = "將病人送到其它醫院",
       reception = "將病人送到接待員處",
-      hospital_1 = "將病人送到其他醫院",
-      hospital_3 = "將病人送到其他醫院",
+      hospital_1 = "將病人送到其它醫院",
+      hospital_3 = "將病人送到其它醫院",
     },
   },
   jukebox = {
@@ -240,7 +240,7 @@ tooltip = {
     objects = "設置走廊",
     balance = "現金",
     research = "研究",
-    hire = "僱用員工",
+    hire = "雇用員工",
     status = "狀態",
     town_map = "城鎮地圖",
     rooms = "建造房屋",
@@ -266,15 +266,15 @@ tooltip = {
   casebook = {
     sent_home = "遣送回家人數",
     cure_requirement = {
-      hire_staff_old = "您需要僱用一名%s來治療該疾病",
+      hire_staff_old = "您需要雇用一名%s來治療該疾病",
       possible = "您有能力治療這種疾病",
       not_possible = "您還沒有能力治療該種疾病",
       ward_hire_nurse = "您需要一位護士在病房中照料病人",
-      hire_surgeon = "您需要僱用第二位外科醫生來完成手術",
+      hire_surgeon = "您需要雇用第二位外科醫生來完成手術",
       research_machine = "您需要研究一些儀器來治療這種疾病",
       build_room = "您需要修建一個房間來治療這種疾病",
       build_ward = "您需要建造一個病房來治療該疾病",
-      hire_surgeons = "您需要僱用兩名外科醫生完成手術",
+      hire_surgeons = "您需要雇用兩名外科醫生完成手術",
     },
     increase = "增加",
     up = "向上捲動",
@@ -298,7 +298,7 @@ tooltip = {
   policy = {
     diag_termination = "對於一個病人的診斷將一直持續到設定的治療結束百分比，或所有的診斷機器都已經嘗試一遍",
     close = "關閉制度畫面",
-    staff_leave = "點擊這裡可以讓處於空閒狀態的員工幫助其他員工",
+    staff_leave = "點擊這裡可以讓處於空閒狀態的員工幫助其它員工",
     diag_procedure = "如果醫生的診斷結果為，治癒機率小於設定的遣送回家百分比，則該病人將被自動遣送回家。如果治癒機率大於設定的嘗試治療百分比，則該病人將被自動送去進行治療",
     staff_rest = "員工休息時的最低疲勞程度",
     staff_stay = "點擊這裡可以使所有員工停留在設定的房間內",
@@ -342,9 +342,9 @@ tooltip = {
     abort_diagnosis = "無需診斷直接去治療",
   },
   watch = {
-    emergency = "緊急情況：剩餘時間內儘快治癒所有急救病人。",
+    emergency = "緊急情況：剩餘時間內盡快治癒所有急救病人。",
     hospital_opening = "建造計時器：它主要用來指示距離醫院開門的時間多少。直接點擊開門按鈕就可以立即開門迎接客人。",
-    epidemic = "傳染病：剩餘時間內儘快阻止傳染病蔓延。當時間耗盡或一個被傳染病人離開醫院，則衛生巡查員將出現。通過按鈕可以切換預防接種模式開或者關。點擊病人就可以讓護士為其接種。",
+    epidemic = "傳染病：剩餘時間內盡快阻止傳染病蔓延。當時間耗盡或一個被傳染病人離開醫院，則衛生巡查員將出現。通過按鈕可以切換預防接種模式開或者關。點擊病人就可以讓護士為其接種。",
   },
   staff_window = {
     doctor_seniority = "資歷－是實習醫生，醫生還是專家",
@@ -358,13 +358,14 @@ tooltip = {
     salary = "月薪",
     name = "員工名字",
     tiredness = "疲勞程度",
-    center_view = "點擊滑鼠右鍵切換人物",
+    -- Expanded for CorsixTH left/right-click behaviour (matches english.lua)
+    center_view = "左鍵單擊縮放至員工，右鍵單擊切換人物",
     skills = "特殊技術",
     researcher = "研究",
     face = "面孔－點擊進入管理",
   },
   rooms = {
-    ultrascan = "醫生使用超級掃瞄儀房間診斷病人",
+    ultrascan = "醫生使用超音波掃瞄儀房間診斷病人",
     research_room = "擁有研究技能的醫生可以在研究部門開發新的藥品和機器。",
     fracture_clinic = "護士使用骨折診所治療骨折病人",
     gps_office = "病人在一般診斷室內接受初始診斷",
@@ -376,9 +377,9 @@ tooltip = {
     pharmacy = "護士在藥房為病人配藥治療",
     cardiogram = "醫生使用心電圖室診斷病人",
     ward = "病房對於診斷和治療都是非常有用的。病人手術前要在病房中觀察一段時間。病房需要護士",
-    training_room = "專家使用培訓室對其他醫生進行培訓",
+    training_room = "專家使用培訓室對其它醫生進行培訓",
     operating_theatre = "手術中心需要兩名具備外科技能的醫生",
-    psychiatry = "精神病診斷治療室可以治療精神病患者同時也能幫助診斷其他病人，但是需要一位擁有精神病治療技能的醫生",
+    psychiatry = "精神病診斷治療室可以治療精神病患者同時也能幫助診斷其它病人，但是需要一位擁有精神病治療技能的醫生",
     hair_restoration = "醫生使用毛髮恢復房間治療禿頂病人",
     tongue_clinic = "醫生使用舌頭鬆弛診斷室治療舌頭鬆弛症病人",
     dna_fixer = "醫生使用DNA恢復裝置房間治療外星人DNA病人",
@@ -418,7 +419,7 @@ tooltip = {
     op_sink2 = "34 OB_OP_SINK_2",
     door = "房門：人們出入房間時必需。",
     auto_autopsy = "驗屍機：對研究新的治療方法有很大幫助。",
-    reception_desk = "服務台：需要一名接待員為病人服務。",
+    reception_desk = "服務臺：需要一名接待員為病人服務。",
     hair_restorer = "25 OB_HAIR_RESTORER",
     projector = "37 OB_PROJECTOR",
     crash_trolley = "20 OB_CRASH",
@@ -507,18 +508,18 @@ vip_names = {
   [7] = "克勞福議員",
   [8] = "羅尼",
   [9] = "一個超級聯賽球星",
-  [10] = "拉裡普羅斯特",
+  [10] = "拉里普羅斯特",
   health_minister = "衛生署部長",
 }
 room_descriptions = {
   ultrascan = {
-    [1] = "超級掃瞄儀//",
-    [2] = "超級掃瞄儀是診斷類儀器中最重要的。它雖然花費驚人，但效果卓著，可以使醫院對病人的診斷達到完美。//",
-    [3] = "超級掃瞄儀需要醫生。它也需要維護。",
+    [1] = "超音波掃瞄儀//",
+    [2] = "超音波掃瞄儀是診斷類儀器中最重要的。它雖然花費驚人，但效果卓著，可以使醫院對病人的診斷達到完美。//",
+    [3] = "超音波掃瞄儀需要醫生。它也需要維護。",
   },
   gp = {
     [1] = "一般診斷室//",
-    [2] = "這是您的醫院中一個基本診斷房間。就診病人將到這裡來檢查病因。隨後再決定是做進一步的診斷還是立即治療。如果一間普通診斷室不夠用，則您可以再建造另一間。房間越大，則可以在裡面擺放更多的特殊物品，從而使醫生的威信越高。這對於其他房間也是一樣的。//",
+    [2] = "這是您的醫院中一個基本診斷房間。就診病人將到這裡來檢查病因。隨後再決定是做進一步的診斷還是立即治療。如果一間一般診斷室不夠用，則您可以再建造另一間。房間越大，則可以在裡面擺放更多的特殊物品，從而使醫生的威信越高。這對於其它房間也是一樣的。//",
     [3] = "一般診斷室需要一名醫生。",
   },
   fracture_clinic = {
@@ -610,12 +611,12 @@ room_descriptions = {
   },
   slack_tongue = {
     [1] = "舌頭鬆弛治療診所//",
-    [2] = "在普通診斷室中被診斷為舌頭鬆弛的病人將被送到該診所接受治療。醫生將使用一種高科技的儀器使舌頭伸直並切掉多餘部分，從而使病人恢復正常。//",
+    [2] = "在一般診斷室中被診斷為舌頭鬆弛的病人將被送到該診所接受治療。醫生將使用一種高科技的儀器使舌頭伸直並切掉多餘部分，從而使病人恢復正常。//",
     [3] = "舌頭鬆弛診所需要醫生。它也需要日常維護。",
   },
   toilets = {
     [1] = "洗手間//",
-    [2] = "當病人感到需要上廁所時就需要洗手間這類設施。如果您希望洗手間多一些造訪者，可以在其中多擺放洗手台和馬桶請考慮在醫院的其他位置也建造一些附屬設施。",
+    [2] = "當病人感到需要上廁所時就需要洗手間這類設施。如果您希望洗手間多一些造訪者，可以在其中多擺放洗手台和馬桶請考慮在醫院的其它位置也建造一些附屬設施。",
   },
   no_room = {
     [1] = "",
@@ -652,7 +653,8 @@ menu_display = {
   high_res = " 陰影 ",
 }
 -- Original credits
--- lewri: I have done my best to re-align these, but likely this one needs checking over with the original strings in English.
+-- Aligned with S[43] in the 1998 Traditional Chinese Big5 LANG-0.DAT
+-- (retaining full spellings/diacritics for [261] and [275]).
 original_credits = {
   [1] = " ",
   [2] = " ",
@@ -881,8 +883,8 @@ original_credits = {
   [225] = "Annabel Roose",
   [226] = "Chris Morgan",
   [227] = "Pete Larsen",
-  [228] = " ",
-  [229] = " ",
+  [228] = "駱婷婷",
+  [229] = "余家愷",
   [230] = " ",
   [231] = ":公關",
   [232] = ",",
@@ -903,24 +905,24 @@ original_credits = {
   [247] = ",",
   [248] = "Caroline Arthur",
   [249] = "James Nolan",
-  [250] = " ",
+  [250] = "余家愷",
   [251] = " ",
   [252] = " ",
   [253] = ":中文化產品經理",
   [254] = ",",
   [255] = "Carol Aggett",
-  [256] = " ",
+  [256] = "余家愷",
   [257] = " ",
   [258] = " ",
   [259] = ":本地化工作",
   [260] = ",",
   [261] = "Sandra Picaper",
   [262] = "Sonia 'Sam' Yazmadjian",
-  [263] = " ",
+  [263] = "駱婷婷",
   [264] = "Bettina Klos",
   [265] = "Alexa Kortsch",
   [266] = "Bianca Normann",
-  [267] = " ",
+  [267] = "余家愷",
   [268] = "C 。T 。O 。S 。p 。A 。Zola Predosa (BO)",
   [269] = "Gian Maria Battistini",
   [270] = "Maria Ziino",
@@ -948,7 +950,7 @@ original_credits = {
   [292] = " ",
   [293] = " ",
   [294] = " ",
-  [295] = ":聯合制片",
+  [295] = ":聯合製片",
   [296] = ",",
   [297] = "Andy Nuttall",
   [298] = " ",
@@ -986,7 +988,7 @@ original_credits = {
   [330] = " ",
   [331] = ":特別感謝",
   [332] = ",",
-  [333] = "Everyone at Frimley Park Hospital",
+  [333] = "弗萊利公園醫院中每個人",
   [334] = " ",
   [335] = ": 特別是",
   [336] = ",",
@@ -995,26 +997,62 @@ original_credits = {
   [339] = " ",
   [340] = " ",
   [341] = " ",
-  [342] = ":Keep On Thinking",
-  [343] = " ",
-  [344] = " ",
-  [345] = " ",
-  [346] = " ",
-  [347] = " ",
-  [348] = " ",
-  [349] = " ",
-  [350] = " ",
-  [351] = " ",
-  [352] = " ",
-  [353] = " ",
-  [354] = " ",
-  [355] = " ",
-  [356] = " ",
-  [357] = " ",
-  [358] = " ",
-  [359] = " ",
-  [360] = " ",
-  [361] = ".",
+  [342] = ":中文版製作",
+  [343] = ",",
+  [344] = "北京飛龍工作室",
+  [345] = "",
+  [346] = "",
+  [347] = "",
+  [348] = ":監製/項目主管",
+  [349] = ",",
+  [350] = "陳國忠/余家愷",
+  [351] = "",
+  [352] = "",
+  [353] = ":翻譯：駱婷婷　余家愷",
+  [354] = "",
+  [355] = ":錄音師：藍信剛",
+  [356] = "",
+  [357] = "",
+  [358] = ":配音：夏莉莉",
+  [359] = "",
+  [360] = "",
+  [361] = "",
+  [362] = ":中文版包裝/手冊設計",
+  [363] = ",",
+  [364] = "白季川/余家愷",
+  [365] = "",
+  [366] = "",
+  [367] = ":生產",
+  [368] = ",",
+  [369] = "余家愷",
+  [370] = "",
+  [371] = "",
+  [372] = "",
+  [373] = ":測試",
+  [374] = ",",
+  [375] = "駱婷婷",
+  [376] = "",
+  [377] = "",
+  [378] = ":特別感謝",
+  [379] = ",",
+  [380] = "Les Edgar",
+  [381] = "Rajan Tande",
+  [382] = "Steve Fitton",
+  [383] = "Lennox Ong",
+  [384] = "駱婷婷",
+  [385] = "",
+  [386] = "",
+  [387] = "",
+  [388] = "",
+  [389] = "",
+  [390] = "",
+  [391] = "",
+  [392] = "",
+  [393] = "",
+  [394] = "",
+  [395] = "",
+  [396] = "",
+  [397] = ".",
 }
 
 pay_rise = {
@@ -1088,7 +1126,7 @@ menu_options_game_speed = {
   and_then_some_more = "    (%1%) 極快",
 }
 rooms_short = {
-  ultrascan = "超級掃瞄儀",
+  ultrascan = "超音波掃瞄儀",
   research_room = "研究部門",
   fracture_clinic = "骨折診所",
   gps_office = "一般診斷室",
@@ -1099,7 +1137,7 @@ rooms_short = {
   decontamination = "淨化設備",
   pharmacy = "藥房",
   cardiogram = "心電圖儀",
-  reception = "服務台",
+  reception = "服務臺",
   training_room = "培訓室",
   corridor_objects = "走廊物品",
   operating_theatre = "手術中心",
@@ -1140,8 +1178,8 @@ insurance_companies = {
   [5] = "潛水艇有限公司",
   [6] = "誠實的泰瑞公司",
   [7] = "矮胖先生股份有限公司",
-  [8] = "裡昂貓公司",
-  [9] = "普裡邦有限公司",
+  [8] = "里昂貓公司",
+  [9] = "普里邦有限公司",
   [10] = "快樂保險公司",
   [11] = "辛迪加保險公司",
   out_of_business = "無",
@@ -1230,7 +1268,7 @@ room_classes = {
 place_objects_window = {
   pick_up_object = "點擊物品可以將其拾起，也可以選擇不同的選項",
   place_objects_in_corridor = "將物品放在走廊上",
-  place_windows = "請設置一些窗戶，點擊滑鼠表示確定",
+  place_windows = "請設置一些窗戶，點擊游標表示確定",
   confirm_or_buy_objects = "您可以確認該房間，或買入或移動其中的一些物品",
   drag_blueprint = "拉伸藍圖直到您滿意的尺寸",
   place_door = "設置房門",
@@ -1272,13 +1310,15 @@ newspaper = {
     [5] = "超級瀆職",
     [6] = "醫生盜墓",
   },
+  -- Unused headlines (S[38][31..34], unused in game)
+  -- {
+  --   [1] = "醫生？庸醫！",
+  --   [2] = "庸醫露出馬腳了",
+  --   [3] = "令人詛咒的診斷",
+  --   [4] = "笨蛋專家",
+  -- },
+  -- LOSE6.SMK (toilet with magazine)
   [6] = {
-    [1] = "醫生？庸醫！",
-    [2] = "庸醫露出馬腳了",
-    [3] = "令人詛咒的診斷",
-    [4] = "笨蛋專家",
-  },
-  [7] = {
     [1] = "醫生真情放縱",
     [2] = "醫生自我“手術”",
     [3] = "醫生完了",
@@ -1316,39 +1356,39 @@ adviser = {
   room_forbidden_non_reachable_parts = "在這個地方放置房間會導致醫院的部分空間無法到達。",
   tutorial = {
     hire_receptionist = "您也需要一位接待員來接待病人。",
-    build_pharmacy = "恭喜！現在應建造一個藥房並僱用一位護士，使醫院正常運轉。",
+    build_pharmacy = "恭喜！現在應建造一個藥房並雇用一位護士，使醫院正常運轉。",
     hire_doctor = "您需要一個醫生來診斷和治療病人。",
-    place_receptionist = "移動接待員並將她放到任意位置。她將很聰明地自己走到服務台。",
+    place_receptionist = "移動接待員並將她放到任意位置。她將很聰明地自己走到服務臺。",
     place_windows = "設置窗戶的方法與設置房門的方法相同。您可以不需要窗戶，但是當您的員工可以從窗戶向外張望時，他們將感到快樂。",
-    confirm_room = "左鍵單擊閃動圖標就可以開業了，也可以通過點擊交叉按鈕返回上一步。",
-    rotate_and_place_reception = "點擊滑鼠右鍵可以旋轉桌子，並用滑鼠左鍵將其放在醫院中合適位置。",
-    build_reception = "你好。首先，您的醫院需要一個服務台，您可以從佈置走廊選單中選取。",
+    confirm_room = "左鍵單擊閃動游標就可以開業了，也可以通過點擊交叉按鈕返回上一步。",
+    rotate_and_place_reception = "點擊游標右鍵可以旋轉桌子，並用游標左鍵將其放在醫院中合適位置。",
+    build_reception = "你好。首先，您的醫院需要一個服務臺，您可以從布置走廊選單中選取。",
     doctor_in_invalid_position = "嘿！您不能將醫生放在那裡。",
-    start_tutorial = "閱讀任務簡報，隨後點擊滑鼠左鍵就可以啟動教程。",
+    start_tutorial = "閱讀任務簡報，隨後點擊游標左鍵就可以啟動教程。",
     receptionist_invalid_position = "您不能將接待員放在那裡。",
     room_too_small_and_invalid = "藍圖尺寸太小了且處於非法位置。",
-    window_in_invalid_position = "該窗口處於非法位置。請嘗試藍圖牆壁上的其他位置。",
+    window_in_invalid_position = "該窗口處於非法位置。請嘗試藍圖牆壁上的其它位置。",
     choose_doctor = "在選擇醫生之前，應重點考慮其能力。",
     information_window = "協助視窗將告訴您剛剛建造的一般診斷室資訊。",
     build_gps_office = "您必須建造一般診斷室才可以診斷病人。",
-    select_doctors = "點擊閃動的圖標挑選可被僱用的醫生。",
-    select_diagnosis_rooms = "點擊閃動的圖標將彈出診斷類房間列表。",
-    select_receptionists = "使用滑鼠左鍵單擊閃動的圖標來查看當前可選擇的接待員。圖標下方的數字表示共有多少個接待員可供選擇。",
-    order_one_reception = "使用滑鼠左鍵單擊閃動的光條，可以訂購一個服務台。",
-    choose_receptionist = "判斷哪一個接待員擁有好的能力與合適的工資，再按左鍵單擊閃動的圖標來僱用她。",
-    prev_receptionist = "左鍵單擊閃動的圖標將可以瀏覽到前一個可供選擇的接待員。",
-    accept_purchase = "點擊閃動的圖標表示購買。",
-    place_door = "沿藍圖牆壁移動滑鼠，尋找放置房門的合適位置。",
-    click_and_drag_to_build = "建造一般診斷室時應先決定具體的尺寸。點擊並按住滑鼠左鍵可以設置房間尺寸。",
-    room_in_invalid_position = "該藍圖是非法的，紅色區域表示藍圖與其他房間或牆壁重疊。",
+    select_doctors = "點擊閃動的游標挑選可被雇用的醫生。",
+    select_diagnosis_rooms = "點擊閃動的游標將彈出診斷類房間列表。",
+    select_receptionists = "使用游標左鍵單擊閃動的游標來查看當前可選擇的接待員。游標下方的數字表示共有多少個接待員可供選擇。",
+    order_one_reception = "使用游標左鍵單擊閃動的光條，可以訂購一個服務臺。",
+    choose_receptionist = "判斷哪一個接待員擁有好的能力與合適的工資，再按左鍵單擊閃動的游標來雇用她。",
+    prev_receptionist = "左鍵單擊閃動的游標將可以瀏覽到前一個可供選擇的接待員。",
+    accept_purchase = "點擊閃動的游標表示購買。",
+    place_door = "沿藍圖牆壁移動游標，尋找放置房門的合適位置。",
+    click_and_drag_to_build = "建造一般診斷室時應先決定具體的尺寸。點擊並按住游標左鍵可以設置房間尺寸。",
+    room_in_invalid_position = "該藍圖是非法的，紅色區域表示藍圖與其它房間或牆壁重疊。",
     place_objects = "右擊可以旋轉房屋中的各種物品，再左擊表示確認。",
     room_too_small = "該房間的藍圖為紅色是因為其尺寸太小了。通過拖動使其尺寸增大。",
-    click_gps_office = "點擊閃動圖標表示選擇一般診斷室。",
-    reception_invalid_position = "如果服務台是灰色的，則表示當前位置是非法的。應嘗試移動或旋轉它。",
-    next_receptionist = "這是接待員列表中的第一個。左鍵單擊閃動的圖標可以瀏覽下一個可供選用的接待員。",
-    room_big_enough = "藍圖尺寸已經足夠大了。當您鬆開滑鼠按鍵表示確認。如果需要的話，以後還可以根據需要移動或改變其尺寸。",
-    object_in_invalid_position = "該物品當前位置非法。請要麼將其放到其他位置，要麼對其進行旋轉。",
-    door_in_invalid_position = "房門設置位置非法。請嘗試藍圖牆壁上的其他位置。",
+    click_gps_office = "點擊閃動光條表示選擇一般診斷室。",
+    reception_invalid_position = "如果服務臺是灰色的，則表示當前位置是非法的。應嘗試移動或旋轉它。",
+    next_receptionist = "這是接待員列表中的第一個。左鍵單擊閃動的游標可以瀏覽下一個可供選用的接待員。",
+    room_big_enough = "藍圖尺寸已經足夠大了。當您鬆開游標按鍵表示確認。如果需要的話，以後還可以根據需要移動或改變其尺寸。",
+    object_in_invalid_position = "該物品當前位置非法。請要麼將其放到其它位置，要麼對其進行旋轉。",
+    door_in_invalid_position = "房門設置位置非法。請嘗試藍圖牆壁上的其它位置。",
     place_doctor = "將醫生放在醫院中的任意位置。他將直奔一般診斷室，為病人診斷。",
   },
   epidemic = {
@@ -1357,13 +1397,13 @@ adviser = {
     multiple_epidemies = "看來醫院裡同時有不只一種傳染病。這將是一場空前災難，加油！",
   },
   staff_advice = {
-    need_handyman_machines = "如果希望維護醫院內的各種醫療機器，則需要僱用清潔工人。",
+    need_handyman_machines = "如果希望維護醫院內的各種醫療機器，則需要雇用清潔工人。",
     need_doctors = "您需要更多的醫生。請將最得力的醫生放在排隊等候人數最多的房間內。",
-    need_handyman_plants = "您需要僱用一位清潔工人來為盆栽澆水。",
-    need_handyman_litter = "醫院中出現了垃圾。請僱用一個清潔工人打掃垃圾。",
-    need_nurses = "您需要僱用更多的護士。病房和藥房都需要護士。",
-    too_many_doctors = "您僱用的醫生太多了。其中有一些人現在正閑。",
-    too_many_nurses = "我認為您現在僱用了太多的護士。",
+    need_handyman_plants = "您需要雇用一位清潔工人來為盆栽澆水。",
+    need_handyman_litter = "醫院中出現了垃圾。請雇用一個清潔工人打掃垃圾。",
+    need_nurses = "您需要雇用更多的護士。病房和藥房都需要護士。",
+    too_many_doctors = "您雇用的醫生太多了。其中有一些人現在正閒。",
+    too_many_nurses = "我認為您現在雇用了太多的護士。",
   },
   earthquake = {
     damage = "地震損壞了醫院中%d台機器，並使%d個人受傷。",
@@ -1382,11 +1422,11 @@ adviser = {
     objective_failed = "任務失敗。",
   },
   surgery_requirements = {
-    need_surgeons_ward_op = "您需要僱用兩位外科醫生，並修建一個病房和手術中心，這樣才可以完成外科手術。",
-    need_surgeon_ward = "為了完成外科手術，您還需要僱用一名外科醫生，以及修建一個病房。",
+    need_surgeons_ward_op = "您需要雇用兩位外科醫生，並修建一個病房和手術中心，這樣才可以完成外科手術。",
+    need_surgeon_ward = "為了完成外科手術，您還需要雇用一名外科醫生，以及修建一個病房。",
   },
   vomit_wave = {
-    started = "請趕快處理醫院中的嘔吐物，否則嘔吐現象會四處傳播。也許您需要多僱用幾個清潔工人。",
+    started = "請趕快處理醫院中的嘔吐物，否則嘔吐現象會四處傳播。也許您需要多雇用幾個清潔工人。",
     ended = "嗨！嘔吐現象已被控制。今後一定要保持醫院的清潔。",
   },
   level_progress = {
@@ -1397,17 +1437,17 @@ adviser = {
     close_to_win_increase_value = "您距離勝利只有一步之遙了。再增加醫院價值%d。",
     financial_criteria_met = "您已經完成了本任務要求達到的財政目標。現在請保持現金在%d以上，使我們確信您的醫院運行良好。",
     nearly_won = "您已經距離勝利非常接近了。",
-    hospital_value_enough = "保持醫院價值在%d以上，並解決好其他問題，就能勝利完成任務了。",
+    hospital_value_enough = "保持醫院價值在%d以上，並解決好其它問題，就能勝利完成任務了。",
     another_patient_cured = "幹得好－治癒了一個病人。收入$%d。",
     three_quarters_lost = "您距離失敗還差四分之三。",
-    reputation_good_enough = "好的，您的聲望已經達到任務要求了。保持在%d以上，並解決好其他方面的問題。",
+    reputation_good_enough = "好的，您的聲望已經達到任務要求了。保持在%d以上，並解決好其它方面的問題。",
     cured_enough_patients = "您已經治癒了足夠多的病人，但是您只有達到更高的標準才能勝利完成任務。",
     nearly_lost = "您距離失敗只有一步之遙了。",
     improve_reputation = "您需要提高聲望%d，這樣才能有機會完成任務。",
     three_quarters_won = "您距離勝利還差四分之三。",
   },
   staff_place_advice = {
-    receptionists_only_at_desk = "接待員只能在服務台工作。",
+    receptionists_only_at_desk = "接待員只能在服務臺工作。",
     only_psychiatrists = "只有具有精神病治療技能的醫生才可以在精神病診斷治療室中工作。",
     only_surgeons = "只有擁有外科技能的醫生才可以在手術中心工作。",
     only_nurses_in_room = "只有護士可以在%s中工作",
@@ -1433,21 +1473,21 @@ adviser = {
     resolved = "好消息。鍋爐和暖氣現在工作正常。氣溫很快就可以恢復到正常水準。",
   },
   competitors = {
-    staff_poached = "您的一位員工被其他醫院挖走了。",
+    staff_poached = "您的一位員工被其它醫院挖走了。",
     hospital_opened = "競爭對手%s的醫院在本區域內已經開張了。",
     land_purchased = "%s已經購買了一些土地。",
   },
   room_requirements = {
-    research_room_need_researcher = "您需要為研究室僱用一個擁有研究技巧的醫生。",
-    op_need_another_surgeon = "您至少還需要為手術中心僱用一名外科醫生。",
+    research_room_need_researcher = "您需要為研究室雇用一個擁有研究技巧的醫生。",
+    op_need_another_surgeon = "您至少還需要為手術中心雇用一名外科醫生。",
     op_need_ward = "您必須為外科手術前的患者建造病房。",
-    reception_need_receptionist = "您必須為病人僱用一位接待員。",
-    psychiatry_need_psychiatrist = "您需要僱用一位精神病醫生，現在您已經建成了一個精神病診斷治療室。",
-    pharmacy_need_nurse = "您應該為藥房僱用一位護士。",
-    ward_need_nurse = "您需要為病房僱用一名護士。",
-    op_need_two_surgeons = "請為手術中心僱用兩名外科醫生完成手術。",
-    training_room_need_consultant = "您應該為培訓室僱用一位專家，負責演講。",
-    gps_office_need_doctor = "您需要為一般診斷室僱用一名醫生。",
+    reception_need_receptionist = "您必須為病人雇用一位接待員。",
+    psychiatry_need_psychiatrist = "您需要雇用一位精神病醫生，現在您已經建成了一個精神病診斷治療室。",
+    pharmacy_need_nurse = "您應該為藥房雇用一位護士。",
+    ward_need_nurse = "您需要為病房雇用一名護士。",
+    op_need_two_surgeons = "請為手術中心雇用兩名外科醫生完成手術。",
+    training_room_need_consultant = "您應該為培訓室雇用一位專家，負責演講。",
+    gps_office_need_doctor = "您需要為一般診斷室雇用一名醫生。",
   },
   goals = {
     win = {
@@ -1472,10 +1512,10 @@ adviser = {
     patients_very_thirsty = "人們感到太口渴了。如果您不立即設置一些飲料販賣機，則將看到大多數人回家去喝可樂。",
     machinery_very_damaged = "緊急！立即派清潔工去修理機器！它們要爆炸了！",
     handymen_tired2 = "您的清潔工太疲倦了。立即讓他們休息。",
-    desperate_need_for_watering = "您需要僱用一名清潔工照料醫院中的盆栽。",
+    desperate_need_for_watering = "您需要雇用一名清潔工照料醫院中的盆栽。",
     nurses_tired = "您的護士感到疲倦了。立即讓她們休息。",
     too_much_litter = "醫院中的廢棄物不斷增多。派幾個清潔工人就可以解決。",
-    reception_bottleneck = "服務台已無法滿足需要。再僱用一名接待員。",
+    reception_bottleneck = "服務臺已無法滿足需要。再雇用一名接待員。",
     place_plants4 = "在醫院中多擺放一些盆栽使所有病人感到快樂。",
     change_priorities_to_plants = "您必須改變清潔工的工作優先級，使他們更多地為盆栽澆水。",
     staff_too_hot = "您的工作人員感到太熱了。請調低供熱標準或拆除房間內的暖氣。",
@@ -1483,7 +1523,7 @@ adviser = {
     plants_thirsty = "您需要對盆栽進行照料。它們正感到口渴。",
     litter_everywhere = "醫院中的廢棄物到處都是。多派幾個清潔工人就可以解決。",
     nurses_tired2 = "您的護士太疲倦了。立即讓她們休息。",
-    plants_dying = "您的盆栽快幹死了。它們需要水。多為盆栽派些清潔工。病人可不願意看到枯死的盆栽。",
+    plants_dying = "您的盆栽快乾死了。它們需要水。多為盆栽派些清潔工。病人可不願意看到枯死的盆栽。",
     reduce_staff_rest_threshold = "嘗試在醫院制度畫面中減少員工休息時的疲勞程度，這樣員工將經常休息。這只是一個主意。",
     more_toilets = "您需要更多的馬桶。人們都已急不可待了。",
     hospital_is_rubbish = "人們在到處宣揚您的醫院是垃圾。要知道您的醫院很快就會臭名遠揚。",
@@ -1497,14 +1537,14 @@ adviser = {
     many_epidemics = "看來醫院裡同時有不只一種傳染病。這將是一場空前災難，加油！",
     place_plants_to_keep_people = "人們正在離開。多擺放一些盆栽可以挽留他們。",
     patients_thirsty2 = "人們抱怨口渴。您應該在醫院中多設置一些飲料販賣機，或將已有的飲料販賣機移動到他們身邊。",
-    money_low = "",
+    money_low = "您的現金快要不夠了！", -- Empty in original TH; filled to match english.lua override
     staff_unhappy = "您的工作人員不是很快樂。可以嘗試給他們一些獎金，或為他們建造一個員工休息室。您也可以在醫院制度畫面中調整員工需要休息時的疲勞程度。",
     people_freezing = "無法相信，在這個擁有中央空調的時代，您的一些病人竟然快被凍僵了。趕快擺放一些暖氣並打開供暖開關使他們感到溫暖。",
     need_toilets = "病人需要洗手間。請在一些易找的地方建造洗手間。",
     nobody_cured_last_month = "上個月幾乎沒有治癒一個病人。",
     patients_very_cold = "病人們感到太冷了。請增加醫院的供熱，或在醫院中多擺放一些暖氣。",
     build_toilets = "立即建造一個洗手間，否則您將看到非常不雅的事情發生。想像一下醫院中將會出現的味道。",
-    another_desk = "新僱用的接待員需要新增一個服務台",
+    another_desk = "新雇用的接待員需要新增一個服務臺",
     many_killed = "您已經殺死了%d個病人。您本來應該治癒他們的病。",
     place_plants2 = "人們正在離開。多擺放一些盆栽可以使他們多停留一會兒。",
     staff_tired = "您的員工感到太疲倦了。如果您再不讓他們到員工休息室休息一會兒，則某些人會由於長時間的緊張疲勞導致崩潰。",
@@ -1513,13 +1553,13 @@ adviser = {
     place_plants3 = "人們的情緒很糟。多擺放一些盆栽使他們快樂。",
     staff_unhappy2 = "您的員工都不是很快樂。很快他們就會要求發獎金。",
     cash_low_consider_loan = "您的流動資金狀況十分不妙。是否考慮貸款？",
-    queue_too_long_at_reception = "在服務台前排隊等待的病人太多了。請再建一個服務台並僱用一名接待員。",
+    queue_too_long_at_reception = "在服務臺前排隊等待的病人太多了。請再建一個服務臺並雇用一名接待員。",
     queue_too_long_send_doctor = "您的%s隊伍太長了。請確認房間中是否有醫生。",
     financial_trouble = "您正面臨著嚴重的財政危機。立即整理帳戶！如果您再虧損$%d，本關任務將失敗。",
     doctors_tired2 = "您的醫生太疲倦了。立即讓他們休息。",
     handymen_tired = "您的清潔工人太勞累了。立即讓他們休息。",
     patient_leaving = "一個病人離開了。原因？醫院管理不善，員工工作不力，再加上設施不全。",
-    machinery_damaged2 = "您必須立即僱用一名清潔工去負責修理維護機器。",
+    machinery_damaged2 = "您必須立即雇用一名清潔工去負責修理維護機器。",
     patients_leaving = "病人們正在離去。在醫院中多擺放一些盆栽，長椅，飲料販賣機等物品將有助於挽留他們。",
     epidemic_getting_serious = "傳染病疫情越來越嚴重。您必須立即行動！",
     machinery_damaged = "立即修理您的機器。它們無法支撐太久。",
@@ -1536,20 +1576,20 @@ adviser = {
     litter_catastrophy = "醫院中的廢棄物太多了。立即派一隊清潔工人解決這個問題。",
     staff_very_cold = "員工們感覺太冷了。請增加醫院的供熱，或在醫院中多擺放一些暖氣。",
     deal_with_epidemic_now = "如果無法立即控制傳染病那麼您的醫院將出大亂子。加油！",
-    too_many_plants = "您已經佈置了足夠多的盆栽了。醫院都快變成叢林了。",
+    too_many_plants = "您已經布置了足夠多的盆栽了。醫院都快變成叢林了。",
     patients_really_thirsty = "病人們感到口渴。多放置一些飲料販賣機，或將已有的飲料販賣機移動到最長的隊伍旁邊。",
     some_litter = "清潔工人可以在垃圾成堆之前清除所有垃圾。",
     patients_annoyed = "人們對醫院的管理感到極端憤怒。我不能責備他們，抓緊時間解決問題吧！",
     receptionists_tired2 = "您的接待員太疲倦了。立即讓她們休息。",
-    no_desk = "你總得有個服務台吧！",
-    no_desk_1 = "你得有個服務台，這樣才會有病人來！",
-    no_desk_2 = "乾的不錯，基本上也是個世界紀錄了吧：快一年了，一個病人都沒有！如果你想繼續當這個經理的話，你需要去僱一個接待員，然後給她一張服務台工作！",
-    no_desk_3 = "你真是個天才，一年了連個服務台都沒有！你怎麼可能有任何的病人來？趕緊給我搞定，別在那裡不務正業了！",
-    no_desk_4 = "服務台需要一位接待員來接待來訪的病人",
+    no_desk = "你總得有個服務臺吧！",
+    no_desk_1 = "你得有個服務臺，這樣才會有病人來！",
+    no_desk_2 = "乾的不錯，基本上也是個世界紀錄了吧：快一年了，一個病人都沒有！如果你想繼續當這個經理的話，你需要去雇一個接待員，然後給她一張服務臺工作！",
+    no_desk_3 = "你真是個天才，一年了連個服務臺都沒有！你怎麼可能有任何的病人來？趕緊給我搞定，別在那裡不務正業了！",
+    no_desk_4 = "服務臺需要一位接待員來接待來訪的病人",
     no_desk_5 = "行了，接下來就是時間問題，應該很快就會有病人來！",
-    no_desk_6 = "你已經僱了一位接待員，要不要給她建個服務台？",
-    no_desk_7 = "你已經建了一個服務台，要不要僱一位接待員？除非解決這個問題，否則不會有病人來！",
-    cannot_afford = "你沒有足夠的存款來僱這個人！", -- I can't see anything like this in the original strings
+    no_desk_6 = "你已經雇了一位接待員，要不要給她建個服務臺？",
+    no_desk_7 = "你已經建了一個服務臺，要不要雇一位接待員？除非解決這個問題，否則不會有病人來！",
+    cannot_afford = "你沒有足夠的存款來雇這個人！", -- I can't see anything like this in the original strings
     cannot_afford_2 = "你沒有足夠的存款來做這件事！",
     falling_1 = "嘿！別開玩笑了，看看你都是怎麼點滑鼠的，你可能會傷到人！",
     falling_2 = "不要再胡搞了，跟有病似的？",
@@ -1574,22 +1614,22 @@ adviser = {
     window_can_place = "你可以在這裡設置窗戶，這樣很好。",
     door_cannot_place = "抱歉，您無法在這裡設置房門。",
     object_can_place = "您可以在這裡擺放物品。",
-    reception_can_place = "您可以在這裡放置服務台。",
+    reception_can_place = "您可以在這裡放置服務臺。",
     staff_cannot_place = "您無法在這裡安置員工。對不起。",
     staff_can_place = "您可以在這裡安置員工。",
     object_cannot_place = "嗨，您無法在這裡擺放物品。",
     room_cannot_place = "您無法在這裡建房。",
     room_cannot_place_2 = "您無法在這裡建房。",
     window_cannot_place = "您實際上無法在這裡設置窗戶。",
-    reception_cannot_place = "您無法在這裡放置服務台",
+    reception_cannot_place = "您無法在這裡放置服務臺",
   },
   praise = {
     many_benches = "病人擁有足夠的座位。太棒了。",
-    many_plants = "太可愛了。您已經佈置了足夠的盆栽。病人將感到滿意。",
+    many_plants = "太可愛了。您已經布置了足夠的盆栽。病人將感到滿意。",
     plants_are_well = "太棒了。盆栽被照料得很好。",
     few_have_to_stand = "在您的醫院中幾乎每個人都有座位。所有的病人都感到快樂。",
     plenty_of_benches = "座椅已經足夠了。",
-    plants_thriving = "太棒了。醫院中的盆栽生長得很茂盛。它們看起來令人感到驚奇。堅持住，您將有可能贏得一個大獎。",
+    plants_thriving = "太棒了。醫院中的盆栽生長得很茂盛。它們看起來令人感到驚奇。堅持著，您將有可能贏得一個大獎。",
     patients_cured = "已經治癒了%d個病人。",
   },
   information = {
@@ -1604,7 +1644,7 @@ adviser = {
     handyman_adjust = "您可以通過調整清潔工人工作的優先級使其打掃得更乾淨。",
     promotion_to_specialist = "您的一個醫生被提升為%s。",
     initial_general_advice = {
-      rats_have_arrived = "老鼠在您的醫院中到處亂跑。使用滑鼠打死它們。",
+      rats_have_arrived = "老鼠在您的醫院中到處亂跑。使用游標打死它們。",
       autopsy_available = "自動驗屍機被研製出來了。藉著它，您可以處置惹麻煩或不歡迎的病人，還可以對他們進行研究。要注意－能否使用該機器還有很大的爭議。",
       first_patients_thirsty = "醫院中的人們感到口渴。為他們多擺放一些飲料販賣機。",
       research_now_available = "您已經建造了第一個研究房間。現在您可以進入研究畫面。",
@@ -1619,15 +1659,15 @@ adviser = {
       research_symbol = "擁有研究技能的醫生後跟符號：}",
       machine_needs_repair = "您有一台機器需要維修。確定機器位置－它可能正在冒煙－在機器上點擊一下，再點擊清潔工人按鈕。",
       increase_heating = "人們感到寒冷。打開城鎮地圖畫面中的供暖設施。",
-      first_VIP = "您要接待來訪的第一位貴賓。一定要確保貴賓沒有看到任何不良事件，或其他不高興的病人。",
+      first_VIP = "您要接待來訪的第一位貴賓。一定要確保貴賓沒有看到任何不良事件，或其它不高興的病人。",
     },
     patient_leaving_too_expensive = "一位病人沒有為%s付款就離開了。這損失太大了。",
     vip_arrived = "小心！%s正準備訪問您的醫院！保持醫院運轉正常，這樣才能使他感到愉快。",
     epidemic_health_inspector = "您的醫院中出現傳染病的消息已經到達了衛生署。衛生巡查員很快就要到達，快做準備。",
     first_death = "這是您第一次殺死病人。感覺如何？",
-    pay_rise = "您的一個員工威脅要辭職。選擇是否同意其請求，或將其解僱。點擊屏幕左下方的圖標可以查看威脅要辭職的員工資訊。",
+    pay_rise = "您的一個員工威脅要辭職。選擇是否同意其請求，或將其解僱。點擊屏幕左下方的游標可以查看威脅要辭職的員工資訊。",
     place_windows = "設置窗戶將使房間更加明亮，並振奮員工的精神。",
-    fax_received = "在屏幕左下角剛剛彈出的圖標表示一些重要事件的相關資訊，或某些需要您決定的事情。",
+    fax_received = "在屏幕左下角剛剛彈出的游標表示一些重要事件的相關資訊，或某些需要您決定的事情。",
   },
   cheats = {
     th_cheat = "恭喜，你解鎖了作弊選項！",
@@ -1637,15 +1677,15 @@ adviser = {
     norest_off_cheat = "呼～精神亢奮劑的效力過去了，員工現在恢復正常作息",
   },
   build_advice = {
-    placing_object_blocks_door = "設置該物品可以阻止其他人接近。",
-    blueprint_would_block = "藍圖與其他房間重疊了。請嘗試重新設置藍圖尺寸，或移動藍圖位置。",
+    placing_object_blocks_door = "設置該物品可以阻止其它人接近。",
+    blueprint_would_block = "藍圖與其它房間重疊了。請嘗試重新設置藍圖尺寸，或移動藍圖位置。",
     door_not_reachable = "病人無法進入那扇門。仔細想一想。",
     blueprint_invalid = "藍圖位置不對。",
   },
 }
 casebook = {
-  sent_home = "遣送回家",
-  deaths = "死亡",
+  sent_home = "遣送回家", -- 1998 LANG-0.DAT mistranslated this as "離職"
+  deaths = "身故",
   treatment_charge = "治療花費",
   reputation = "聲望",
   research = "集中研究",
@@ -1653,15 +1693,15 @@ casebook = {
   cured = "治癒",
   earned_money = "收入",
   cure_desc = {
-    hire_psychiatrists = "您需要僱用一些精神病醫生。",
+    hire_psychiatrists = "您需要雇用一些精神病醫生。",
     improve_cure = "提高療效。",
-    hire_nurses = "您需要僱用一些護士。",
+    hire_nurses = "您需要雇用一些護士。",
     build_ward = "您仍需要建造一個病房。",
     no_cure_known = "未治癒。",
     cure_known = "治癒。",
     build_room = "我建議您修建%s",
-    hire_doctors = "您需要僱用一些醫生。",
-    hire_surgeons = "您需要僱用一些外科醫生。",
+    hire_doctors = "您需要雇用一些醫生。",
+    hire_surgeons = "您需要雇用一些外科醫生。",
   },
 }
 diseases = {
@@ -1669,7 +1709,7 @@ diseases = {
     name = "病房診斷",
   },
   diag_ultrascan = {
-    name = "超級掃瞄儀診斷",
+    name = "超音波掃瞄儀診斷",
   },
   autopsy = {
     name = "驗屍",
@@ -1968,7 +2008,7 @@ trophy_room = {
       [1] = "由於您的醫院價值不菲，因此衛生署向您表示恭喜。",
     },
     regional = {
-      [1] = "您真是一個理財高手。您的醫院的價值比其他醫院的總和還要多。",
+      [1] = "您真是一個理財高手。您的醫院的價值比其它醫院的總和還要多。",
     },
   },
   rats_accuracy = {
@@ -2009,7 +2049,7 @@ trophy_room = {
     },
     regional = {
       [1] = "由於您的醫院在過去一年中贏得了最高的聲望，特此頒發牛蛙獎。這是您應得的。",
-      [2] = "在這一年中，您的醫院的聲望超過了其他所有醫院的總和。真是一項偉大的成就。",
+      [2] = "在這一年中，您的醫院的聲望超過了其它所有醫院的總和。真是一項偉大的成就。",
     },
   },
   consistant_rep = {
@@ -2034,13 +2074,13 @@ trophy_room = {
       [1] = "衛生巡查員注意到您的醫院非常乾淨。乾淨的醫院意味安全的醫院。堅持下去。",
     },
     regional_bad = {
-      [1] = "您的醫院是本區域中最不清潔的。其他醫院都使走廊保持整潔。您使醫學界蒙羞。",
+      [1] = "您的醫院是本區域中最不清潔的。其它醫院都使走廊保持整潔。您使醫學界蒙羞。",
     },
   },
   happy_patients = {
     awards = {
       [1] = "在過去一年中，您的醫院使所有訪問的病人都感到快樂，您將為此感到驕傲。",
-      [2] = "訪問您的醫院的病人比其他醫院內的病人要快樂得多。",
+      [2] = "訪問您的醫院的病人比其它醫院內的病人要快樂得多。",
     },
     penalty = {
       [1] = "前去您的醫院就診的病人感到非常不滿。您必須改進提高才可以獲得衛生署的尊重。",
@@ -2049,7 +2089,7 @@ trophy_room = {
   },
   emergencies = {
     regional_good = {
-      [1] = "衛生署認識到您的醫院在處理緊急事件時比其他醫院都要好，特此頒發獎勵。",
+      [1] = "衛生署認識到您的醫院在處理緊急事件時比其它醫院都要好，特此頒發獎勵。",
     },
     penalty = {
       [1] = "您處理緊急事件的能力實在太差了。前來就診的急救病人並沒有得到正確的治療。",
@@ -2065,11 +2105,11 @@ trophy_room = {
   gen_repairs = {
     awards = {
       [1] = "由於您的清潔工人使醫院內的儀器設備運行良好，特此頒發特別獎金。幹得好。假期愉快。",
-      [2] = "您的清潔工人比其他醫院的都要好。這真是一件值得慶祝的事情。",
+      [2] = "您的清潔工人比其它醫院的都要好。這真是一件值得慶祝的事情。",
       [3] = "您的儀器維護得很好。這一切都離不開清潔工人的努力。幹得好。",
     },
     penalty = {
-      [1] = "您的清潔工人在維護機器方面表現不是很好。您應該讓他們更多地關心維護保養工作，或者再多僱用幾名清潔工人。",
+      [1] = "您的清潔工人在維護機器方面表現不是很好。您應該讓他們更多地關心維護保養工作，或者再多雇用幾名清潔工人。",
       [2] = "維修工作一團糟。您的清潔工人無法很好的照料各種醫療儀器。",
     },
   },
@@ -2088,7 +2128,7 @@ trophy_room = {
       [2] = "由於您的天才管理使醫院的死亡人數達到最低點。這真是令人高興的事情。",
     },
     regional = {
-      [1] = "您的醫院的死亡人數比其他醫院都低。請接受這個獎勵。",
+      [1] = "您的醫院的死亡人數比其它醫院都低。請接受這個獎勵。",
     },
   },
   rats_killed = {
@@ -2112,10 +2152,10 @@ trophy_room = {
       [1] = "您的員工希望您知道他們非常不高興。好的員工就是最有價值的資產。使他們快樂，否則您將在一天之內失去全部。",
     },
     regional_good = {
-      [1] = "您的員工比其他醫院的員工都要快樂。快樂的員工意味。更高的利潤和更低的死亡率。衛生署感到非常高興。",
+      [1] = "您的員工比其它醫院的員工都要快樂。快樂的員工意味著更高的利潤和更低的死亡率。衛生署感到非常高興。",
     },
     regional_bad = {
-      [1] = "您的員工在上一年度中非常不幸。您一定要加以留意。其他醫院的員工都比您的員工快樂。",
+      [1] = "您的員工在上一年度中非常不幸。您一定要加以留意。其它醫院的員工都比您的員工快樂。",
     },
   },
   healthy_plants = {
@@ -2123,7 +2163,7 @@ trophy_room = {
       [1] = "由於您的醫院在過去一年中是盆栽保持健康成長，特此頒發茁壯成長獎。",
     },
     trophies = {
-      [1] = "由於您的醫院在過去十二個月中使所有盆栽長勢良好，特此盆栽盆栽協會向您頒發綠色健康獎。",
+      [1] = "由於您的醫院在過去十二個月中使所有盆栽長勢良好，特此盆栽協會向您頒發綠色健康獎。",
       [2] = "由於您的醫院在過去一年中使所有盆栽長勢良好，特此頒發綠色名人獎。",
     },
   },
@@ -2142,25 +2182,25 @@ trophy_room = {
     },
     penalty = {
       [1] = "您的醫院無法使病人得到很好的治療。請關注並加以改進。",
-      [2] = "您的醫院對病人的治療效果不如其他醫院。您使衛生署和您自己都名聲掃地。下不為例。",
+      [2] = "您的醫院對病人的治療效果不如其它醫院。您使衛生署和您自己都名聲掃地。下不為例。",
     },
     awards = {
-      [1] = "恭喜您在過去一年中治癒了這麽多的病人。很多人都感覺不錯，感謝您的工作。",
-      [2] = "由於您的醫院治癒了比其他醫院更多的病人，所以請接受這個獎勵。您的表現太棒了。",
+      [1] = "恭喜您在過去一年中治癒了這麼多的病人。很多人都感覺不錯，感謝您的工作。",
+      [2] = "由於您的醫院治癒了比其它醫院更多的病人，所以請接受這個獎勵。您的表現太棒了。",
     },
     regional = {
-      [1] = "由於您的醫院治癒的病人數目比其他醫院的總和還多，特此頒發獎勵。",
+      [1] = "由於您的醫院治癒的病人數目比其它醫院的總和還多，特此頒發獎勵。",
     },
   },
   pop_percentage = {
     awards = {
       [1] = "在過去一年中，您的醫院在城鎮人口中獲得了很高的份額。幹得好。",
-      [2] = "恭喜。訪問您的醫院的居民人數超過了其他任何一個醫院。",
-      [3] = "幹得好。訪問您的醫院的居民人數超過了其他醫院的總和。",
+      [2] = "恭喜。訪問您的醫院的居民人數超過了其它任何一個醫院。",
+      [3] = "幹得好。訪問您的醫院的居民人數超過了其它醫院的總和。",
     },
     penalty = {
-      [1] = "在過去一年中，您的醫院在城鎮人口中獲得了很高的份額。幹得好。",
-      [2] = "恭喜。訪問您的醫院的居民人數超過了其他任何一個醫院。",
+      [1] = "在過去一年中，您的醫院只有很少的就診病人。如果希望賺錢，就應該先付出。",
+      [2] = "在本區域中的每個醫院都比您擁有更多的佔有額。您應該感到羞愧。",
     },
   },
   research = {
@@ -2175,7 +2215,7 @@ trophy_room = {
     },
     awards = {
       [1] = "您的研究使您的醫院始終緊跟最新發展。這是您的科研人員應得的獎勵。",
-      [2] = "在過去一年中，您比其他醫院研究出更多的藥品和儀器設備。請接受衛生署頒發的這個獎勵。",
+      [2] = "在過去一年中，您比其它醫院研究出更多的藥品和儀器設備。請接受衛生署頒發的這個獎勵。",
     },
   },
   reputation = "聲望",
@@ -2210,7 +2250,7 @@ menu_file = {
   restart = "    (%1%) 重新開始",
 }
 rooms_long = {
-  ultrascan = "超級掃描儀房間",
+  ultrascan = "超音波掃描儀房間",
   research_room = "研究部門",
   general = "一般",
   gps_office = "一般診斷室",
@@ -2239,7 +2279,7 @@ rooms_long = {
 }
 fax = {
   epidemic_result = {
-    fine_amount = "政府宣佈全國緊急狀態，並對您罰款%d。",
+    fine_amount = "政府宣布全國緊急狀態，並對您罰款%d。",
     close_text = "哈！",
     hospital_evacuated = "會議決定只能疏散您的醫院。",
     succeeded = {
@@ -2287,16 +2327,16 @@ fax = {
   },
   disease_discovered_patient_choice = {
     need_to_build = "您必須建造一個%s才能處理該疾病。",
-    need_to_employ = "僱用一名%s就可以處理該情況。",
+    need_to_employ = "雇用一名%s就可以處理該情況。",
     what_to_do_question = "您打算怎樣處理這個病人？",
-    guessed_percentage_name = "您的員工正在嘗試治療該病人。我們有%d%%的幾率治癒該病：%s",
+    guessed_percentage_name = "您的員工正在嘗試治療該病人。我們有%d%%的機率治癒該病：%s",
     choices = {
       send_home = "送病人回家。",
       research = "將病人送到研究部門。",
       wait = "讓病人在醫院中等一會兒。",
     },
     disease_name = "發現了新情況。該疾病為%s",
-    need_to_build_and_employ = "如果您建造了一個%s並僱用了一名%s，您就能成功。",
+    need_to_build_and_employ = "如果您建造了一個%s並雇用了一名%s，您就能成功。",
     can_not_cure = "您無法治療該疾病。",
   },
   emergency_result = {
@@ -2306,8 +2346,8 @@ fax = {
   },
   disease_discovered = {
     discovered_name = "您的員工發現了一種新的疾病。它是%s",
-    need_to_employ = "僱用一名%s就可以處理這種危機。",
-    need_to_build_and_employ = "如果您建造了一個%s並僱用了一名%s，您就能成功。",
+    need_to_employ = "雇用一名%s就可以處理這種危機。",
+    need_to_build_and_employ = "如果您建造了一個%s並雇用了一名%s，您就能成功。",
     need_to_build = "您必須建造一個%s才能處理該疾病。",
     close_text = "新發現了一種疾病。",
     can_cure = "您可以處理這種疾病。",
@@ -2326,7 +2366,7 @@ fax = {
     },
     num_disease = "%d個病人患有%s，他們需要緊急治療。",
     cure_possible_drug_name_efficiency = "您已經擁有了要求的設備和技能。您擁有他們所需要的藥品。藥品%s的療效為%d%%。",
-    cure_not_possible_employ = "您將需要僱用一名%s",
+    cure_not_possible_employ = "您將需要雇用一名%s",
     cure_not_possible = "現在您還不能治療這種疾病。",
     cure_possible = "由於您擁有準備和技能，所以您應該可以處理這個緊急事件。",
     choices = {
@@ -2335,7 +2375,7 @@ fax = {
     },
     location = "在%s發生了事故",
     cure_not_possible_build = "您將需要建造一間%s",
-    cure_not_possible_build_and_employ = "您將需要建造一間%s並僱用一名%s",
+    cure_not_possible_build_and_employ = "您將需要建造一間%s並雇用一名%s",
     bonus = "處理這個緊急事件的最大獎金額為%d。如果您失敗了，則您的聲望將大幅下降。",
   },
   debug_fax = {
@@ -2356,11 +2396,11 @@ fax = {
     cover_up_explanation_1 = "如果您想要掩蓋傳染病，您將必須在有限時間內，即衛生巡查員到來之前，治癒所有被傳染的病人。",
     cover_up_explanation_2 = "如果衛生巡查員到達，並發現了您正在試圖掩蓋傳染病，則他將對您採取嚴厲的懲罰。",
     choices = {
-      cover_up = "在指定時間內且病人離開醫院之前，儘量治癒所有被感染的病人。",
-      declare = "宣佈一種傳染病。支付罰款且名譽受損。",
+      cover_up = "在指定時間內且病人離開醫院之前，盡量治癒所有被感染的病人。",
+      declare = "宣布一種傳染病。支付罰款且名譽受損。",
     },
     disease_name = "醫生發現了傳染病%s。",
-    declare_explanation_fine = "如果您宣佈出現傳染病，則您將支付罰款%d，且名譽受損。所有病人將自動被接種疫苗。",
+    declare_explanation_fine = "如果您宣布出現傳染病，則您將支付罰款%d，且名譽受損。所有病人將自動被接種疫苗。",
   },
   diagnosis_failed = {
     choices = {
@@ -2374,7 +2414,7 @@ fax = {
   },
 }
 disease_discovered_patient_choice = {
-  need_to_employ = "僱用一名%s就可以處理該情況。",
+  need_to_employ = "雇用一名%s就可以處理該情況。",
 }
 drug_companies = {
   [1] = "良藥公司",
@@ -2389,7 +2429,7 @@ humanoid_name_ends = {
   [3] = "克利夫",
   [4] = "桑",
   [5] = "因格頓",
-  [6] = "貝裡",
+  [6] = "貝里",
   [7] = "頓",
   [8] = "桑",
   [9] = "李",
@@ -2440,7 +2480,7 @@ dynamic_info = {
     guessed_diagnosis = "嘗試診斷：%s",
     diagnosis_progress = "診斷過程",
     actions = {
-      sent_to_other_hospital = "指派到其他醫院",
+      sent_to_other_hospital = "指派到其它醫院",
       prices_too_high = "費用太高了－我要回家了",
       waiting_for_treatment_rooms = "等待為我建造一間治療室",
       dying = "快死了！",
@@ -2486,9 +2526,9 @@ introduction_texts = {
     "決定權就在您的手中。祝您好運。",
   level1 =
     "歡迎來到您的第一座醫院！// " ..
-    "首先要擺放服務台，建造一般診斷室，並僱用一名接待員和一名醫生。 " ..
+    "首先要擺放服務臺，建造一般診斷室，並雇用一名接待員和一名醫生。 " ..
     "隨後就可以等待開張了。 " ..
-    "建造精神病診斷治療室並僱用一名精神病醫生是一個好主意。 " ..
+    "建造精神病診斷治療室並雇用一名精神病醫生是一個好主意。 " ..
     "藥房和護士也是治療病人所必需的。 " ..
     "建造一個充氣機房間就可以治療頭部腫脹患者。 " ..
     "您需要治癒10個病人，並使聲望保持在200以上。",
@@ -2499,11 +2539,11 @@ introduction_texts = {
     "醫院價值需要達到$200,000，且銀行帳戶上要有$400,000。 " ..
     "如果無法達到上述要求，則無法勝利完成任務。",
   level2 =
-    "在該區域內還有一些其他的疾病。//" ..
+    "在該區域內還有一些其它的疾病。//" ..
     "建造醫院從而可以治療更多的病人，並應該考慮建造研究部門。 " ..
     "記住保持內部的清潔，從而使聲望盡可能地高－您將遇到患有舌頭鬆弛症的病人，因此需要建造舌頭診治房間。 " ..
     "您也可以建造心電圖房間來幫助診斷疾病。 " ..
-    "這些房間都需要經過研究才能夠被建造。現在你可以購買其他土地擴展醫院－使用城鎮地圖就可以購買土地。 " ..
+    "這些房間都需要經過研究才能夠被建造。現在你可以購買其它土地擴展醫院－使用城鎮地圖就可以購買土地。 " ..
     "目標是聲望300，銀行現金為10000，且治癒40個病人。",
   level7 =
     "在這裡您將受到衛生署的密切監察，因此要在賺錢的同時，努力提高自己的聲望。 " ..
@@ -2519,8 +2559,8 @@ introduction_texts = {
     "地震將對醫院中的機器產生損壞，從而影響醫院的運營。 " ..
     "使您聲望達到400以上，現金達到$50,000。另外需要治癒200個病人。",
   level4 =
-    "使所有的病人快樂，保持治療的高效率並儘量降低死亡人數。 " ..
-    "聲望是十分重要的，因此儘量贏得更高的聲望。 " ..
+    "使所有的病人快樂，保持治療的高效率並盡量降低死亡人數。 " ..
+    "聲望是十分重要的，因此盡量贏得更高的聲望。 " ..
     "不要太多擔心收入情況－當聲望提高了，收入也自然會提高。 " ..
     "您需要培訓您的醫生，拓寬他們的能力。 " ..
     "這樣他們就可以更好的為病人服務。 " ..
@@ -2607,7 +2647,7 @@ humanoid_name_starts = {
   [20] = "米爾",
   [21] = "白",
   [22] = "芬",
-  [23] = "裡奇",
+  [23] = "里奇",
   [24] = "斯科特",
   [25] = "伯爾",
   [26] = "派克",
@@ -2627,7 +2667,7 @@ transactions = {
   cure_colon = "治療：",
   epidemy_coverup_fine = "隱瞞傳染病罰款",
   final_treat_colon = "最終治療：",
-  jukebox = "收入：音樂盒",
+  jukebox = "收入：投幣音樂盒",
   loan_interest = "貸款利率",
   overdraft = "透支利率",
   wages = "工資",
@@ -2649,7 +2689,7 @@ transactions = {
   vaccination = "接種疫苗",
   advance_colon = "進階：",
   vip_award = "貴賓現金獎勵",
-  hire_staff = "僱用員工",
+  hire_staff = "雇用員工",
   bank_loan = "銀行貸款",
   machine_replacement = "汰換機器花費",
   emergency_bonus = "支付緊急事件獎金",
@@ -2661,7 +2701,7 @@ transactions = {
 object = {
   chair = "椅子",
   sofa = "沙發",
-  operating_table = "手術臺",
+  operating_table = "手術台",
   bed2 = "床",
   bench = "長椅",
   scanner = "掃描儀",
@@ -2673,12 +2713,12 @@ object = {
   op_sink2 = "洗手台",
   door = "房門",
   auto_autopsy = "自動驗屍儀",
-  reception_desk = "服務台",
+  reception_desk = "服務臺",
   hair_restorer = "毛髮恢復機",
   projector = "放映機",
   crash_trolley = "診斷儀器小推車",
   tv = "電視機",
-  ultrascanner = "超級掃瞄儀",
+  ultrascanner = "超音波掃瞄儀",
   surgeon_screen = "外科屏風",
   litter_bomb = "垃圾炸彈",
   inflator = "充氣機",
@@ -2744,7 +2784,7 @@ letter = {
   },
   [5] = {
     [1] = "親愛的%s//",
-    [2] = "您好。我們尊重您不希望離開這個迷人的醫院，但是提醒您要仔細考慮。您的薪水將達到$%d，如果您願意到其他醫院工作並將其運行得很好。//",
+    [2] = "您好。我們尊重您不希望離開這個迷人的醫院，但是提醒您要仔細考慮。您的薪水將達到$%d，如果您願意到其它醫院工作並將其運行得很好。//",
     [3] = "您現在是否願意移動到%s醫院？",
   },
   [6] = {
@@ -2850,7 +2890,7 @@ tooltip.objects.rathole = "老鼠一家，您的醫院夠髒了，住著很舒�
 tooltip.fax.close = "關閉此視窗，但不刪除訊息"
 tooltip.message.button = "點選開啟訊息"
 tooltip.message.button_dismiss = "點選開啟訊息，右鍵點選忽略"
-tooltip.casebook.cure_requirement.hire_staff = "您需要僱傭人員來治療該疾病"
+tooltip.casebook.cure_requirement.hire_staff = "您需要雇用人員來治療該疾病"
 tooltip.casebook.cure_type.unknown = "您還不知道如何治療該疾病"
 tooltip.research_policy.no_research = "當前沒有任何此類研究在進行中"
 tooltip.research_policy.research_progress = "此類研究下次發現的進度: %1%/%2%"
@@ -2996,7 +3036,7 @@ install = {
 }
 
 misc.not_yet_implemented = "（尚未實現）"
-misc.no_heliport = "還沒有疾病被發現，或者地圖上需要一個直升機場。你可能需要建一個服務台，並僱用一位接待員"
+misc.no_heliport = "還沒有疾病被發現，或者地圖上需要一個直升機場。你可能需要建一個服務臺，並雇用一位接待員"
 
 main_menu = {
   new_game = "開始遊戲",
@@ -3165,7 +3205,7 @@ tooltip.customise_window = {
   volume = "如果減小音量按鈕同時打開了治療手冊，請將開啟治療手冊的熱鍵更改為 Shift + C",
   alien_dna_only_by_emergency = "因為缺少合適的動畫，預設外星人 DNA 病人只會來自緊急事件。要允許緊急事件外出現外星人 DNA 病人，請關閉此選項",
   disable_fractured_bones_females = "由於動畫效果不佳，預設不會有女性骨折患者。要允許女性骨折患者就診，請關閉此功能",
-  enable_avg_contents = "如果您想讓遊戲記住在建造房間時通常會新增哪些其他物件，請啟用此選項。",
+  enable_avg_contents = "如果您想讓遊戲記住在建造房間時通常會新增哪些其它物件，請啟用此選項。",
   remove_destroyed_rooms = "開啟這個選項，使已毀壞的房間可以付費移除。",
   back = "關閉此選單，並返回設定選單",
 }
@@ -3204,14 +3244,14 @@ tooltip.folders_window = {
 }
 
 accessibility_window = {
-  scrollspeed = "捲動速度",
-  shift_scrollspeed = "加速捲動速度",
+  scroll_speed = "捲動速度",
+  shift_scroll_speed = "加速捲動速度",
   zoom_speed = "縮放速度",
 }
 
 tooltip.accessibility_window = {
-  scrollspeed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
-  shift_scrollspeed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
+  scroll_speed = "將捲動速度設為1（最慢）到10（最快）。預設為2。",
+  shift_scroll_speed = "設定在捲動時按下 Shift 鍵時的捲動速度。1（最慢）到10（最快）。預設：4。",
   zoom_speed = "將相機變焦速度設為10（最慢）到1000（最快）。預設值為80。",
   apply_scrollspeed = "應用輸入的捲動速度",
   cancel_scrollspeed = "返回而不更改捲動速度",
@@ -3294,7 +3334,7 @@ hotkey_window = {
   ingame_panel_buildRoom = "建造房間",
   ingame_panel_furnishCorridor = "設定走廊",
   ingame_panel_editRoom = "編輯房間/物品",
-  ingame_panel_hireStaff = "僱用員工",
+  ingame_panel_hireStaff = "雇用員工",
   ingame_rotateobject = "旋轉物件",
   ingame_quickSave = "快速儲存",
   ingame_quickLoad = "快速載入",
@@ -3404,7 +3444,7 @@ errors = {
   could_not_load_campaign = "無法載入任務：%s",
   could_not_find_first_campaign_level = "找不到該任務的第一關：%s",
   save_to_tmp = "檔案無法儲存到 %s 。檔案改為儲存到 %s 。問題: %s",
-  dialog_empty_queue = "抱歉，程式遇到bug了。彈出視窗顯示的這個人員沒有被安排指令（empty action queue），請你決定把他叫離醫院或執行其他動作。",
+  dialog_empty_queue = "抱歉，程式遇到bug了。彈出視窗顯示的這個人員沒有被安排指令（empty action queue），請你決定把他叫離醫院或執行其它動作。",
   compatibility_error = {
     demo_in_full = "抱歉，這是演示版的遊戲存檔，無法在完整版中開啟。請更新原版杏林也瘋狂目錄內容。",
     full_in_demo = "抱歉，這是完整版的遊戲存檔，無法在演示版中開啟。請更新原版杏林也瘋狂目錄內容。",
@@ -3448,12 +3488,12 @@ tooltip.information = {
 
 totd_window = {
   tips = {
-    "醫院想開張就需要一個前臺桌子和一個問診室。這之後還需要根據不同病人建立各種房間。但有個藥房總是對的。",
-    "有一些機器需要維護，比如說充氣機。所以僱一兩個修理人員還是必要的，不然那就是個定時炸彈。",
-    "你的員工會不時感到疲倦。所以建一間休閒室也很必要。",
-    "多放點幾個暖氣，讓你的員工和病人感到春天般溫暖。用全景地圖來檢視它們的覆蓋面積以決定是否還需要多放些。",
-    "一個醫生的醫療水平很大程度影響他的診斷速度。把最厲害的醫生放在問診室，這樣你會省下其他的問診室。",
-    "實習生和醫生們可以通過在學習室向專家學習來提高水平。如果請來的專家擁有某一項專長（外科醫生，精神病醫生或研究員），他也會教給他的學生們。",
+    "醫院想開張就需要一個服務臺和一個一般診斷室。這之後還需要根據不同病人建立各種房間。但有個藥房總是對的。",
+    "有一些機器需要維護，比如說充氣機。所以雇用一兩個清潔工人還是必要的，不然那就是個定時炸彈。",
+    "你的員工會不時感到疲倦。所以建一間員工休息室也很必要。",
+    "多放點幾個暖氣，讓你的員工和病人感到春天般溫暖。用城鎮地圖來檢視它們的覆蓋面積以決定是否還需要多放些。",
+    "一個醫生的醫療水平很大程度影響他的診斷速度。把最厲害的醫生放在一般診斷室，這樣你會省下其它的一般診斷室。",
+    "實習醫生和醫生們可以通過在培訓室向專家學習來提高水平。如果請來的專家擁有某一項專長（外科醫生，精神病醫生或研究員），他也會教給他的學生們。",
     "有沒有試過在傳真機上撥112？這是歐洲的急救電話。記得將音量調到最大！",
     "在主選單和遊戲選單裡面，找到選項視窗，在那裡可以調整解析度和語言。",
     "你選擇了中文，但是你還是可能會在遊戲中不停地看到英文。把他們翻譯了吧，我們需要你的幫助！",
@@ -3496,7 +3536,7 @@ cheats_window = {
     vip = "貴賓",
     earthquake = "地震",
     epidemic = "生成傳染性病人",
-    toggle_infected = "切換感染圖示",
+    show_infected = "切換感染圖示",
     create_patient = "生成病人",
     end_month = "月末",
     end_year = "年末",
@@ -3517,7 +3557,7 @@ tooltip.cheats_window = {
     vip = "建立一位貴賓。",
     earthquake = "製造一次地震。",
     epidemic = "建立一位可能導致流行病傳染的傳染性患者",
-    toggle_infected = "切換感染圖示，以發現活躍的流行病",
+    show_infected = "切換感染圖示，以發現活躍的流行病",
     create_patient = "在地圖的邊緣生成一個病人。",
     end_month = "跳到月末。",
     end_year = "跳到年末。",
@@ -3608,7 +3648,7 @@ hotkeys_file_err = {
 }
 
 -- Override for level progress typo
-level_progress.hospital_value_enough = "保持醫院價值在%d以上，並解決好其他問題，就能完成任務了。"
+level_progress.hospital_value_enough = "保持醫院價值在%d以上，並解決好其它問題，就能完成任務了。"
 level_progress.cured_enough_patients = "您已經治癒了足夠多的病人，但是您只有達到更高的標準才能完成任務。"
 
 -- Override for multiplayer typos
@@ -3617,3 +3657,11 @@ multiplayer.everyone_failed = "所有玩家都沒有完成最終目標。因此�
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
+
+-- Compatibility aliases for renamed toggle_infected key
+cheats_window.cheats = {
+  toggle_infected = show_infected,
+}
+tooltip.cheats_window.cheats = {
+  toggle_infected = show_infected,
+}
