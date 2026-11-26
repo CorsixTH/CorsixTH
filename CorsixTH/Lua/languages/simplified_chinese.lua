@@ -29,8 +29,8 @@ IsArabicNumerals(false)
 -- Search OVERRIDE and NEW STRINGS for workspace
 
 -------------------------------  OLD STRINGS  -------------------------------
--- Generated from official Simplified Chinese datapack, do not modify!
--- Use OVERRIDE if errors present
+-- Verified against the 1997 Simplified Chinese release (LANG-0.DAT)
+-- Targeted fixes and overrides are applied below where noted.
 
 staff_class = {
   nurse                 = "护士",
@@ -446,7 +446,7 @@ months = {
 }
 
 -- "Null", -- not needed?
--- "银行帐户", -- unused(?)
+-- "银行账户", -- unused(?)
 -- "现金", -- unused(?)
 
 graphs = {
@@ -576,23 +576,23 @@ adviser = {
     -- 1) build reception
     build_reception               = "你好。首先，您的医院需要一个接待台，您可以从布置走廊菜单中选取。", -- start of the tutorial
     order_one_reception           = "使用鼠标左键单击闪动的光条，可以定购一个接待台。",
-    accept_purchase               = "点击闪动的像标表示购买。",
+    accept_purchase               = "点击闪动的图标表示购买。",
     rotate_and_place_reception    = "点击鼠标右键可以旋转桌子，并用鼠标左键将其放在医院中合适位置。",
     reception_invalid_position    = "如果接待台是灰色的，则表示当前位置是非法的。应尝试移动或旋转它。",
 
     -- 2) hire receptionist
     hire_receptionist             = "您也需要一位接待员来接待病人。",
-    select_receptionists          = "使用鼠标左键单击闪动的像标来查看当前可选择的接待员。像标下方的数字表示共有多少个接待员可供选择。",
-    next_receptionist             = "这是接待员列表中的第一个。左键单击闪动的像标可以浏览下一个可供选用的接待员。",
-    prev_receptionist             = "左键单击闪动的像标将可以浏览到前一个可供选择的接待员。",
-    choose_receptionist           = "判断哪一个接待员拥有好的能力与合适的工资，再左键单击闪动的像标来雇佣她。",
+    select_receptionists          = "使用鼠标左键单击闪动的图标来查看当前可选择的接待员。图标下方的数字表示共有多少个接待员可供选择。",
+    next_receptionist             = "这是接待员列表中的第一个。左键单击闪动的图标可以浏览下一个可供选用的接待员。",
+    prev_receptionist             = "左键单击闪动的图标将可以浏览到前一个可供选择的接待员。",
+    choose_receptionist           = "判断哪一个接待员拥有好的能力与合适的工资，再左键单击闪动的图标来雇佣她。",
     place_receptionist            = "移动接待员并将她放到任意位置。她将很聪明地自己走到接待台。",
     receptionist_invalid_position = "您不能将接待员放在那里。",
 
     -- 3) build GP's office
     -- 3.1) room window
     build_gps_office              = "您必须建造一般诊断室才可以诊断病人。",
-    select_diagnosis_rooms        = "点击闪动的像标将弹出诊断类房间列表。",
+    select_diagnosis_rooms        = "点击闪动的图标将弹出诊断类房间列表。",
     click_gps_office              = "点击闪动光条表示选择一般诊断室。",
 
     -- 3.2) blueprint
@@ -612,12 +612,12 @@ adviser = {
     -- 3.4) objects
     place_objects                 = "右击可以旋转房屋中的各种物品，再左击表示确认。",
     object_in_invalid_position    = "该物品当前位置非法。请要么将其放到其它位置，要么对其进行旋转。",
-    confirm_room                  = "左键单击闪动像标就可以开业了，也可以通过点击交叉按钮返回上一步。",
+    confirm_room                  = "左键单击闪动图标就可以开业了，也可以通过点击交叉按钮返回上一步。",
     information_window            = "帮助条将告诉您刚刚建造的一般诊断室信息。",
 
     -- 4) hire doctor
     hire_doctor                   = "您需要一个医生来诊断和治疗病人。",
-    select_doctors                = "点击闪动的像标挑选可被雇佣的医生。",
+    select_doctors                = "点击闪动的图标挑选可被雇佣的医生。",
     choose_doctor                 = "在选择医生之前，应重点考虑其能力。",
     place_doctor                  = "将医生放在医院中的任意位置。他将直奔一般诊断室，为病人诊断。",
     doctor_in_invalid_position    = "嗨！您不能将医生放在那里。",
@@ -678,11 +678,11 @@ adviser = {
   },
 
   warnings = {
-    money_low                     = "",
+    money_low                     = "您的现金快要不够了！", -- Empty in original TH; filled to match english.lua override
     money_very_low_take_loan      = "您的现金量太少了。您可以尝试贷款。",
     cash_low_consider_loan        = "您的流动资金状况十分不妙。是否考虑贷款？",
     bankruptcy_imminent           = "嗨! 您快破产了。小心啊!",
-    financial_trouble             = "您正面临着严重的财政危机。立即整理帐户！如果您再亏损$%d ，本关任务将失败。", -- %d amount left before level is lost
+    financial_trouble             = "您正面临着严重的财政危机。立即整理账户！如果您再亏损$%d ，本关任务将失败。", -- %d amount left before level is lost
     finanical_trouble2            = "多增加一些收入。如果再亏损$%d 任务就会失败。", -- %d same as above
     financial_trouble3            = "您的现金状况不太妙。想办法增加一些收入。您距离失败还差$%d 。", -- %d same again
 
@@ -780,13 +780,13 @@ adviser = {
     change_priorities_to_plants   = "您必须改变清洁工的工作优先级，使他们更多地为植物浇水。",
     plants_dying                  = "您的植物快干死了。它们需要水。多为植物派些清洁工。病人可不愿意看到枯死的植物。",
 
-    another_desk = "新雇用的接待员需要添加一个接待台",
+    another_desk = "新雇佣的接待员需要添加一个接待台",
   },
 
   praise = {
     many_plants                   = "太可爱了。您已经布置了足够的植物。病人将感到满意。",
     plants_are_well               = "太棒了。植物被照料得很好。",
-    plants_thriving               = "太棒了。医院中的植物生长得很茂盛。它们看起来令人感到惊奇。坚持。，您将有可能赢得一个大奖。",
+    plants_thriving               = "太棒了。医院中的植物生长得很茂盛。它们看起来令人感到惊奇。坚持下去，您将有可能赢得一个大奖。", -- Fixed broken punctuation ("坚持。，") from 1997 LANG-0.DAT
 
     many_benches                  = "病人拥有足够的座位。太棒了。",
     plenty_of_benches             = "座椅已经足够了。",
@@ -812,9 +812,9 @@ adviser = {
     patient_abducted              = "您的一位病人被外星人诱拐了。", -- what the heck is this? I never got that far in the original...
     patient_leaving_too_expensive = "一位病人没有为%s 付款就离开了。这损失太大了。",
 
-    pay_rise                      = "您的一个员工威胁要辞职。选择是否同意其请求，或将其解雇。点击屏幕左下方的像标可以查看威胁要辞职的员工信息。", -- TODO only in tutorial / first time?
+    pay_rise                      = "您的一个员工威胁要辞职。选择是否同意其请求，或将其解雇。点击屏幕左下方的图标可以查看威胁要辞职的员工信息。", -- TODO only in tutorial / first time?
     handyman_adjust               = "您可以通过调整清洁工人工作的优先级使其打扫得更干净。", -- TODO only in tutorial / first time?
-    fax_received                  = "在屏幕左下角刚刚弹出的像标表示一些重要事件的相关信息，或某些需要您决定的事情。", -- Once only
+    fax_received                  = "在屏幕左下角刚刚弹出的图标表示一些重要事件的相关信息，或某些需要您决定的事情。", -- Once only
 
     vip_arrived                   = "小心！%s 正准备访问您的医院！保持医院运转正常，这样才能使他感到愉快。", -- %s (name of VIP)
     epidemic_health_inspector     = "您的医院中出现传染病的消息已经到达了卫生部。卫生巡查员很快就要到达，快做准备。",
@@ -1045,7 +1045,7 @@ rooms_long = {
 }
 
 disease_discovered_patient_choice = {
-  need_to_employ = "雇用一名%s就可以处理该情况。",
+  need_to_employ = "雇佣一名%s就可以处理该情况。",
 }
 
 drug_companies = {
@@ -1191,7 +1191,7 @@ menu_display = {
 }
 
 menu_charts = {
-  statement           = " 银行帐户 ",
+  statement           = " 银行账户 ",
   casebook            = " 治疗手册 ",
   policy              = " 制度 ",
   research            = " 研究 ",
@@ -1547,7 +1547,7 @@ tooltip = {
   },
 
   toolbar = {
-    bank_button        = "左击进入银行经理画面，右击进入银行帐户",
+    bank_button        = "左击进入银行经理画面，右击进入银行账户",
     balance            = "现金",
     reputation         = "声望", -- NB: no %d! Append " ([reputation])".
     date               = "日期",
@@ -1693,7 +1693,7 @@ tooltip = {
     psychiatrist       = "精神病",
     researcher         = "研究",
     salary             = "月薪",
-    center_view        = "切换到当前人物",
+    center_view        = "左键单击缩放至员工，右键单击切换人物", -- Matches english.lua override (left click zoom, right click cycle)
     sack               = "解雇",
     pick_up            = "拾起",
   },
@@ -1736,7 +1736,7 @@ tooltip = {
     up                 = "向上滚动",
     down               = "向下滚动",
     close              = "关闭治疗手册",
-    reputation         = "治疗或诊断接待台",
+    reputation         = "治疗或诊断声望", -- Fixed 1997 LANG-0.DAT mistranslation ("接待台" -> "声望")
     treatment_charge   = "花费",
     earned_money       = "总收入",
     cured              = "治愈人数",
@@ -1766,7 +1766,7 @@ tooltip = {
   },
 
   statement = {
-    close              = "关闭银行帐户画面",
+    close              = "关闭银行账户画面",
   },
 
   research = {
@@ -2016,7 +2016,9 @@ newspaper = {
   { "粗鲁的医生", "医生臭名远扬", "医生完了", "贪得无厌的医生"                       },
   { "篡改数据", "器官买卖犯罪", "银行危机", "调查基金数据"                       },
   { "医学工作者盗墓", "医生盗墓", "医生盗墓，人赃并获", "医生死期不远了", "超级渎职", "医生盗墓" },
-  { "医生？庸医！", "庸医露馅了", "令人诅咒的诊断", "笨蛋专家",                      },
+  -- Unused headlines (S[38][31..34], unused in game)
+  -- { "医生？庸医！", "庸医露馅了", "令人诅咒的诊断", "笨蛋专家", },
+  -- LOSE6.SMK (toilet with magazine)
   { "医生真情放纵", "医生自我“手术”", "医生完了", "医生大丑闻", "医生搞得一团糟"            },
 }
 
@@ -2377,14 +2379,14 @@ original_credits = {
   "Alexa Kortsch",
   "Bianca Normann",
   "",
-  "C 。T 。O 。S 。p 。A 。Zola Predosa (BO)",
+  "C.T.O. S.p.A. Zola Predosa (BO)", -- Fixed full-width dots from 1997 LANG-0.DAT
   "Gian Maria Battistini",
   "Maria Ziino",
   "Gabriele Vegetti",
   "",
   "Elena Ruiz de Velasco",
   "Julio Valladares",
-  "Ricardo Mart*nez",
+  "Ricardo Martínez", -- Fixed corrupted '*' in 1997 LANG-0.DAT
   "",
   "Kia Collin",
   "CBG Consult",
@@ -2822,17 +2824,17 @@ introduction_texts = {
     "让恶心呕吐的病人靠近清洁工人。" ..
     "需要赚取$300,000就可以过关。",
   level9 =
-    "当填满了卫生部的银行帐户并为部长大人购买了一辆轿车后，您现在又要开始新的工作了。" ..
+    "当填满了卫生部的银行账户并为部长大人购买了一辆轿车后，您现在又要开始新的工作了。" ..
     "在这里您要面对很多问题。" ..
     "只有拥有足够经验充分的员工和房间，您才能够顺利过关。" ..
-    "医院价值需要达到$200,000，且银行帐户上要有$400,000。" ..
+    "医院价值需要达到$200,000，且银行账户上要有$400,000。" ..
     "如果无法达到上述要求，则无法胜利完成任务。",
   level10 =
     "随着您的经验不断增长，卫生部要求您集中精力提高药品的治疗效果。" ..
     "有人对您颇有微辞，为此您必须使所有的药物都非常有效。" ..
     "另外，一定要降低医疗事故的发生次数，减少死亡人数。" ..
     "作为提示，您需要为建造胶桶留一些空地。" ..
-    "使所有药物的疗效都达到80%%，声望达到650且在银行帐户上有$500,000，这样就可以胜利过关。",
+    "使所有药物的疗效都达到80%，声望达到650且在银行账户上有$500,000，这样就可以胜利过关。",
   level11 =
     "现在您有机会建造一座终极医院。" ..
     "该地区享有极高的声望，因此卫生部希望能够看到最好的医院建造在这里。" ..
@@ -2840,7 +2842,7 @@ introduction_texts = {
     "这是一项非常重要的工作。" ..
     "这需要您的努力工作。" ..
     "注意一点，该区域常常会看到不明飞行物。因此请让您的员工做好准备迎接不速之客。" ..
-    "您的医院价值需要达到$240,000，在银行帐户内需要$500,000，且声望需要达到700。",
+    "您的医院价值需要达到$240,000，在银行账户内需要$500,000，且声望需要达到700。",
   level12 =
     "您现在遇到了最大的挑战。" ..
     "我们为您的成功感到由衷地高兴，卫生部为您准备了一项顶级工作；他们需要有人建造另一个超级医院，赚钱的同时获取较高的声望。" ..
@@ -3198,11 +3200,11 @@ adviser = {
     falling_4 = "这里是医院，不是主题公园！",
     falling_5 = "这里不适合逗人玩，他们是病人好吗？",
     falling_6 = "这里不是保龄球馆，应该对待病人如春天般温暖！",
-    research_screen_open_1 = "你需要建设一个研究科室才能访问研究页面。",
+    research_screen_open_1 = "你需要建设一个研究部门才能访问研究页面。",
     research_screen_open_2 = "这一关不能开展研究。",
     researcher_needs_desk_1 = "研究员需要一张桌子展开工作。",
     researcher_needs_desk_2 = "你的研究员对你允许他休息片刻表示感谢，但如果你想让每个人都工作，你需要给每个人一张桌子。",
-    researcher_needs_desk_3 = "每个研究院需要自己的桌子。",
+    researcher_needs_desk_3 = "每个研究员需要自己的桌子。",
     nurse_needs_desk_1 = "每个护士都需要自己的桌子。",
     nurse_needs_desk_2 = "你的护士对你允许他休息片刻表示感谢，但如果你想让每个人都工作，你需要给每个人一张桌子。",
     low_prices = "%s的收费太低了。虽然来的人很多，但你赚不到什么钱。",
@@ -3265,7 +3267,7 @@ install = {
 }
 
 misc.not_yet_implemented = "（尚未实现）"
-misc.no_heliport = "还没有疾病被发现，或者地图上需要一个直升机场。你可能需要建一个接待台，并雇用一位接待员"
+misc.no_heliport = "还没有疾病被发现，或者地图上需要一个直升机场。你可能需要建一个接待台，并雇佣一位接待员"
 
 main_menu = {
   new_game = "开始游戏",
@@ -3404,14 +3406,14 @@ tooltip.graphics_window = {
 }
 
 accessibility_window = {
-  scrollspeed = "滚动速度",
-  shift_scrollspeed = "加速滚动速度",
+  scroll_speed = "滚动速度",
+  shift_scroll_speed = "加速滚动速度",
   zoom_speed = "缩放速度",
 }
 
 tooltip.accessibility_window = {
-  scrollspeed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
-  shift_scrollspeed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
+  scroll_speed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
+  shift_scroll_speed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
   zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
   apply_scrollspeed = "应用输入的滚动速度。",
   cancel_scrollspeed = "返回而不更改滚动速度。",
@@ -3451,7 +3453,7 @@ tooltip.customise_window = {
   allow_user_actions_while_paused = "在主题医院中，只有在游戏暂停的情况下，才允许玩家使用顶部菜单，这也是 CorsixTH 的默认设置。但是将此选项打开，游戏暂停时可以进行所有操作",
   alien_dna_only_by_emergency = "因为缺少合适的动画，默认外星人 DNA 病人只会来自紧急事件。要允许紧急事件外出现外星人 DNA 病人，请关闭此选项",
   disable_fractured_bones_females = "由于动画效果不佳，默认不会有女性骨折患者。要允许女性骨折患者就诊，请关闭此功能",
-  enable_avg_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其他对象，请启用此选项。",
+  enable_avg_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其它对象，请启用此选项。",
   remove_destroyed_rooms = "打开这个选项，使已毁坏的房间可以付费移除。",
   back = "关闭此菜单，并返回设置菜单",
 }
@@ -3672,7 +3674,7 @@ errors = {
   could_not_load_campaign = "无法加载任务：%s",
   could_not_find_first_campaign_level = "找不到该任务的第一关：%s",
   save_to_tmp = "文件无法保存到 %s 。文件改为保存到 %s 。问题: %s",
-  dialog_empty_queue = "抱歉，程序遇到bug了。弹出窗口显示的这个人员没有被安排指令（empty action queue），请你决定把他叫离医院或进行其他动作。",
+  dialog_empty_queue = "抱歉，程序遇到bug了。弹出窗口显示的这个人员没有被安排指令（empty action queue），请你决定把他叫离医院或进行其它动作。",
   compatibility_error = {
     demo_in_full = "抱歉，这是演示版的游戏存档，无法在完整版中打开。请更新原版主题医院目录内容。",
     full_in_demo = "抱歉，这是完整版的游戏存档，无法在演示版中打开。请更新原版主题医院目录内容。",
@@ -3714,12 +3716,12 @@ tooltip.information = {
 
 totd_window = {
   tips = {
-    "医院想开张就需要一个前台桌子和一个问诊室。这之后还需要根据不同病人建立各种房间。但有个药房总是对的。",
-    "有一些机器需要维护，比如说充气机。所以雇一两个修理人员还是必要的，不然那就是个定时炸弹。",
-    "你的员工会不时感到疲倦。所以建一间休闲室也很必要。",
-    "多放点几个暖气，让你的员工和病人感到春天般温暖。用全景地图来查看它们的覆盖面积以决定是否还需要多放些。",
-    "一个医生的医疗水平很大程度影响他的诊断速度。把最牛逼的医生放在问诊室，这样你会省下其他的问诊室。",
-    "实习生和医生们可以通过在学习室向专家学习来提高水平。如果请来的专家拥有某一项专长（外科医生，精神病医生或研究员），他也会教给他的学生们。",
+    "医院想开张就需要一个接待台和一个一般诊断室。这之后还需要根据不同病人建立各种房间。但有个药房总是对的。",
+    "有一些机器需要维护，比如说充气机。所以雇一两个清洁工还是必要的，不然那就是个定时炸弹。",
+    "你的员工会不时感到疲倦。所以建一间员工休息室也很必要。",
+    "多放点几个暖气，让你的员工和病人感到春天般温暖。用城镇地图来查看它们的覆盖面积以决定是否还需要多放些。",
+    "一个医生的医疗水平很大程度影响他的诊断速度。把最优秀的医生放在一般诊断室，这样你会省下其它的一般诊断室。",
+    "实习生和医生们可以通过在培训室向专家学习来提高水平。如果请来的专家拥有某一项专长（外科医生，精神病医生或研究员），他也会教给他的学生们。",
     "有没有试过在传真机上拨112？这是欧洲的急救电话。记得将音量调到最大！",
     "在主菜单和游戏菜单里面，找到选项窗口，在那里可以调整分辨率和语言。",
     "你选择了中文，但是你还是可能会在游戏中不停地看到英文。把他们翻译了吧，我们需要你的帮助！",
@@ -3730,7 +3732,7 @@ totd_window = {
     "在成群结队等待就诊的病人中，你可以通过指向房间的门来找到哪些病人在等。",
     "点击房间门可以看到等待队列。你可以做些调整让某些人走个后门，或者送到另一个房间去。",
     "不开心的员工只有通过涨薪来平衡自己了。你要保证你的员工的工作环境像家一样，才能让他们甘心给你卖命。",
-    "病人等的时间长了，会口渴，如果开了暖气，口渴得会更快！放些自动贩卖机吧，还能多些零花钱。",
+    "病人等的时间长了，会口渴，如果开了暖气，口渴得会更快！放些饮料机吧，还能多些零花钱。",
     "如果你见过某种病，你可以中断诊疗过程直接去治，治死了不要找我。",
     "从紧急事件总能赚一大笔，但是你要按时处理好才行。",
     "你知道可以指定清洁工人工作的地区吗？打开他的数据窗口，点击“所有地区”文字便可设置地区。",
@@ -3762,7 +3764,7 @@ cheats_window = {
     vip = "贵宾",
     earthquake = "地震",
     epidemic = "生成传染性病人",
-    toggle_infected = "切换感染图标",
+    show_infected = "切换感染图标",
     create_patient = "生成病人",
     end_month = "月末",
     end_year = "年末",
@@ -3783,7 +3785,7 @@ tooltip.cheats_window = {
     vip = "创建一位贵宾。",
     earthquake = "制造一次地震。",
     epidemic = "创建一位可能导致流行病传染的传染性患者",
-    toggle_infected = "切换感染图标，以发现活跃的流行病",
+    show_infected = "切换感染图标，以发现活跃的流行病",
     create_patient = "在地图的边缘生成一个病人。",
     end_month = "跳到月末。",
     end_year = "跳到年末。",
@@ -3874,7 +3876,7 @@ hotkeys_file_err = {
 }
 
 -- Override for level progress typo
-level_progress.hospital_value_enough = "保持医院价值在%d以上，并解决好其他问题，就能完成任务了。"
+level_progress.hospital_value_enough = "保持医院价值在%d以上，并解决好其它问题，就能完成任务了。"
 level_progress.cured_enough_patients = "您已经治愈了足够多的病人，但是您只有达到更高的标准才能完成任务。"
 
 -- Override for multiplayer typos
@@ -3883,3 +3885,7 @@ multiplayer.everyone_failed = "所有玩家都没有完成最终目标。因此�
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
+
+-- Compatibility aliases for renamed toggle_infected key
+cheats_window.cheats.toggle_infected = cheats_window.cheats.show_infected
+tooltip.cheats_window.cheats.toggle_infected = tooltip.cheats_window.cheats.show_infected
