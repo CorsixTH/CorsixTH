@@ -213,6 +213,15 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
 
+  ; Remove old dependencies, so we only install the ones we need
+  Delete "$INSTDIR\*.dll"
+  Delete "$INSTDIR\*.pdb"
+  Delete "$INSTDIR\*.lib"
+  Delete "$INSTDIR\*.lua"
+  RMDir /r "$INSTDIR\mime"
+  RMDir /r "$INSTDIR\socket"
+  RMDir /r "$INSTDIR\ssl"
+
   ${If} ${FileExists} "$INSTDIR\Lua"
     RMDir /r "$INSTDIR\Lua"
     CreateDirectory "$INSTDIR\Lua"
