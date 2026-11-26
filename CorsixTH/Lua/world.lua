@@ -686,7 +686,7 @@ end
 
 function World:initWallTypes()
   self.wall_id_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
+  for _, wall_type in pairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
       for _, id in pairs(wall_type[set]) do
         self.wall_id_by_block_id[id] = wall_type.id
@@ -694,7 +694,7 @@ function World:initWallTypes()
     end
   end
   self.wall_set_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
+  for _, wall_type in pairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
       for _, id in pairs(wall_type[set]) do
         self.wall_set_by_block_id[id] = set
@@ -702,7 +702,7 @@ function World:initWallTypes()
     end
   end
   self.wall_dir_by_block_id = {}
-  for _, wall_type in ipairs(self.wall_types) do
+  for _, wall_type in pairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
       for name, id in pairs(wall_type[set]) do
         self.wall_dir_by_block_id[id] = name
