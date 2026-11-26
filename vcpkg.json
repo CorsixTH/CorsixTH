@@ -6,7 +6,12 @@
         "tools"
       ]
     },
-    "sdl3",
+    {
+      "name": "sdl3",
+      "features": [
+        { "name": "alsa", "platform": "linux" }
+      ]
+    },
     "luafilesystem",
     "lpeg",
     "libpng",
