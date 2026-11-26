@@ -95,9 +95,9 @@ enum persist_type {
   PERSIST_TPERMANENT = LUA_TTHREAD + 1,
   PERSIST_TTRUE,
   PERSIST_TTABLE_WITH_META,
-  PERSIST_TINTEGER,
+  PERSIST_TSMALLINT,  // 0 to 16383 (Lua 5.1, 5.2, LuaJIT and older saves)
   PERSIST_TPROTOTYPE,
-  PERSIST_TRESERVED1,  // Not currently used
+  PERSIST_TINTEGER,    // Any integer (Lua 5.3 and later)
   PERSIST_TRESERVED2,  // Not currently used
   PERSIST_TCOUNT,      // must equal 16 (for compatibility)
 };
@@ -293,6 +293,39 @@ class lua_persist_basic_writer : public lua_persist_writer {
     lua_pop(L, 1);
   }
 
+  //! Write the number at iIndex so that it loads as the same number: on Lua
+  //! 5.3 and later also of the same subtype, an integer as an integer and a
+  //! float as a float (a whole float such as 3.0 loaded as the integer 3, and
+  //! an integer above 16383 such as 50000 as the float 50000.0: the same
+  //! value, but tostring differs, and a loaded game differed from one that
+  //! was not saved and loaded).
+  void write_number(int iIndex) {
+    double fValue = lua_tonumber(L, iIndex);
+#if LUA_VERSION_NUM >= 503
+    if (lua_isinteger(L, iIndex)) {
+      // Every integer, in as few bytes as its size needs
+      uint8_t iByte = PERSIST_TINTEGER;
+      write_byte_stream(&iByte, 1);
+      write_int(lua_tointeger(L, iIndex));
+      return;
+    }
+#else
+    if (floor(fValue) == fValue && 0.0 <= fValue && fValue <= 16383.0) {
+      // Small integers are written as just a few bytes
+      // NB: 16383 = 2^14-1, which is the maximum value which
+      // can fit into two bytes of VUInt.
+      uint8_t iByte = PERSIST_TSMALLINT;
+      write_byte_stream(&iByte, 1);
+      write_uint(static_cast<uint16_t>(fValue));
+      return;
+    }
+#endif
+    // Other numbers are written as an 8 byte double
+    uint8_t iByte = LUA_TNUMBER;
+    write_byte_stream(&iByte, 1);
+    write_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double));
+  }
+
   void write_stack_object(int iIndex) override {
     // Convert index from relative to absolute
     if (iIndex < 0 && iIndex > LUA_REGISTRYINDEX)
@@ -315,21 +348,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
         iByte = LUA_TBOOLEAN;
       write_byte_stream(&iByte, 1);
     } else if (iType == LUA_TNUMBER) {
-      double fValue = lua_tonumber(L, iIndex);
-      if (floor(fValue) == fValue && 0.0 <= fValue && fValue <= 16383.0) {
-        // Small integers are written as just a few bytes
-        // NB: 16383 = 2^14-1, which is the maximum value which
-        // can fit into two bytes of VUInt.
-        uint8_t iByte = PERSIST_TINTEGER;
-        write_byte_stream(&iByte, 1);
-        uint16_t iValue = (uint16_t)fValue;
-        write_uint(iValue);
-      } else {
-        // Other numbers are written as an 8 byte double
-        uint8_t iByte = LUA_TNUMBER;
-        write_byte_stream(&iByte, 1);
-        write_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double));
-      }
+      write_number(iIndex);
     } else {
       // Complex values are cached, and are only written once (if this
       // weren't done, then cycles in the object graph would break
@@ -985,9 +1004,15 @@ class lua_persist_basic_reader : public lua_persist_reader {
           }
           break;
         }
-        case PERSIST_TINTEGER: {
+        case PERSIST_TSMALLINT: {
           uint16_t iValue;
           if (!read_uint(iValue)) return false;
+          lua_pushinteger(L, iValue);
+          break;
+        }
+        case PERSIST_TINTEGER: {
+          lua_Integer iValue;
+          if (!read_int(iValue)) return false;
           lua_pushinteger(L, iValue);
           break;
         }
@@ -1006,14 +1031,14 @@ class lua_persist_basic_reader : public lua_persist_reader {
               case PERSIST_TTABLE_WITH_META:
                 lua_pushliteral(L, "table-with-metatable");
                 break;
-              case PERSIST_TINTEGER:
-                lua_pushliteral(L, "integer");
+              case PERSIST_TSMALLINT:
+                lua_pushliteral(L, "small-integer");
                 break;
               case PERSIST_TPROTOTYPE:
                 lua_pushliteral(L, "prototype");
                 break;
-              case PERSIST_TRESERVED1:
-                lua_pushliteral(L, "reserved1");
+              case PERSIST_TINTEGER:
+                lua_pushliteral(L, "integer");
                 break;
               case PERSIST_TRESERVED2:
                 lua_pushliteral(L, "reserved2");
