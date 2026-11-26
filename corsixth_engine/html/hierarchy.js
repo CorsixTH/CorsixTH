@@ -39,8 +39,7 @@ var hierarchy =
     ] ],
     [ "load_multi_buffer", "classload__multi__buffer.html", null ],
     [ "lua_class_binding&lt; T &gt;", "classlua__class__binding.html", null ],
-    [ "lua_persist_int&lt; T &gt;", "structlua__persist__int.html", null ],
-    [ "lua_persist_int&lt; int &gt;", "structlua__persist__int_3_01int_01_4.html", null ],
+    [ "lua_persist_int&lt; S &gt;", "structlua__persist__int.html", null ],
     [ "lua_persist_reader", "classlua__persist__reader.html", [
       [ "lua_persist_basic_reader", "classlua__persist__basic__reader.html", null ]
     ] ],

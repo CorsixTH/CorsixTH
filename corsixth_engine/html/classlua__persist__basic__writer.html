@@ -113,6 +113,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab0b002f1218260370e2d7f87ce421787" id="r_ab0b002f1218260370e2d7f87ce421787"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0b002f1218260370e2d7f87ce421787">init</a> ()</td></tr>
 <tr class="memitem:a3091b7892fc8a56e5c41eb2ba0964a4d" id="r_a3091b7892fc8a56e5c41eb2ba0964a4d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3091b7892fc8a56e5c41eb2ba0964a4d">finish</a> ()</td></tr>
 <tr class="memitem:aa7710ab846b38cb0eb62301612bd92fd" id="r_aa7710ab846b38cb0eb62301612bd92fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7710ab846b38cb0eb62301612bd92fd">fast_write_stack_object</a> (int iIndex) override</td></tr>
+<tr class="memitem:ab357b1b1ec86628fed35e0388d0f8ca7" id="r_ab357b1b1ec86628fed35e0388d0f8ca7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab357b1b1ec86628fed35e0388d0f8ca7">write_number</a> (int iIndex)</td></tr>
 <tr class="memitem:a0e040169359685c5ccc44b34bbacd751" id="r_a0e040169359685c5ccc44b34bbacd751"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e040169359685c5ccc44b34bbacd751">write_stack_object</a> (int iIndex) override</td></tr>
 <tr class="memitem:abdd5d97e63823b358adc210e83d9f327" id="r_abdd5d97e63823b358adc210e83d9f327"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdd5d97e63823b358adc210e83d9f327">write_object_raw</a> ()</td></tr>
 <tr class="memitem:a8cc545c6b9f1b35fa7ddf97829a0095e" id="r_a8cc545c6b9f1b35fa7ddf97829a0095e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cc545c6b9f1b35fa7ddf97829a0095e">check_that_userdata_can_be_depersisted</a> (int iIndex)</td></tr>
@@ -423,6 +424,32 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classlua__persist__writer.html#a1803221eb9e66ee1fd7ee3982cfba40b">lua_persist_writer</a>.</p>
+
+</div>
+</div>
+<a id="ab357b1b1ec86628fed35e0388d0f8ca7" name="ab357b1b1ec86628fed35e0388d0f8ca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab357b1b1ec86628fed35e0388d0f8ca7">&#9670;&#160;</a></span>write_number()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lua_persist_basic_writer::write_number </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>iIndex</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Write the number at iIndex so that it loads as the same number: on Lua 5.3 and later also of the same subtype, an integer as an integer and a float as a float (a whole float such as 3.0 loaded as the integer 3, and an integer above 16383 such as 50000 as the float 50000.0: the same value, but tostring differs, and a loaded game differed from one that was not saved and loaded). </p>
 
 </div>
 </div>

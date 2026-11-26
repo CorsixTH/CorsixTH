@@ -11,6 +11,7 @@ var classlua__persist__basic__writer =
     [ "set_error", "classlua__persist__basic__writer.html#af584d462842250e8bda09979be1e5e15", null ],
     [ "set_error_object", "classlua__persist__basic__writer.html#a4cab6e005b334cb222e0815b168bc26f", null ],
     [ "write_byte_stream", "classlua__persist__basic__writer.html#a9deadee7198719eb0e021576c03faf2d", null ],
+    [ "write_number", "classlua__persist__basic__writer.html#ab357b1b1ec86628fed35e0388d0f8ca7", null ],
     [ "write_object_raw", "classlua__persist__basic__writer.html#abdd5d97e63823b358adc210e83d9f327", null ],
     [ "write_prototype", "classlua__persist__basic__writer.html#aae9b0cd8bc7ac988537c716fa56fd608", null ],
     [ "write_stack_object", "classlua__persist__basic__writer.html#a0e040169359685c5ccc44b34bbacd751", null ]
