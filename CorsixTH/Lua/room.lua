@@ -984,18 +984,6 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
     local screen, sx, sy = self.world:findObjectNear(humanoid, "screen")
     local use_screen = UseScreenAction(screen):setMustHappen(true):setIsLeaving(true)
 
-    --Make old saved game action queues compatible with the changes made by the #293 fix commit:
-    for actions_index, action in ipairs(humanoid.action_queue) do
-      if action.name == "use screen" or (action.name == "walk" and action.x == sx and action.y == sy) then
-        if not action.is_leaving then
-          humanoid.humanoid_actions[actions_index].is_leaving = true
-        end
-        if action.name == "walk" and action.must_happen then
-          action.must_happen = false
-        end
-      end
-    end
-
     if humanoid:getCurrentAction().name == "use_screen" then
       --The humanoid must be using the screen to undress because this isn't a leaving action:
       if not humanoid:hasDressingAndLeavingAction() then

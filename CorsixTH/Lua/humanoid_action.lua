@@ -129,3 +129,5 @@ function HumanoidAction:afterLoad(old, new)
     if not self.state then self.state = 1 end
   end
 end
+
+return HumanoidAction
