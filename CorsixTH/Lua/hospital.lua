@@ -955,14 +955,6 @@ function Hospital:onEndDay()
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
 
-  -- Count receptionists.
-  self.receptionist_count = 0
-  for _, staff in ipairs(self.staff) do
-    if class.is(staff, Receptionist) then
-      self.receptionist_count = self.receptionist_count + 1
-    end
-  end
-
   self:_fixBoiler() -- Boiler always needs work (especially if broken).
 
   -- Do we have a disaster?
