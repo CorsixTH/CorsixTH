@@ -305,7 +305,7 @@ def format_reports(files: list[FileOverview]) -> str:
             lines.append(f"  Error at {line_str}: {r.message}")
 
     if total_reports == 0:
-        return "No issues found!"
+        return ["No issues found in class definitions!"]
 
     return ([
         '=' * 60,
