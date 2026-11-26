@@ -28,6 +28,8 @@ SOFTWARE.
 #include <SDL3/SDL.h>
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <stack>
 #include <stdexcept>
@@ -439,9 +441,20 @@ class render_target {
  private:
   friend class scoped_target_texture;
 
+  struct target_texture_entry {
+    SDL_Texture* texture{nullptr};
+    int width{0};
+    int height{0};
+    uint64_t last_used_frame{0};
+    bool in_use{false};
+  };
+
   double draw_scale() const;
 
-  void destroy_intermediate_textures();
+  SDL_Texture* acquire_target_texture(int width, int height);
+  void release_target_texture(SDL_Texture* texture);
+  void prune_target_texture_pool();
+  void destroy_target_texture_pool();
 
   SDL_Window* window{nullptr};
   SDL_Renderer* renderer{nullptr};
@@ -457,9 +470,11 @@ class render_target {
 
   std::stack<SDL_Rect> clip_rects;  ///< Stack of requested clip rects.
 
-  // Intermediate textures used in the production of the current frame.
-  // These are destroyed after the frame is presented.
-  std::vector<SDL_Texture*> intermediate_textures;
+  // Pool of target textures reused across frames to avoid per-frame
+  // creation/destruction churn in graphics drivers.
+  std::vector<target_texture_entry> target_texture_pool;
+  uint64_t frame_seq{0};
+  int max_texture_size{0};
 
   bool scale_bitmaps{false};  ///< Whether bitmaps should be scaled.
   bool supports_target_textures{};

@@ -39,6 +39,7 @@ SOFTWARE.
 #include <new>
 #include <stack>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "persist_lua.h"
@@ -60,6 +61,49 @@ constexpr int jelly_effect_period = 540;
 
 //! The number of game ticks the jelly effect is active for when it runs.
 constexpr int jelly_effect_duration = 90;
+
+// Cap pooled target textures to bound VRAM/driver memory while retaining
+// zoom buffers and concurrent intermediate UI targets across frames:
+// - 32 entries accommodates active intermediate targets plus recent window
+//   and zoom sizes.
+// - 128 MiB fits up to three bucketed 4K ABGR8888 targets (3840x2304 ~=
+//   33.75 MiB each) or eight 1440p targets (2560x1536 = 15 MiB each) with
+//   headroom for smaller intermediate UI buffers.
+// - 600 frames (~10s at 60 FPS) retains textures across brief UI or zoom
+//   transitions before reclaiming idle sizes.
+constexpr size_t max_target_pool_entries = 32;
+constexpr size_t max_target_pool_bytes = 128u * 1024u * 1024u;
+constexpr uint64_t target_pool_idle_ttl_frames = 600;
+// Limit best-fit reuse to at most 2x the bucketed pixel area so small
+// begin_intermediate_drawing() targets do not pin full-screen zoom buffers.
+constexpr size_t max_target_pool_oversize_factor = 2;
+
+std::pair<int, int> bucket_target_size(int width, int height,
+                                       int max_texture_size) {
+  auto align_up = [](int val, int align) {
+    return ((val + align - 1) / align) * align;
+  };
+  int cap_w = 0;
+  int cap_h = 0;
+  if (width <= 256 && height <= 256) {
+    cap_w = align_up(width, 64);
+    cap_h = align_up(height, 32);
+  } else {
+    cap_w = align_up(width, 512);
+    cap_h = align_up(height, 256);
+  }
+  if (max_texture_size > 0) {
+    cap_w = std::min(cap_w, max_texture_size);
+    cap_h = std::min(cap_h, max_texture_size);
+  }
+  return {cap_w, cap_h};
+}
+
+size_t texture_byte_size(int width, int height,
+                         const SDL_PixelFormatDetails* format) {
+  const size_t bpp = format ? static_cast<size_t>(format->bytes_per_pixel) : 4u;
+  return static_cast<size_t>(width) * static_cast<size_t>(height) * bpp;
+}
 
 //! Convert a colour to an equivalent grey scale level.
 /*!
@@ -438,18 +482,24 @@ render_target::scoped_target_texture::scoped_target_texture(
       scale(bScale) {
   if (!target->supports_target_textures) return;
 
-  texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
-                              SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  texture = target->acquire_target_texture(iWidth, iHeight);
+  if (!texture) return;
+
   if (!SDL_SetRenderTarget(target->renderer, texture)) {
     std::fprintf(stderr, "scoped_target_texture error: %s", SDL_GetError());
-    SDL_DestroyTexture(texture);
+    target->release_target_texture(texture);
     texture = nullptr;
     return;
   }
 
-  // Clear the new texture to transparent/black.
+  // Clear the entire backing texture (including any bucket padding) to
+  // transparent black, then restrict the viewport to the logical region.
+  SDL_SetRenderClipRect(target->renderer, nullptr);
+  SDL_SetRenderViewport(target->renderer, nullptr);
   SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
   SDL_RenderClear(target->renderer);
+  SDL_Rect viewport = {0, 0, iWidth, iHeight};
+  SDL_SetRenderViewport(target->renderer, &viewport);
   target->current_target = this;
 }
 
@@ -479,16 +529,18 @@ render_target::scoped_target_texture::~scoped_target_texture() {
   if (scale) {
     // If the target texture is already scaled, skip the global scale factor
     // by drawing directly.
-
-    if (!SDL_RenderTexture(target->renderer, texture, nullptr, &rect)) {
+    SDL_FRect src_rect = {0.0f, 0.0f, rect.w, rect.h};
+    if (!SDL_RenderTexture(target->renderer, texture, &src_rect, &rect)) {
       std::fprintf(stderr,
                    "scoped_target_texture destructor failed to render: %s",
                    SDL_GetError());
     }
   } else {
-    target->draw(texture, nullptr, &rect, 0);
+    SDL_Rect src_rect = {0, 0, static_cast<int>(rect.w),
+                         static_cast<int>(rect.h)};
+    target->draw(texture, &src_rect, &rect, 0);
   }
-  target->intermediate_textures.push_back(texture);
+  target->release_target_texture(texture);
 }
 
 render_target::render_target(const render_target_creation_params& params)
@@ -532,6 +584,14 @@ render_target::render_target(const render_target_creation_params& params)
     throw std::runtime_error(SDL_GetError());
   }
 
+  const Sint64 max_tex_prop =
+      SDL_GetNumberProperty(SDL_GetRendererProperties(renderer),
+                            SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
+  if (max_tex_prop > 0) {
+    max_texture_size = static_cast<int>(
+        std::min<Sint64>(max_tex_prop, std::numeric_limits<int>::max()));
+  }
+
   auto testTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                                        SDL_TEXTUREACCESS_TARGET, 16, 16);
   if (!testTexture) {
@@ -567,7 +627,7 @@ render_target::render_target(const render_target_creation_params& params)
 
 render_target::~render_target() {
   zoom_buffer.reset();
-  destroy_intermediate_textures();
+  destroy_target_texture_pool();
 
   if (renderer) {
     SDL_DestroyRenderer(renderer);
@@ -634,6 +694,11 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
   if (fScale <= 0.000) {
     return false;
+  } else if (0.999 <= fScale && fScale <= 1.001) {
+    if (eWhatToScale == scaled_items::all) {
+      global_scale_factor = 1.0;
+    }
+    return true;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
     if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
@@ -668,8 +733,6 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     // the scale to commit the zoom buffer back to the screen at.
     global_scale_factor = fScale;
     return true;
-  } else if (0.999 <= fScale && fScale <= 1.001) {
-    return true;
   } else if (eWhatToScale == scaled_items::bitmaps) {
     scale_bitmaps = true;
     bitmap_scale_factor = fScale;
@@ -690,8 +753,8 @@ const char* render_target::get_renderer_details() const {
 const char* render_target::get_last_error() { return SDL_GetError(); }
 
 bool render_target::start_frame() {
-  // Destroy any intermediate textures used last frame.
-  destroy_intermediate_textures();
+  ++frame_seq;
+  prune_target_texture_pool();
 
   fill_black();
   return true;
@@ -1057,11 +1120,120 @@ double render_target::draw_scale() const {
   return global_scale_factor;
 }
 
-void render_target::destroy_intermediate_textures() {
-  for (SDL_Texture* texture : intermediate_textures) {
-    SDL_DestroyTexture(texture);
+SDL_Texture* render_target::acquire_target_texture(int width, int height) {
+  if (!pixel_format || width <= 0 || height <= 0) return nullptr;
+
+  auto [cap_w, cap_h] = bucket_target_size(width, height, max_texture_size);
+  const size_t bucket_area =
+      static_cast<size_t>(cap_w) * static_cast<size_t>(cap_h);
+  const size_t max_reuse_area =
+      bucket_area <= std::numeric_limits<size_t>::max() /
+                         max_target_pool_oversize_factor
+          ? bucket_area * max_target_pool_oversize_factor
+          : std::numeric_limits<size_t>::max();
+
+  // Best-fit reuse: pick the smallest idle texture that fits the requested
+  // region within the oversize bound, avoiding cross-frame reuse of textures
+  // already used this frame and preventing tiny UI targets from pinning large
+  // zoom buffers.
+  target_texture_entry* best_entry = nullptr;
+  size_t best_area = std::numeric_limits<size_t>::max();
+  for (target_texture_entry& entry : target_texture_pool) {
+    if (entry.in_use || entry.last_used_frame >= frame_seq ||
+        entry.width < width || entry.height < height) {
+      continue;
+    }
+    const size_t entry_area =
+        static_cast<size_t>(entry.width) * static_cast<size_t>(entry.height);
+    if (entry_area <= max_reuse_area && entry_area < best_area) {
+      best_entry = &entry;
+      best_area = entry_area;
+    }
   }
-  intermediate_textures.clear();
+  if (best_entry) {
+    best_entry->in_use = true;
+    best_entry->last_used_frame = frame_seq;
+    return best_entry->texture;
+  }
+
+  // Pool miss: allocate a bucketed texture first.
+  int tex_w = std::max(cap_w, width);
+  int tex_h = std::max(cap_h, height);
+  SDL_Texture* texture = SDL_CreateTexture(
+      renderer, pixel_format->format, SDL_TEXTUREACCESS_TARGET, tex_w, tex_h);
+  if (!texture && (tex_w != width || tex_h != height)) {
+    // Fallback to exact dimensions if the bucketed allocation fails despite
+    // max-size clamping.
+    tex_w = width;
+    tex_h = height;
+    texture = SDL_CreateTexture(renderer, pixel_format->format,
+                                SDL_TEXTUREACCESS_TARGET, tex_w, tex_h);
+  }
+  if (!texture) return nullptr;
+
+  size_t total_bytes = texture_byte_size(tex_w, tex_h, pixel_format);
+  for (const target_texture_entry& entry : target_texture_pool) {
+    total_bytes += texture_byte_size(entry.width, entry.height, pixel_format);
+  }
+
+  while (target_texture_pool.size() >= max_target_pool_entries ||
+         total_bytes > max_target_pool_bytes) {
+    size_t lru_idx = target_texture_pool.size();
+    uint64_t oldest_frame = std::numeric_limits<uint64_t>::max();
+    for (size_t i = 0; i < target_texture_pool.size(); ++i) {
+      const target_texture_entry& entry = target_texture_pool[i];
+      if (!entry.in_use && entry.last_used_frame < frame_seq &&
+          entry.last_used_frame < oldest_frame) {
+        oldest_frame = entry.last_used_frame;
+        lru_idx = i;
+      }
+    }
+    if (lru_idx == target_texture_pool.size()) break;
+
+    total_bytes -=
+        texture_byte_size(target_texture_pool[lru_idx].width,
+                          target_texture_pool[lru_idx].height, pixel_format);
+    SDL_DestroyTexture(target_texture_pool[lru_idx].texture);
+    target_texture_pool[lru_idx] = target_texture_pool.back();
+    target_texture_pool.pop_back();
+  }
+
+  target_texture_pool.push_back({texture, tex_w, tex_h, frame_seq, true});
+  return texture;
+}
+
+void render_target::release_target_texture(SDL_Texture* texture) {
+  if (!texture) return;
+  for (target_texture_entry& entry : target_texture_pool) {
+    if (entry.texture == texture) {
+      entry.in_use = false;
+      entry.last_used_frame = frame_seq;
+      return;
+    }
+  }
+  SDL_DestroyTexture(texture);
+}
+
+void render_target::prune_target_texture_pool() {
+  size_t i = 0;
+  while (i < target_texture_pool.size()) {
+    const target_texture_entry& entry = target_texture_pool[i];
+    if (!entry.in_use &&
+        frame_seq - entry.last_used_frame > target_pool_idle_ttl_frames) {
+      SDL_DestroyTexture(entry.texture);
+      target_texture_pool[i] = target_texture_pool.back();
+      target_texture_pool.pop_back();
+    } else {
+      ++i;
+    }
+  }
+}
+
+void render_target::destroy_target_texture_pool() {
+  for (const target_texture_entry& entry : target_texture_pool) {
+    SDL_DestroyTexture(entry.texture);
+  }
+  target_texture_pool.clear();
 }
 
 raw_bitmap::~raw_bitmap() {

@@ -312,7 +312,7 @@ class freetype_font final : public font {
 
   static FT_Library freetype_library;
   static int freetype_init_count;
-  static constexpr int cache_size_log2{7};
+  static constexpr int cache_size_log2{10};
   FT_Face font_face{nullptr};
   argb_colour font_color{0};
   font_shadow_options shadow_opts{};
