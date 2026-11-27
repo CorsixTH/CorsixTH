@@ -3885,7 +3885,3 @@ multiplayer.everyone_failed = "所有玩家都没有完成最终目标。因此�
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
-
--- Compatibility aliases for renamed toggle_infected key
-cheats_window.cheats.toggle_infected = cheats_window.cheats.show_infected
-tooltip.cheats_window.cheats.toggle_infected = tooltip.cheats_window.cheats.show_infected
