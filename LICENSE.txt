@@ -132,6 +132,7 @@ Copyright (C) 2026 "arimu1"
 Copyright (C) 2026 Rj "UncleUncleRj" Simas
 Copyright (C) 2026 Bruno "BrunoGits" Lima
 Copyright (C) 2026 Flavio "Flavsditz" Diez
+Copyright (C) 2026 Frank "m1980Bayern"
 
 
 et al.
