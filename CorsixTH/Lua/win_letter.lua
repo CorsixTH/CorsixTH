@@ -29,7 +29,7 @@ local SDL = require("sdl")
 class "WinLetter"
 
 ---@class WinLetter
----@operator call: WinLetter
+---@overload fun(App, any, function?): WinLetter
 local WinLetter = _G["WinLetter"] ---@type WinLetter
 
 -- The letter's cross and tick (LETTR02V in the movie's palette: 1 tick,

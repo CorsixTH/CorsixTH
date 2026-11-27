@@ -24,9 +24,10 @@ local Window = _G['Window'] ---@type Window
 class "UIFullscreen" (Window)
 
 ---@class UIFullscreen: Window
----@operator call: UIFullscreen
+---@overload fun(UI): UIFullscreen
 local UIFullscreen = _G["UIFullscreen"] ---@type UIFullscreen
 
+---@param ui UI
 function UIFullscreen:UIFullscreen(ui)
   self:Window()
 

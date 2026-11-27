@@ -24,9 +24,11 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UICasebook" (UIFullscreen)
 
 ---@class UICasebook: UIFullscreen
----@operator call: UICasebook
+---@overload fun(UI, string): UICasebook
 local UICasebook = _G["UICasebook"] ---@type UICasebook
 
+---@param ui UI
+---@param disease_selection string
 function UICasebook:UICasebook(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
@@ -135,8 +137,8 @@ function UICasebook:updateDiseaseList()
   end
 end
 
---! Select a disease by name.
---!param disease (string) Name of the disease
+--- Select a disease by name.
+---@param disease (string) Name of the disease
 function UICasebook:selectDisease(disease)
   for i = 1, #self.names_sorted do
     if disease == self.names_sorted[i] then

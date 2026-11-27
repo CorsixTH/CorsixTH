@@ -79,9 +79,13 @@ litter_rank["soot_window"] = 99
 class "Litter" (Entity)
 
 ---@class Litter: Entity
----@operator call: Litter
+---@overload fun(Hospital, string, integer, integer): Litter
 local Litter = _G["Litter"] ---@type Litter
 
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
 function Litter:Litter(hospital, object_type, x, y)
   local th = TH.animation()
   self:Entity(th)

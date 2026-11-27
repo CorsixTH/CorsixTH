@@ -22,11 +22,12 @@ SOFTWARE. --]]
 class "Entity"
 
 ---@class Entity
----@operator call: Entity
+---@overload fun(THAnimation): Entity
 local Entity = _G["Entity"] ---@type Entity
 
 local TH = require("TH")
 
+---@param animation THAnimation Animation showing the entity.
 function Entity:Entity(animation)
   -- World of the entity, set by World:newEntity()
   self.world = nil

@@ -24,7 +24,7 @@ local Window = _G['Window'] ---@type Window
 class "TreeNode"
 
 ---@class TreeNode
----@operator call: TreeNode
+---@overload fun(): TreeNode
 local TreeNode = _G["TreeNode"] ---@type TreeNode
 
 function TreeNode:TreeNode()
@@ -188,11 +188,12 @@ end
 class "FileTreeNode" (TreeNode)
 
 ---@class FileTreeNode: TreeNode
----@operator call: FileTreeNode
+---@overload fun(string): FileTreeNode
 local FileTreeNode = _G["FileTreeNode"] ---@type FileTreeNode
 
 local pathsep = package.config:sub(1, 1)
 
+---@param path string
 function FileTreeNode:FileTreeNode(path)
   self:TreeNode()
   if path:sub(-1) == pathsep and path ~= pathsep then
@@ -453,12 +454,13 @@ end
 -- multiple root nodes.
 class "DummyRootNode" (TreeNode)
 
+---@alias TreeNodeArray TreeNode[]
+
 ---@class DummyRootNode: TreeNode
----@operator call: DummyRootNode
+---@overload fun(TreeNodeArray): DummyRootNode
 local DummyRootNode = _G["DummyRootNode"] ---@type DummyRootNode
 
---!param roots (array) An array of `TreeNode`s which should be displayed as
--- root nodes.
+---@param roots TreeNodeArray Nodes that should be displayed as root nodes.
 function DummyRootNode:DummyRootNode(roots)
   self:TreeNode()
   self.children = {}
@@ -488,21 +490,16 @@ end
 class "TreeControl" (Window) ---@type TreeControl
 
 ---@class TreeControl: Window
----@operator call: TreeControl
+---@overload fun(TreeNode, integer, integer, integer, integer, table, table): TreeControl
 local TreeControl = _G["TreeControl"] ---@type TreeControl
 
---!param root (TreeNode) The single root node of the tree (use a `DummyRootNode`
--- here if multiple root nodes are desired).
---!param x (integer) The X-position, in pixels, where the control should start
--- within its parent.
---!param y (integer) The Y-position, in pixels, where the control should start
--- within its parent.
---!param width (integer) The width, in pixels, of the control.
---!param height (integer) The height, in pixels, of the control.
---!param col_bg (table) The background colour of the control - this should be
--- a table with `red`, `green`, and `blue` fields, each an integer between 0
--- and 255.
---!param col_fg (table) The colour used for the scrollbar and highlighted items.
+---@param root (TreeNode) The single root node of the tree (use a `DummyRootNode` here if multiple root nodes are desired).
+---@param x (integer) The X-position, in pixels, where the control should start within its parent.
+---@param y (integer) The Y-position, in pixels, where the control should start within its parent.
+---@param width (integer) The width, in pixels, of the control.
+---@param height (integer) The height, in pixels, of the control.
+---@param col_bg (table) The background colour of the control - this should be a table with `red`, `green`, and `blue` fields, each an integer between 0 and 255.
+---@param col_fg (table) The colour used for the scrollbar and highlighted items.
 function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_offset, has_font)
   -- Setup the base window
   self:Window()

@@ -32,7 +32,7 @@ local ATTACH_BLUEPRINT_TO_TILE = false
 class "UIPlaceObjects" (Window)
 
 ---@class UIPlaceObjects: Window
----@operator call: UIPlaceObjects
+---@overload fun(UI, any, boolean): UIPlaceObjects
 local UIPlaceObjects = _G["UIPlaceObjects"] ---@type UIPlaceObjects
 
 --- Constructor for the class.
@@ -43,6 +43,7 @@ local UIPlaceObjects = _G["UIPlaceObjects"] ---@type UIPlaceObjects
 --- * `existing_object`: If not nil, an already existing object that is about to be moved.
 ---   In particular, if that object has a variable called `current_frame` then that frame
 ---   will be used when drawing the object as it is being moved.
+---  @param pay_for boolean
 function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:Window()
 

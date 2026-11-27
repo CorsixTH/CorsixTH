@@ -93,9 +93,15 @@ local days_unreachable = 10
 class "Plant" (Object)
 
 ---@class Plant: Object
----@operator call: Plant
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Plant
 local Plant = _G["Plant"] ---@type Plant
 
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
 function Plant:Plant(hospital, object_type, x, y, direction, etc)
   -- It doesn't matter which direction the plant is facing. It will be rotated so that an approaching
   -- handyman uses the correct usage animation when appropriate.

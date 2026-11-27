@@ -32,9 +32,12 @@ local Window = _G['Window'] ---@type Window
 class "UIPatient" (Window)
 
 ---@class UIPatient: Window
----@operator call: UIPatient
+---@overload fun(UI, Patient): UIPatient
 local UIPatient = _G["UIPatient"] ---@type UIPatient
 
+---Constructor of the UIPatient class.
+---@param ui UI
+---@param patient Patient
 function UIPatient:UIPatient(ui, patient)
   self:Window()
 

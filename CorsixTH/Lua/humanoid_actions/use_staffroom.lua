@@ -25,7 +25,7 @@ class "UseStaffRoomAction" (HumanoidAction)
 ---@class UseStaffRoomAction: HumanoidAction
 ---@field target_obj (Object?) Object being used in the staff room.
 ---@field next_target_obj (Object?) Next object to use in the staff room.
----@operator call: UseStaffRoomAction
+---@overload fun(): UseStaffRoomAction
 local UseStaffRoomAction = _G["UseStaffRoomAction"] ---@type UseStaffRoomAction
 
 function UseStaffRoomAction:UseStaffRoomAction()

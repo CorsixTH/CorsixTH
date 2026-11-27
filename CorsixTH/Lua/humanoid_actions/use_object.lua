@@ -30,7 +30,7 @@ class "UseObjectAction" (HumanoidAction)
 ---@field old_tile_x (integer) Temporary stored orginal position
 ---@field old_tile_y (integer) Temporary stored orginal position
 ---@field destroy_user_after_use (boolean) Destroy the entity after using the object.
----@operator call: UseObjectAction
+---@overload fun(Object): UseObjectAction
 local UseObjectAction = _G["UseObjectAction"] ---@type UseObjectAction
 
 --- Construct a 'use object' action.

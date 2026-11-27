@@ -47,11 +47,19 @@ room.call_sound = "reqd003.wav"
 class "PsychRoom" (Room)
 
 ---@class PsychRoom: Room
----@operator call: PsychRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): PsychRoom
 local PsychRoom = _G["PsychRoom"] ---@type PsychRoom
 
-function PsychRoom:PsychRoom(...)
-  self:Room(...)
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function PsychRoom:PsychRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function PsychRoom:roomFinished()

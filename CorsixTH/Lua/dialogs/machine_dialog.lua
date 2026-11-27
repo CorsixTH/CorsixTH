@@ -23,9 +23,12 @@ local Window = _G['Window'] ---@type Window
 class "UIMachine" (Window)
 
 ---@class UIMachine: Window
----@operator call: UIMachine
+---@overload fun(UI, Machine, Room): UIMachine
 local UIMachine = _G["UIMachine"] ---@type UIMachine
 
+---@param ui UI
+---@param machine Machine
+---@param room Room
 function UIMachine:UIMachine(ui, machine, room)
   self:Window()
 

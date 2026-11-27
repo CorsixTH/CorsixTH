@@ -55,6 +55,13 @@ local col = {
   textbox        = Colours.Textbox,
 }
 
+---Constructor of the UIResizable
+---@param ui UI
+---@param width integer
+---@param height integer
+---@param colour integer[]
+---@param no_borders boolean
+---@param background_bevel boolean
 function UIResizable:UIResizable(ui, width, height, colour, no_borders, background_bevel)
   self:Window()
 

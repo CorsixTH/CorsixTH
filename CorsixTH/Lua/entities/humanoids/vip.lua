@@ -60,12 +60,13 @@ local Humanoid = _G['Humanoid'] ---@type Humanoid
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)
 
----@class Vip: Humanoid
----@operator call: Vip
+---@class Vip: Humanoid Animation showing the VIP.
+---@overload fun(THAnimation): Vip
 local Vip = _G["Vip"] ---@type Vip
 
-function Vip:Vip(...)
-  self:Humanoid(...)
+---@param animation THAnimation 
+function Vip:Vip(animation)
+  self:Humanoid(animation)
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.action_string = ""
   self.name = ""

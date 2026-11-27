@@ -24,7 +24,7 @@ local Entity = _G['Entity'] ---@type Entity
 class "Humanoid" (Entity)
 
 ---@class Humanoid: Entity
----@operator call: Humanoid
+---@overload fun(THAnimation): Humanoid
 local Humanoid = _G["Humanoid"] ---@type Humanoid
 
 local walk_animations = permanent"humanoid_walk_animations"({})
@@ -338,9 +338,9 @@ moods("emergency",      3914,      50)
 moods("exit",           4052,      60)
 
 
---!param ... Arguments for base class constructor.
-function Humanoid:Humanoid(...)
-  self:Entity(...)
+---@param animation THAnimation Animation showing the humanoid.
+function Humanoid:Humanoid(animation)
+  self:Entity(animation)
   self.action_queue = {}
   self.last_move_direction = "east"
   self.attributes = {}

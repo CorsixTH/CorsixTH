@@ -24,9 +24,10 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIBankManager" (UIFullscreen)
 
 ---@class UIBankManager: UIFullscreen
----@operator call: UIBankManager
+---@overload fun(UI): UIBankManager
 local UIBankManager = _G["UIBankManager"] ---@type UIBankManager
 
+---@param ui UI
 function UIBankManager:UIBankManager(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

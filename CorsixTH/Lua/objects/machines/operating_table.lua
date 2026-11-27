@@ -123,15 +123,18 @@ object.orientations = {
 class "OperatingTable" (Machine)
 
 ---@class OperatingTable: Machine
----@operator call: OperatingTable
+---@overload fun(): OperatingTable
 local OperatingTable = _G["OperatingTable"] ---@type OperatingTable
 
 OperatingTable:slaveMixinClass()
 
-function OperatingTable:machineUsed(...)
+---@param room (Room) machine room
+---@param earthquake_activated (boolean) If true, machine was damaged by an active earthquake
+---@return (boolean) is room exploding after this use
+function OperatingTable:machineUsed(room, earthquake_activated)
   -- Only if the table is the primary/master of the pair
   if not self.master then
-    return Machine.machineUsed(self, ...)
+    return Machine.machineUsed(self, room, earthquake_activated)
   end
 end
 

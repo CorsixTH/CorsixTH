@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "QueueAction" (HumanoidAction)
 
 ---@class QueueAction: HumanoidAction
----@operator call: QueueAction
+---@overload fun(integer, integer, Queue): QueueAction
 local QueueAction = _G["QueueAction"] ---@type QueueAction
 
 --- Queue for something (door or reception desk).

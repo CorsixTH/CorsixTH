@@ -24,7 +24,7 @@ local Window = _G['Window'] ---@type Window
 class "Subtitles" (Window)
 
 ---@class Subtitles: Window
----@operator call: Subtitles
+---@overload fun(): Subtitles
 local Subtitles = _G["Subtitles"] ---@type Subtitles
 
 --! Subtitles constructor
@@ -90,7 +90,7 @@ end
 class "SubtitleQueue"
 
 ---@class SubtitleQueue
----@operator call: SubtitleQueue
+---@overload fun(): SubtitleQueue
 local SubtitleQueue = _G["SubtitleQueue"] ---@type SubtitleQueue
 
 --! SubtitleQueue constructor

@@ -25,9 +25,10 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIStaffManagement" (UIFullscreen)
 
 ---@class UIStaffManagement: UIFullscreen
----@operator call: UIStaffManagement
+---@overload fun(UI): UIStaffManagement
 local UIStaffManagement = _G["UIStaffManagement"] ---@type UIStaffManagement
 
+---@param ui UI
 function UIStaffManagement:UIStaffManagement(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

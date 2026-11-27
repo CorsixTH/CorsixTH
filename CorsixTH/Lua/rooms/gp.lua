@@ -46,11 +46,11 @@ room.call_sound = "reqd008.wav"
 class "GPRoom" (Room)
 
 ---@class GPRoom: Room
----@operator call: GPRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): GPRoom
 local GPRoom = _G["GPRoom"] ---@type GPRoom
 
-function GPRoom:GPRoom(...)
-  self:Room(...)
+function GPRoom:GPRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function GPRoom:doStaffUseCycle(humanoid)

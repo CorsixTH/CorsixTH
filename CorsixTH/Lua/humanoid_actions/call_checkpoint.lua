@@ -22,10 +22,14 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 
 class "CallCheckPointAction" (HumanoidAction)
 
+---@alias CallType { ["key"]: string}
+
 ---@class CallCheckPointAction: HumanoidAction
----@operator call: CallCheckPointAction
+---@overload fun(CallType, function): CallCheckPointAction
 local CallCheckPointAction = _G["CallCheckPointAction"] ---@type CallCheckPointAction
 
+---@param call CallType
+---@param on_remove function
 function CallCheckPointAction:CallCheckPointAction(call, on_remove)
   assert(call == nil or
       (type(call) == "table" and type(call.key) == "string"),

@@ -29,7 +29,7 @@ class "WalkAction" (HumanoidAction)
 ---@field x (integer) X coordinate of the destination tile.
 ---@field y (integer) Y coordinate of the destination tile.
 ---@field trimmed (boolean?) Optional parameter to finish action on re-route
----@operator call: WalkAction
+---@overload fun(integer, integer, boolean): WalkAction
 local WalkAction = _G["WalkAction"] ---@type WalkAction
 
 --- Action to walk to a given position.

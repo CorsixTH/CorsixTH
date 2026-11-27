@@ -24,9 +24,10 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIProgressReport" (UIFullscreen)
 
 ---@class UIProgressReport: UIFullscreen
----@operator call: UIProgressReport
+---@overload fun(UI): UIProgressReport
 local UIProgressReport = _G["UIProgressReport"] ---@type UIProgressReport
 
+---@param ui UI
 function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)
 

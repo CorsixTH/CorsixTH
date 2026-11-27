@@ -47,11 +47,21 @@ room.handyman_call_sound = "maint013.wav"
 class "InflationRoom" (Room)
 
 ---@class InflationRoom: Room
----@operator call: InflationRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): InflationRoom
 local InflationRoom = _G["InflationRoom"] ---@type InflationRoom
 
-function InflationRoom:InflationRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function InflationRoom:InflationRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function InflationRoom:commandEnteringPatient(patient)

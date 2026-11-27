@@ -24,7 +24,7 @@ class "StaffReceptionAction" (HumanoidAction)
 
 ---@class StaffReceptionAction: HumanoidAction
 ---@field object (ReceptionDesk) The desk to staff.
----@operator call: StaffReceptionAction
+---@overload fun(ReceptionDesk): StaffReceptionAction
 local StaffReceptionAction = _G["StaffReceptionAction"] ---@type StaffReceptionAction
 
 -- Action class for the "staff reception desk" action.

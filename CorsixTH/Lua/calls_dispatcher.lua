@@ -30,6 +30,7 @@ local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
 
 local debug_enabled = false -- Turn on for debug message
 
+---@param world World
 function CallsDispatcher:CallsDispatcher(world)
   self.world = world
   self.call_queue = {}

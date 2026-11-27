@@ -29,7 +29,7 @@ local pathsep = package.config:sub(1, 1)
 class "Graphics"
 
 ---@class Graphics
----@operator call: Graphics
+---@overload fun(App, any, any): Graphics
 local Graphics = _G["Graphics"] ---@type Graphics
 
 local cursor_data = {
@@ -67,6 +67,10 @@ local charsets = {
   ["mik"] = 2
 }
 
+---Constructor of the Graphics class.
+---@param app App
+---@param gfx_set any
+---@param charset any
 function Graphics:Graphics(app, gfx_set, charset)
   self.app = app
   self.target = self.app.video
@@ -979,7 +983,7 @@ end
 class "AnimationManager"
 
 ---@class AnimationManager
----@operator call: AnimationManager
+---@overload fun(any): AnimationManager
 local AnimationManager = _G["AnimationManager"] ---@type AnimationManager
 
 function AnimationManager:AnimationManager(anims)

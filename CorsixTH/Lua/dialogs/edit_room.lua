@@ -25,9 +25,11 @@ local UIPlaceObjects = _G['UIPlaceObjects'] ---@type UIPlaceObjects
 class "UIEditRoom" (UIPlaceObjects)
 
 ---@class UIEditRoom: UIPlaceObjects
----@operator call: UIEditRoom
+---@overload fun(UI, any): UIEditRoom
 local UIEditRoom = _G["UIEditRoom"] ---@type UIEditRoom
 
+---@param ui UI
+---@param room_type any
 function UIEditRoom:UIEditRoom(ui, room_type)
 
   -- NB: UIEditRoom:onCursorWorldPositionChange is called by the UIPlaceObjects

@@ -24,9 +24,20 @@ local Window = _G['Window'] ---@type Window
 class "UIMessage" (Window)
 
 ---@class UIMessage: Window
----@operator call: UIMessage
+---@overload fun(UI, integer, integer, function, any, string, any, any, any, function): UIMessage
 local UIMessage = _G["UIMessage"] ---@type UIMessage
 
+---Constructor of the UIMessage class.
+---@param ui UI
+---@param x integer
+---@param stop_x integer
+---@param onClose function
+---@param type any
+---@param message string
+---@param owner any
+---@param timeout any
+---@param default_choice any
+---@param callback function
 function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice, callback)
   self:Window()
 

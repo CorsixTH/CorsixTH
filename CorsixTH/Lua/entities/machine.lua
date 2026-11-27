@@ -26,9 +26,15 @@ local Object = _G['Object'] ---@type Object
 class "Machine" (Object)
 
 ---@class Machine: Object
----@operator call: Machine
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Machine
 local Machine = _G["Machine"] ---@type Machine
 
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
 function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self:Object(hospital, object_type, x, y, direction, etc)
   self.mood_marker = 1 -- Machine reuses the patient marker.
@@ -127,10 +133,10 @@ function Machine:earthquakeImpact(room)
   self:machineUsed(room, true)
 end
 
---! Call on machine use.
---!param room (object) machine room
---!param earthquake_activated (boolean) If true, machine was damaged by an active earthquake
---!return (bool) is room exploding after this use
+--- Call on machine use.
+---@param room (Room) machine room
+---@param earthquake_activated (boolean) If true, machine was damaged by an active earthquake
+---@return (boolean) is room exploding after this use
 function Machine:machineUsed(room, earthquake_activated)
   earthquake_activated = not not earthquake_activated
   -- Do nothing if the room has already crashed

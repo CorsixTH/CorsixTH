@@ -23,9 +23,13 @@ local Hospital = _G['Hospital'] ---@type Hospital
 class "AIHospital" (Hospital)
 
 ---@class AIHospital: Hospital
----@operator call: AIHospital
+---@overload fun(string, World, any, string): AIHospital
 local AIHospital = _G["AIHospital"] ---@type AIHospital
 
+---@param competitor string One of the pre-defined computer opponents.
+---@param world World
+---@param avail_rooms any
+---@param name string User name.
 function AIHospital:AIHospital(competitor, world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
   if name then

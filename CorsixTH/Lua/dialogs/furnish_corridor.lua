@@ -28,9 +28,12 @@ local Window = _G['Window'] ---@type Window
 class "UIFurnishCorridor" (Window)
 
 ---@class UIFurnishCorridor: Window
----@operator call: UIFurnishCorridor
+---@overload fun(UI, any, Window): UIFurnishCorridor
 local UIFurnishCorridor = _G["UIFurnishCorridor"] ---@type UIFurnishCorridor
 
+---@param ui UI
+---@param objects Object[]
+---@param edit_dialog Window
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
 

@@ -42,9 +42,13 @@ object.orientations = {
 class "Helicopter" (Object)
 
 ---@class Helicopter: Object
----@operator call: Helicopter
+---@overload fun(Hospital, string, any, EtcType): Helicopter
 local Helicopter = _G["Helicopter"] ---@type Helicopter
 
+---@param hospital Hospital
+---@param object_type string
+---@param direction any
+---@param etc EtcType
 function Helicopter:Helicopter(hospital, object_type, direction, etc)
   local x, y = hospital:getHeliportPosition()
   -- Helicopter needs to land below tile to be positioned correctly

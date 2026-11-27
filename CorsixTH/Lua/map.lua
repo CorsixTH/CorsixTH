@@ -22,13 +22,14 @@ SOFTWARE. --]]
 class "Map"
 
 ---@class Map
----@operator call: Map
+---@overload fun(App): Map
 local Map = _G["Map"] ---@type Map
 
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
 local thMap = require("TH").map
 
+---@param app App
 function Map:Map(app)
   self.width = false
   self.height = false

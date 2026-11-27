@@ -25,7 +25,7 @@ local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPrio
 class "Epidemic"
 
 ---@class Epidemic
----@operator call: Epidemic
+---@overload fun(Hospital, Patient): Epidemic
 local Epidemic = _G["Epidemic"] ---@type Epidemic
 
 --- Manages the epidemics that occur in hospitals. Generally, any epidemic

@@ -24,7 +24,7 @@ cth_require("persistance")
 class "Window"
 
 ---@class Window
----@operator call: Window
+---@overload fun(): Window
 local Window = _G["Window"] ---@type Window
 
 -- NB: pressed mouse buttons are denoted with a "mouse_" prefix in buttons_down,
@@ -170,7 +170,7 @@ end
 class "Panel"
 
 ---@class Panel
----@operator call: Panel
+---@overload fun(): Panel
 local Panel = _G["Panel"] ---@type Panel
 
 -- !dummy
@@ -597,7 +597,7 @@ end
 class "Button"
 
 ---@class Button
----@operator call: Button
+---@overload fun(): Button
 local Button = _G["Button"] ---@type Button
 
 --!dummy
@@ -834,7 +834,7 @@ end
 class "Scrollbar"
 
 ---@class Scrollbar
----@operator call: Scrollbar
+---@overload fun(): Scrollbar
 local Scrollbar = _G["Scrollbar"] ---@type Scrollbar
 
 --!dummy
@@ -944,7 +944,7 @@ end
 class "Textbox"
 
 ---@class Textbox
----@operator call: Textbox
+---@overload fun(): Textbox
 local Textbox = _G["Textbox"] ---@type Textbox
 
 --!dummy
@@ -1344,7 +1344,7 @@ end
 class "HotkeyBox"
 
 ---@class HotkeyBox
----@operator call: HotkeyBox
+---@overload fun(): HotkeyBox
 local HotkeyBox = _G["HotkeyBox"] ---@type HotkeyBox
 
 --!dummy

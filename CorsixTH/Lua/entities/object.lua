@@ -25,10 +25,12 @@ local Entity = _G['Entity'] ---@type Entity
 --! An `Entity` which occupies at least a single map tile and does not move.
 class "Object" (Entity)
 
+---@alias EtcType "map object"?
+
 ---@class Object: Entity
 ---@field reserved_for (Humanoid?) Humanoid that has claimed the object.
 ---@field permanent_flags (integer) Permanent drawing flags of the object.
----@operator call: Object
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Object
 local Object = _G["Object"] ---@type Object
 
 local orient_mirror = {
@@ -38,6 +40,13 @@ local orient_mirror = {
   south = "east",
 }
 
+---Constructor of the Object class.
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
 function Object:Object(hospital, object_type, x, y, direction, etc)
   assert(class.is(hospital, Hospital), "First argument is not a Hospital instance.")
 
@@ -1086,11 +1095,17 @@ end
 class "SideObject" (Object)
 
 ---@class SideObject: Object
----@operator call: SideObject
+---@overload fun(Hospital, string, integer, integer, any, EtcType): SideObject
 local SideObject = _G["SideObject"] ---@type SideObject
 
-function SideObject:SideObject(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function SideObject:SideObject(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 end
 
 function SideObject:getDrawingLayer()

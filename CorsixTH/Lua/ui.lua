@@ -26,7 +26,7 @@ local Window = _G['Window'] ---@type Window
 class "UI" (Window)
 
 ---@class UI: Window
----@operator call: UI
+---@overload fun(App, boolean): UI
 local UI = _G["UI"] ---@type UI
 
 local TH = require("TH")
@@ -138,6 +138,9 @@ end
 
 local LOADED_DIALOGS = false
 
+---Constructor of the UI class.
+---@param app App
+---@param minimal boolean
 function UI:UI(app, minimal)
   self:Window()
   self:initKeyAndButtonCodes()

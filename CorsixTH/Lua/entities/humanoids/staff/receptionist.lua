@@ -28,12 +28,12 @@ local Staff = _G['Staff'] ---@type Staff
 class "Receptionist" (Staff)
 
 ---@class Receptionist: Staff
----@operator call: Receptionist
+---@overload fun(THAnimation): Receptionist
 local Receptionist = _G["Receptionist"] ---@type Receptionist
 
---!param ... Arguments to base class constructor.
-function Receptionist:Receptionist(...)
-  self:Staff(...)
+---@param animation THAnimation Animation showing the receptionist.
+function Receptionist:Receptionist(animation)
+  self:Staff(animation)
   self.leave_sounds = {"sack007.wav", "sack008.wav"}
   self.leave_priority = AnnouncementPriority.Critical -- must always be played even without receptionist
 end

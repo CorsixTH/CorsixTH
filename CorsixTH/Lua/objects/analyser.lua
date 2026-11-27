@@ -61,11 +61,17 @@ object.orientations = {
 class "AtomAnalyser" (Object)
 
 ---@class AtomAnalyser: Object
----@operator call: AtomAnalyser
+---@overload fun(Hospital, string, integer, integer, any, any): AtomAnalyser
 local AtomAnalyser = _G["AtomAnalyser"] ---@type AtomAnalyser
 
-function AtomAnalyser:AtomAnalyser(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc "map object"?
+function AtomAnalyser:AtomAnalyser(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 end
 
 function AtomAnalyser:getDrawingLayer()

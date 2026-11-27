@@ -30,9 +30,10 @@ local ipairs
 class "Audio"
 
 ---@class Audio
----@operator call: Audio
+---@overload fun(App): Audio
 local Audio = _G["Audio"] ---@type Audio
 
+---@param app App
 function Audio:Audio(app)
   self.app = app
 

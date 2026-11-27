@@ -24,9 +24,10 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIPolicy" (UIFullscreen)
 
 ---@class UIPolicy: UIFullscreen
----@operator call: UIPolicy
+---@overload fun(UI): UIPolicy
 local UIPolicy = _G["UIPolicy"] ---@type UIPolicy
 
+---@param ui UI
 function UIPolicy:UIPolicy(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

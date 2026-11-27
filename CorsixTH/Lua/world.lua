@@ -49,9 +49,12 @@ class "World"
 ---@class World
 ---@field app App The application.
 ---@field free_build_mode boolean Whether the level is played without money.
----@operator call: World
+---@overload fun(App, boolean): World
 local World = _G["World"] ---@type World
 
+---Constructor of the World class.
+---@param app App
+---@param free_build_mode boolean Whether money is not relevant in the game.
 function World:World(app, free_build_mode)
   local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
   local EntityMap = _G["EntityMap"] ---@type EntityMap

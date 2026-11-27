@@ -22,7 +22,7 @@ SOFTWARE. --]]
 class "Earthquake"
 
 ---@class Earthquake
----@operator call: Earthquake
+---@overload fun(World, boolean): Earthquake
 local Earthquake = _G["Earthquake"] ---@type Earthquake
 
 --[[
@@ -40,9 +40,9 @@ All fields relating to the current or next earthquake:
   disabled (boolean) If earthquakes have been disabled by the cheat menu
 --]]
 
-local damage_time = 16 -- Hours between each damage caused by an earthquake
-local warning_period = 600 -- Hours between warning and main quakes
-local warning_length = 25 -- Length of early warning quake
+local damage_time = 16 --- Hours between each damage caused by an earthquake
+local warning_period = 600 --- Hours between warning and main quakes
+local warning_length = 25 --- Length of early warning quake
 
 local month_length = {
   31, -- Jan
@@ -60,8 +60,8 @@ local month_length = {
 }
 
 --! Track earthquakes in the world
---!param world (table) Owned by this world
---!param convert (boolean) If true, world is upgraded from before this Earthquake class
+---@param world (World) Owned by this world
+---@param convert (boolean) If true, world is upgraded from before this Earthquake class
 function Earthquake:Earthquake(world, convert)
   self.world = world
   if not convert then

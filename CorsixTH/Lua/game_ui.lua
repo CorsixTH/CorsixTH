@@ -27,7 +27,7 @@ local UI = _G['UI'] ---@type UI
 class "GameUI" (UI)
 
 ---@class GameUI: UI
----@operator call: GameUI
+---@overload fun(App, Hospital, boolean): GameUI
 local GameUI = _G["GameUI"] ---@type GameUI
 
 local TH = require("TH")
@@ -46,10 +46,10 @@ local shake_screen_max_movement = 50 --pixels
 -- This scroll speed is further adjusted by the configured scroll_speed
 local key_scroll_speed = 10
 
---! Game UI constructor.
---!param app (Application) Application object.
---!param local_hospital Hospital to display
---!param map_editor (bool) Whether the map is editable.
+--- Game UI constructor.
+---@param app (App) Application object.
+---@param local_hospital Hospital to display
+---@param map_editor (boolean) Whether the map is editable.
 function GameUI:GameUI(app, local_hospital, map_editor)
   self:UI(app, false)
   self.app = app

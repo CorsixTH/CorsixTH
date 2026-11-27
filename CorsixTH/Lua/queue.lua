@@ -31,7 +31,7 @@ SOFTWARE. --]]
 class "Queue"
 
 ---@class Queue
----@operator call: Queue
+---@overload fun(): Queue
 local Queue = _G["Queue"] ---@type Queue
 
 --! Constructor of a queue.

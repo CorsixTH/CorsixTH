@@ -26,7 +26,7 @@ class "PickupAction" (HumanoidAction)
 ---@field ui (UI) the user interface.
 ---@field window (UIPlaceStaff?) Window instance for placing the staff member.
 ---@field todo_close (Window?) Object to close afterwards.
----@operator call: PickupAction
+---@overload fun(UI): PickupAction
 local PickupAction = _G["PickupAction"] ---@type PickupAction
 
 --- Construct a pick-up action

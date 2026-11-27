@@ -45,7 +45,7 @@ local default_announcement_decay_hours = {
 class "AnnouncementQueue"
 
 ---@class AnnouncementQueue
----@operator call: AnnouncementQueue
+---@overload fun(): AnnouncementQueue
 local AnnouncementQueue = _G["AnnouncementQueue"] ---@type AnnouncementQueue
 
 --! Creates an announcement queue: a collection of announcements with queue semantics.
@@ -108,7 +108,7 @@ end
 class "AnnouncementEntry"
 
 ---@class AnnouncementEntry
----@operator call: AnnouncementEntry
+---@overload fun(): AnnouncementEntry
 local AnnouncementEntry = _G["AnnouncementEntry"] ---@type AnnouncementEntry
 
 --! Creates an announcement
@@ -129,11 +129,11 @@ end
 class "Announcer"
 
 ---@class Announcer
----@operator call: Announcer
+---@overload fun(App): Announcer
 local Announcer = _G["Announcer"] ---@type Announcer
 
---! Constructor.
---!param app (App) The CorsixTH app
+--- Constructor.
+---@param app (App) The CorsixTH app
 function Announcer:Announcer(app)
   self.app = app
   self.entries = AnnouncementQueue()
@@ -143,13 +143,12 @@ function Announcer:Announcer(app)
   self:_setRandomAnnouncementTarget()
 end
 
---! Requests the announcer to play an announcement.
---!param name (string) The filename to play.
---!param priority (int | nil) The priority of the announcement. See AnnouncementPriority.
---!param decay_hours (float | nil) After this amount of hours the announcement should be considered irrelevant.
--- Provide nil for a decay time based on the provided priority.
---!param played_callback (function | nil) The callback to trigger when the announcement was successfully played.
---!param played_callback_delay (int | nil) Delay the callback with this amount of milliseconds.
+--- Requests the announcer to play an announcement.
+---@param name (string) The filename to play.
+---@param priority (integer | nil) The priority of the announcement. See AnnouncementPriority.
+---@param decay_hours (number | nil) After this amount of hours the announcement should be considered irrelevant. Provide nil for a decay time based on the provided priority.
+---@param played_callback (function | nil) The callback to trigger when the announcement was successfully played.
+---@param played_callback_delay (integer | nil) Delay the callback with this amount of milliseconds.
 function Announcer:playAnnouncement(name, priority, decay_hours, played_callback, played_callback_delay)
   -- Announcements use the in-game time instead of ticks.
   -- For example, if an employee is sacked, the announcement should

@@ -26,9 +26,10 @@ local Window = _G['Window'] ---@type Window
 class "UIAdviser" (Window)
 
 ---@class UIAdviser: Window
----@operator call: UIAdviser
+---@overload fun(UI): UIAdviser
 local UIAdviser = _G["UIAdviser"] ---@type UIAdviser
 
+---@param ui UI
 function UIAdviser:UIAdviser(ui)
   self:Window()
 

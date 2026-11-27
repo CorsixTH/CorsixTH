@@ -55,11 +55,17 @@ object.orientations = {
 class "Rathole" (Object)
 
 ---@class Rathole: Object
----@operator call: Rathole
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Rathole
 local Rathole = _G["Rathole"] ---@type Rathole
 
-function Rathole:Rathole(hospital, oject_type, x, y, direction, etc)
-  self:Object(hospital, oject_type, x, y, direction, etc)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function Rathole:Rathole(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 end
 
 function Rathole:getDrawingLayer()

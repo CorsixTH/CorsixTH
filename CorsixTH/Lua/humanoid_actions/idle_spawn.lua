@@ -23,9 +23,11 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "IdleSpawnAction" (HumanoidAction)
 
 ---@class IdleSpawnAction: HumanoidAction
----@operator call: IdleSpawnAction
+---@overload fun(integer, SpawnPoint): IdleSpawnAction
 local IdleSpawnAction = _G["IdleSpawnAction"] ---@type IdleSpawnAction
 
+---@param anim integer
+---@param point_dir SpawnPoint
 function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
   assert(type(anim) == "number", "Invalid value for parameter 'anim'")
   assert(type(point_dir) == "table" and

@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "AnswerCallAction" (HumanoidAction)
 
 ---@class AnswerCallAction: HumanoidAction
----@operator call: AnswerCallAction
+---@overload fun(): AnswerCallAction
 local AnswerCallAction = _G["AnswerCallAction"] ---@type AnswerCallAction
 
 function AnswerCallAction:AnswerCallAction()

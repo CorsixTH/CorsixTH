@@ -29,7 +29,7 @@ SOFTWARE. --]]
 class "Date"
 
 ---@class Date
----@operator call: Date
+---@overload fun(integer, integer, integer, integer): Date
 local Date = _G["Date"] ---@type Date
 
 local month_length = {
@@ -74,19 +74,14 @@ end
 
 -- PUBLIC
 
---[[ Date constructor
 
-! Date is initialized by setting year, month day and hour in this order
-the default day is 1-01-01T00 - if any of the components isn't set the
-default value is used.
-
-!param year (number) year of the new date
-!param month (number) month of the new date
-!param day (number) day of the new date
-!param hour (number) hour of the new date
-
-!return (Date) created object.
-]]
+--- Date is initialized by setting year, month day and hour in this order
+--- the default day is 1-01-01T00 - if any of the components isn't set the
+--- default value is used.
+---@param year (integer) year of the new date
+---@param month (integer) month of the new date
+---@param day (integer) day of the new date
+---@param hour (integer) hour of the new date
 function Date:Date(year, month, day, hour)
   self._year = year or 1
   self._month = month or 1
@@ -95,13 +90,9 @@ function Date:Date(year, month, day, hour)
   self:_adjustOverflow()
 end
 
---[[ Returns the last day of the current month
-
-! This method finds the correct last day for current month of self. This number
-is also the number of days within a month. Ignores leap years.
-
-!return (number)
-]]
+--- This method finds the correct last day for current month of self. This number
+--- is also the number of days within a month. Ignores leap years.
+---@return integer
 function Date:lastDayOfMonth()
   return month_length[self._month]
 end

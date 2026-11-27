@@ -24,7 +24,7 @@ class "MultiUseObjectAction" (HumanoidAction)
 
 ---@class MultiUseObjectAction: HumanoidAction
 ---@field mirror_flags integer Animation flags.
----@operator call: MultiUseObjectAction
+---@overload fun(Object, Humanoid): MultiUseObjectAction
 local MultiUseObjectAction = _G["MultiUseObjectAction"] ---@type MultiUseObjectAction
 
 --- Construct a multi-use object action.

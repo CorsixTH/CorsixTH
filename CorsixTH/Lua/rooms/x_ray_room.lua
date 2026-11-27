@@ -47,11 +47,21 @@ room.handyman_call_sound = "maint005.wav"
 class "XRayRoom" (Room)
 
 ---@class XRayRoom: Room
----@operator call: XRayRoom
+---@overload fun(integer, integer, integer, integer, string, any, World, Object, Object?): XRayRoom
 local XRayRoom = _G["XRayRoom"] ---@type XRayRoom
 
-function XRayRoom:XRayRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id string ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function XRayRoom:XRayRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function XRayRoom:commandEnteringPatient(patient)

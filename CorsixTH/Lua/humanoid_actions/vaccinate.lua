@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "VaccinateAction" (HumanoidAction)
 
 ---@class VaccinateAction: HumanoidAction
----@operator call: VaccinateAction
+---@overload fun(Patient, integer): VaccinateAction
 local VaccinateAction = _G["VaccinateAction"] ---@type VaccinateAction
 
 -- Vaccinate action constructor for a nurse.

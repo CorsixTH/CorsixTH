@@ -158,11 +158,17 @@ object.orientations = {
 class "Chair" (Object)
 
 ---@class Chair: Object
----@operator call: Chair
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Chair
 local Chair = _G["Chair"] ---@type Chair
 
-function Chair:Chair(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function Chair:Chair(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 end
 
 --! This function is automatically called after loading a game and serves for compatibility.

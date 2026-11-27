@@ -25,14 +25,14 @@ local Window = _G['Window'] ---@type Window
 class "UIWatch" (Window)
 
 ---@class UIWatch: Window
----@operator call: UIWatch
+---@overload fun(UI, string): UIWatch
 local UIWatch = _G["UIWatch"] ---@type UIWatch
 
 local TICK_DAYS = 100
 local TICK_DAYS_EMERGENCY = 52
 local TIMER_SEGMENTS = 13
 
---!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
+---@param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
 function UIWatch:UIWatch(ui, count_type)
   self:Window()
 

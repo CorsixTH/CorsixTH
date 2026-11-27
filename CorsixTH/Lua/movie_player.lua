@@ -29,7 +29,7 @@ local WinLetter = _G["WinLetter"] ---@type WinLetter
 class "MoviePlayer"
 
 ---@class MoviePlayer
----@operator call: MoviePlayer
+---@overload fun(App, any, any): MoviePlayer
 local MoviePlayer = _G["MoviePlayer"] ---@type MoviePlayer
 
 --! Calculate the position and size for a movie
@@ -162,6 +162,9 @@ end
 -- many milliseconds before the end of the movie.
 local LETTER_SHOWS_MS = 250
 
+---@param app App
+---@param audio Audio
+---@param video any
 function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio

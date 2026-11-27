@@ -22,16 +22,19 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 
 class "SpawnAction" (HumanoidAction)
 
+---@alias SpawnMode "spawn" | "despawn" Mode of spawning
+---@alias SpawnPoint {x: integer, y: integer, direction: string?} Position and optional face direction of spawning or despawning.
+
 ---@class SpawnAction: HumanoidAction
----@field mode ("spawn" | "despawn") Mode of spawning
----@field point ({x: integer, y: integer, direction: string?}) Position and optional face direction of spawning or despawning.
----@field offset ({x: integer, y: integer}?) Optional offset.
----@operator call: SpawnAction
+---@field mode SpawnMode Mode of spawning
+---@field point SpawnPoint Position and optional face direction of spawning or despawning.
+---@field offset {x: integer, y: integer}? Optional offset relative to the spawn point position.
+---@overload fun(SpawnMode, SpawnPoint): SpawnAction
 local SpawnAction = _G["SpawnAction"] ---@type SpawnAction
 
 --- Spawn an entity.
---- @param mode (string) Mode of spawning: "spawn" or "despawn"
---- @param point ({x: integer, y: integer, direction: string?}) Position and optional face direction of spawning or despawning.
+--- @param mode SpawnMode Mode of spawning: "spawn" or "despawn"
+--- @param point SpawnPoint Position and optional face direction of spawning or despawning.
 function SpawnAction:SpawnAction(mode, point)
   assert(mode == "spawn" or mode == "despawn", "Invalid value for parameter 'mode'")
   assert(type(point) == "table" and
@@ -51,7 +54,7 @@ end
 --- y values are 2, and should not be set less than or equal to 0. Only one of
 --- x or y offsets are used depending on the initial walk direction of the
 --- newly spawned humanoid.
---- @param offset ({x: integer, y: integer}?) Optional position offset.
+--- @param offset {x: integer, y: integer} Position offset.
 --- @return (SpawnAction) # Return self for daisy chaining.
 function SpawnAction:setOffset(offset)
   assert(type(offset) == "table" and

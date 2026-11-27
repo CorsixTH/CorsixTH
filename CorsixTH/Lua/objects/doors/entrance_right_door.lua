@@ -36,9 +36,15 @@ object.supports_creation_for_map = true
 class "EntranceDoor" (Object)
 
 ---@class EntranceDoor: Object
----@operator call: EntranceDoor
+---@overload fun(Hospital, string, integer, integer, any, EtcType): EntranceDoor
 local EntranceDoor = _G["EntranceDoor"] ---@type EntranceDoor
 
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
 function EntranceDoor:EntranceDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Object(hospital, object_type, x, y, direction, etc)

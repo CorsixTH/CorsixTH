@@ -22,7 +22,7 @@ SOFTWARE. --]]
 class "HumanoidAction"
 
 ---@class HumanoidAction
----@operator call: HumanoidAction
+---@overload fun(string): HumanoidAction
 local HumanoidAction = _G["HumanoidAction"] ---@type HumanoidAction
 
 --- Construct a humanoid action (base class constructor).

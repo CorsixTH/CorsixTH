@@ -27,9 +27,14 @@ local Window = _G['Window'] ---@type Window
 class "UIPlaceStaff" (Window)
 
 ---@class UIPlaceStaff: Window
----@operator call: UIPlaceStaff
+---@overload fun(UI, StaffProfile, integer, integer): UIPlaceStaff
 local UIPlaceStaff = _G["UIPlaceStaff"] ---@type UIPlaceStaff
 
+---Constructor of the UIPlaceStaff class.
+---@param ui UI
+---@param profile StaffProfile
+---@param x integer
+---@param y integer
 function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.ui = ui
   self.world = ui.app.world

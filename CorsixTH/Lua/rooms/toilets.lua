@@ -41,11 +41,21 @@ room.floor_tile = 21
 class "ToiletRoom" (Room)
 
 ---@class ToiletRoom: Room
----@operator call: ToiletRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): ToiletRoom
 local ToiletRoom = _G["ToiletRoom"] ---@type ToiletRoom
 
-function ToiletRoom:ToiletRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function ToiletRoom:ToiletRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.door.queue:setBenchThreshold(3)
 end
 

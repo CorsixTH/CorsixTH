@@ -26,11 +26,12 @@ class "Patient" (Humanoid)
 ---@class Patient: Humanoid
 ---@field is_debug (boolean) Whether the patient is a debug patient.
 ---@field is_emergency (boolean) Whether the patient came in by helicopter.
----@operator call: Patient
+---@overload fun(THAnimation): Patient
 local Patient = _G["Patient"] ---@type Patient
 
-function Patient:Patient(...)
-  self:Humanoid(...)
+---@param animation THAnimation Animation showing the patient.
+function Patient:Patient(animation)
+  self:Humanoid(animation)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   self.should_knock_on_doors = true
   self.treatment_history = {}

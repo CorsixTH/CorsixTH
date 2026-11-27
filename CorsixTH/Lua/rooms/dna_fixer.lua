@@ -48,11 +48,22 @@ room.handyman_call_sound = "maint006.wav"
 class "DNAFixerRoom" (Room)
 
 ---@class DNAFixerRoom: Room
----@operator call: DNAFixerRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): DNAFixerRoom
 local DNAFixerRoom = _G["DNAFixerRoom"] ---@type DNAFixerRoom
 
-function DNAFixerRoom:DNAFixerRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+---@return DNAFixerRoom
+function DNAFixerRoom:DNAFixerRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function DNAFixerRoom:commandEnteringPatient(patient)

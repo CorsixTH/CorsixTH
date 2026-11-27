@@ -21,9 +21,13 @@ SOFTWARE. --]]
 class "StaffProfile"
 
 ---@class StaffProfile
----@operator call: StaffProfile
+---@overload fun(World, string, THStringProxy): StaffProfile
 local StaffProfile = _G["StaffProfile"] ---@type StaffProfile
 
+---Contructor of the StaffProfile class.
+---@param world World
+---@param humanoid_class string
+---@param local_string THStringProxy
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.world = world
   self.humanoid_class = humanoid_class

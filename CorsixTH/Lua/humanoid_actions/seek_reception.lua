@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "SeekReceptionAction" (HumanoidAction)
 
 ---@class SeekReceptionAction: HumanoidAction
----@operator call: SeekReceptionAction
+---@overload fun(): SeekReceptionAction
 local SeekReceptionAction = _G["SeekReceptionAction"] ---@type SeekReceptionAction
 
 -- Distance from queue that patient can join a reception desk queue.

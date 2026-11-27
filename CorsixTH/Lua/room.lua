@@ -21,11 +21,21 @@ SOFTWARE. --]]
 class "Room"
 
 ---@class Room
----@operator call: Room
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): Room
 local Room = _G["Room"] ---@type Room
 
 local COST_RECOVERY = 0.40 --- Percentage cost recovery of destroyed room items
 
+---@param x integer
+---@param y integer
+---@param w integer
+---@param h integer
+---@param id any
+---@param room_info any
+---@param world World
+---@param hospital Hospital
+---@param door Object
+---@param door2 Object?
 function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world

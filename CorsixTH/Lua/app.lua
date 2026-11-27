@@ -39,7 +39,7 @@ local SAVEGAME_VERSION = 270
 class "App"
 
 ---@class App
----@operator call: App
+---@overload fun(): App
 local App = _G["App"] ---@type App
 
 App.MIN_WINDOW_WIDTH = 640

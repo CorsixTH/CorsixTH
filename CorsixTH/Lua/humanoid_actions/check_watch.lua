@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "CheckWatchAction" (HumanoidAction)
 
 ---@class CheckWatchAction: HumanoidAction
----@operator call: CheckWatchAction
+---@overload fun(): CheckWatchAction
 local CheckWatchAction = _G["CheckWatchAction"] ---@type CheckWatchAction
 
 function CheckWatchAction:CheckWatchAction()

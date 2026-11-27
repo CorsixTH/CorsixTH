@@ -105,11 +105,17 @@ anim_mgr:setPatientMarker(anims["Standard Female Patient"].gown_off, 0, kf1, 3, 
 class "SurgeonScreen" (Object)
 
 ---@class SurgeonScreen: Object
----@operator call: SurgeonScreen
+---@overload fun(Hospital, string, integer, integer, any, EtcType): SurgeonScreen
 local SurgeonScreen = _G["SurgeonScreen"] ---@type SurgeonScreen
 
-function SurgeonScreen:SurgeonScreen(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function SurgeonScreen:SurgeonScreen(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.num_green_outfits = 2
   self.num_white_outfits = 0
 end

@@ -24,9 +24,13 @@ local Window = _G['Window'] ---@type Window
 class "UIStaffRise" (Window)
 
 ---@class UIStaffRise: Window
----@operator call: UIStaffRise
+---@overload fun(UI, Staff, number): UIStaffRise
 local UIStaffRise = _G["UIStaffRise"] ---@type UIStaffRise
 
+---Constructor of the UIStaffRise class.
+---@param ui UI
+---@param staff Staff
+---@param rise_amount number
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:Window()
   local app = ui.app

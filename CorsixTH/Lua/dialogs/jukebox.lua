@@ -18,17 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local ipairs
-    = ipairs
-
 local Window = _G['Window'] ---@type Window
 
 class "UIJukebox" (Window)
 
 ---@class UIJukebox: Window
----@operator call: UIJukebox
+---@overload fun(App): UIJukebox
 local UIJukebox = _G["UIJukebox"] ---@type UIJukebox
 
+---@param app App
 function UIJukebox:UIJukebox(app)
   self:Window()
   self.modal_class = "jukebox"

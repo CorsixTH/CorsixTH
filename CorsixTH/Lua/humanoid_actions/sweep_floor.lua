@@ -24,9 +24,10 @@ class "SweepFloorAction" (HumanoidAction)
 
 ---@class SweepFloorAction: HumanoidAction
 ---@field litter (Litter) The litter to sweep.
----@operator call: SweepFloorAction
+---@overload fun(Litter): SweepFloorAction
 local SweepFloorAction = _G["SweepFloorAction"] ---@type SweepFloorAction
 
+---@param litter Litter
 function SweepFloorAction:SweepFloorAction(litter)
   local Litter = _G["Litter"] ---@type Litter
   assert(class.is(litter, Litter), "Invalid value for parameter 'litter'")

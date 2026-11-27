@@ -23,9 +23,12 @@ cth_require("announcer")
 class "Hospital"
 
 ---@class Hospital
----@operator call: Hospital
+---@overload fun(World, any, string): Hospital
 local Hospital = _G["Hospital"] ---@type Hospital
 
+---@param world World
+---@param avail_rooms any
+---@param name string User name.
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
   local level_config = world.map.level_config

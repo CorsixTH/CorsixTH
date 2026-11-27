@@ -75,7 +75,7 @@ object.orientations = {
 class "RadiationShield" (Object)
 
 ---@class RadiationShield: Object
----@operator call: RadiationShield
+---@overload fun(): RadiationShield
 local RadiationShield = _G["RadiationShield"] ---@type RadiationShield
 
 RadiationShield:slaveMixinClass()

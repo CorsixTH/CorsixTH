@@ -49,11 +49,21 @@ room.call_sound = "reqd002.wav"
 class "ScannerRoom" (Room)
 
 ---@class ScannerRoom: Room
----@operator call: ScannerRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): ScannerRoom
 local ScannerRoom = _G["ScannerRoom"] ---@type ScannerRoom
 
-function ScannerRoom:ScannerRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function ScannerRoom:ScannerRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function ScannerRoom:commandEnteringPatient(patient)

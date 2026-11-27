@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "OnGroundAction" (HumanoidAction)
 
 ---@class OnGroundAction: HumanoidAction
----@operator call: OnGroundAction
+---@overload fun(): OnGroundAction
 local OnGroundAction = _G["OnGroundAction"] ---@type OnGroundAction
 
 function OnGroundAction:OnGroundAction()

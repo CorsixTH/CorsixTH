@@ -28,12 +28,12 @@ local Staff = _G['Staff'] ---@type Staff
 class "Nurse" (Staff)
 
 ---@class Nurse: Staff
----@operator call: Nurse
+---@overload fun(THAnimation): Nurse
 local Nurse = _G["Nurse"] ---@type Nurse
 
---!param ... Arguments to base class constructor.
-function Nurse:Nurse(...)
-  self:Staff(...)
+---@param animation THAnimation Animation showing the nurse.
+function Nurse:Nurse(animation)
+  self:Staff(animation)
   self.leave_sounds = {"sack004.wav", "sack005.wav"}
 end
 

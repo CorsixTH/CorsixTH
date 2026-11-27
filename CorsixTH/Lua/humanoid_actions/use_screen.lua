@@ -24,11 +24,11 @@ local Object = _G['Object'] ---@type Object
 class "UseScreenAction" (HumanoidAction)
 
 ---@class UseScreenAction: HumanoidAction
----@operator call: UseScreenAction
+---@overload fun(Object): UseScreenAction
 local UseScreenAction = _G["UseScreenAction"] ---@type UseScreenAction
 
 --- Action to use the screen.
---- @param screen (screen) Screen to use.
+--- @param screen (Object) Screen to use.
 function UseScreenAction:UseScreenAction(screen)
   assert(class.is(screen, Object) and (
       screen.object_type.id == "screen" or

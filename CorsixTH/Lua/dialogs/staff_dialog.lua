@@ -31,35 +31,8 @@ local Window = _G['Window'] ---@type Window
 class "UIStaff" (Window)
 
 ---@class UIStaff: Window
----@operator call: UIStaff
+---@overload fun(UI, Staff): UIStaff
 local UIStaff = _G["UIStaff"] ---@type UIStaff
-
---! Callback function for handyman to change his parcel.
-function UIStaff:changeParcel()
-  local index = 0
-  for i, v in ipairs(self.staff.hospital.ownedPlots) do
-    if v == self.staff.parcelNr then
-      index = i
-      break
-    end
-  end
-  if not self.staff.hospital.ownedPlots[index + 1] then
-    self.staff.parcelNr = 0
-  else
-    self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1]
-  end
-end
-
-function UIStaff:getParcelText()
-  if not self.staff.parcelNr then
-    self.staff.parcelNr = 0
-  end
-  if self.staff.parcelNr == 0 then
-    return _S.handyman_window.all_parcels --"All parcels"
-  else
-    return _S.handyman_window.parcel .. " " .. self.staff.parcelNr
-  end
-end
 
 function UIStaff:UIStaff(ui, staff)
   local Handyman = _G["Handyman"] ---@type Handyman
@@ -160,6 +133,33 @@ function UIStaff:UIStaff(ui, staff)
     end
   end, 17, 211 + offset, 92, 286 + offset)
 
+end
+
+--! Callback function for handyman to change his parcel.
+function UIStaff:changeParcel()
+  local index = 0
+  for i, v in ipairs(self.staff.hospital.ownedPlots) do
+    if v == self.staff.parcelNr then
+      index = i
+      break
+    end
+  end
+  if not self.staff.hospital.ownedPlots[index + 1] then
+    self.staff.parcelNr = 0
+  else
+    self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1]
+  end
+end
+
+function UIStaff:getParcelText()
+  if not self.staff.parcelNr then
+    self.staff.parcelNr = 0
+  end
+  if self.staff.parcelNr == 0 then
+    return _S.handyman_window.all_parcels --"All parcels"
+  else
+    return _S.handyman_window.parcel .. " " .. self.staff.parcelNr
+  end
 end
 
 function UIStaff:getStaffPosition(dx, dy)

@@ -28,9 +28,12 @@ local Window = _G['Window'] ---@type Window
 class "UIMenuBar" (Window)
 
 ---@class UIMenuBar: Window
----@operator call: UIMenuBar
+---@overload fun(UI, boolean): UIMenuBar
 local UIMenuBar = _G["UIMenuBar"] ---@type UIMenuBar
 
+---Constructor of the UIMenuBar class.
+---@param ui UI
+---@param map_editor boolean Whether the map editor is shown/used.
 function UIMenuBar:UIMenuBar(ui, map_editor)
   self:Window()
 
@@ -489,7 +492,7 @@ end
 class "UIMenu"
 
 ---@class UIMenu
----@operator call: UIMenu
+---@overload fun(): UIMenu
 local UIMenu = _G["UIMenu"] ---@type UIMenu
 
 function UIMenu:UIMenu()

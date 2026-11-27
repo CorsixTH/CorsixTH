@@ -47,11 +47,21 @@ room.handyman_call_sound = "maint007.wav"
 class "HairRestorationRoom" (Room)
 
 ---@class HairRestorationRoom: Room
----@operator call: HairRestorationRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): HairRestorationRoom
 local HairRestorationRoom = _G["HairRestorationRoom"] ---@type HairRestorationRoom
 
-function HairRestorationRoom:HairRestorationRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function HairRestorationRoom:HairRestorationRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function HairRestorationRoom:commandEnteringPatient(patient)

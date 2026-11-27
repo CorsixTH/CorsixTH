@@ -26,9 +26,11 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIFax" (UIFullscreen)
 
 ---@class UIFax: UIFullscreen
----@operator call: UIFax
+---@overload fun(UI, any): UIFax
 local UIFax = _G["UIFax"] ---@type UIFax
 
+---@param ui UI
+---@param icon any
 function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

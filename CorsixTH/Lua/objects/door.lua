@@ -37,11 +37,17 @@ cth_require("queue")
 class "Door" (Object)
 
 ---@class Door: Object
----@operator call: Door
+---@overload fun(Hospital, string, integer, integer, any, EtcType): Door
 local Door = _G["Door"] ---@type Door
 
-function Door:Door(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function Door:Door(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.queue = Queue()
   -- Priority should be given to humanoids already inside the door's room, as
   -- otherwise we could end up in a situation where a patient trying to leave

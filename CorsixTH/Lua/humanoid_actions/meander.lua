@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "MeanderAction" (HumanoidAction)
 
 ---@class MeanderAction: HumanoidAction
----@operator call: MeanderAction
+---@verload fun(): MeanderAction
 local MeanderAction = _G["MeanderAction"] ---@type MeanderAction
 
 function MeanderAction:MeanderAction()

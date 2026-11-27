@@ -47,11 +47,21 @@ room.handyman_call_sound = "maint015.wav"
 class "BloodMachineRoom" (Room)
 
 ---@class BloodMachineRoom: Room
----@operator call: BloodMachineRoom
+---@overload fun(integer, integer, integer, integer, any, any, World, Object, Object?): BloodMachineRoom
 local BloodMachineRoom = _G["BloodMachineRoom"] ---@type BloodMachineRoom
 
-function BloodMachineRoom:BloodMachineRoom(...)
-  self:Room(...)
+---@param x integer X position of the base corner of the room.
+---@param y integer Y Position of the base corner of the room.
+---@param w integer Width of the room.
+---@param h integer Height of the room.
+---@param id any ID of the room.
+---@param room_info any
+---@param world World World object
+---@param hospital Hospital Hospital owning the room.
+---@param door Object  Primary door for room
+---@param door2 Object? Optional secondary door (e.g. swing doors)
+function BloodMachineRoom:BloodMachineRoom(x, y, w, h, id, room_info, world, hospital, door, door2)
+  self:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
 end
 
 function BloodMachineRoom:commandEnteringPatient(patient)

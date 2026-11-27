@@ -32,9 +32,11 @@ stored for future use anyway.
 class "ResearchDepartment"
 
 ---@class ResearchDepartment
----@operator call: ResearchDepartment
+---@overload fun(Hospital): ResearchDepartment
 local ResearchDepartment = _G["ResearchDepartment"] ---@type ResearchDepartment
 
+---Constructor of the ResearchDepartment.
+---@param hospital Hospital
 function ResearchDepartment:ResearchDepartment(hospital)
   self.hospital = hospital
   self.world = hospital.world

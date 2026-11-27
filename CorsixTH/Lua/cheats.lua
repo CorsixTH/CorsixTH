@@ -27,10 +27,11 @@ local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPrio
 class "Cheats"
 
 ---@class Cheats
----@operator call: Cheats
+---@overload fun(Hospital): Cheats
 local Cheats = _G["Cheats"] ---@type Cheats
 
 --- Cheats System
+--- @param hospital Hospital
 function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window

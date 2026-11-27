@@ -25,7 +25,7 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIGraphs" (UIFullscreen)
 
 ---@class UIGraphs: UIFullscreen
----@operator call: UIGraphs
+---@overload fun(UI): UIGraphs
 local UIGraphs = _G["UIGraphs"] ---@type UIGraphs
 
 local TH = require("TH")
@@ -42,6 +42,7 @@ local colours = {
   reputation = {215, 12, 101}
 }
 
+---@param ui UI
 function UIGraphs:UIGraphs(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

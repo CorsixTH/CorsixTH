@@ -35,9 +35,15 @@ object.idle_animations = {
 class "SwingDoor" (Door)
 
 ---@class SwingDoor: Door
----@operator call: SwingDoor
+---@overload fun(Hospital, string, integer, integer, any, EtcType): SwingDoor
 local SwingDoor = _G["SwingDoor"] ---@type SwingDoor
 
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
 function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Door(hospital, object_type, x, y, direction, etc)

@@ -23,10 +23,11 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "KnockDoorAction" (HumanoidAction)
 
 ---@class KnockDoorAction: HumanoidAction
----@operator call: KnockDoorAction
+---@overload fun(Humanoid, Object, string): KnockDoorAction
 local KnockDoorAction = _G["KnockDoorAction"] ---@type KnockDoorAction
 
 --- Constructor for knocking on the door action.
+--- @param humanoid Humanoid Always a patient.
 --- @param door (Object) Door to knock on.
 --- @param direction (string) Direction of facing.
 function KnockDoorAction:KnockDoorAction(humanoid, door, direction)

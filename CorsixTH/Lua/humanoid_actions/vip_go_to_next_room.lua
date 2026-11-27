@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "VipGoToNextRoomAction" (HumanoidAction)
 
 ---@class VipGoToNextRoomAction: HumanoidAction
----@operator call: VipGoToNextRoomAction
+---@overload fun(): VipGoToNextRoomAction
 local VipGoToNextRoomAction = _G["VipGoToNextRoomAction"] ---@type VipGoToNextRoomAction
 
 function VipGoToNextRoomAction:VipGoToNextRoomAction()

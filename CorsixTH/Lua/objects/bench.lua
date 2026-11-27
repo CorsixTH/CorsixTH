@@ -148,11 +148,17 @@ object.orientations = {
 class "Bench" (Object)
 
 ---@class Bench: Object
----@operator call: Bench
+---@overload fun (Hospital, string, integer, integer, any, any): Bench
 local Bench = _G["Bench"] ---@type Bench
 
-function Bench:Bench(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc "map object"?
+function Bench:Bench(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 end
 
 --Called when the patient sits up from a bench for whatever reason

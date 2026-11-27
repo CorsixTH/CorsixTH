@@ -25,9 +25,11 @@ local TH = require("TH")
 class "Strings"
 
 ---@class Strings
----@operator call: Strings
+---@overload fun(App): Strings
 local Strings = _G["Strings"] ---@type Strings
 
+---Constructor of the Strings class.
+---@param app App
 function Strings:Strings(app)
   self.app = app
 end
@@ -116,7 +118,7 @@ function Strings:init()
     }, infinite_table_mt)
     -- Actually run the language file
     local status, err = pcall(chunk, env)
-    if not status and err ~= good_error_marker and TheApp.good_install_folder then
+    if not status and err ~= good_error_marker and self.app.good_install_folder then
       print("Error evaluating " .. filename .. ":\n" .. tostring(err))
     end
   end

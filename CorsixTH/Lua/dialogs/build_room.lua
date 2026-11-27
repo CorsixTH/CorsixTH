@@ -25,9 +25,10 @@ local Window = _G['Window'] ---@type Window
 class "UIBuildRoom" (Window)
 
 ---@class UIBuildRoom: Window
----@operator call: UIBuildRoom
+---@overload fun(UI): UIBuildRoom
 local UIBuildRoom = _G["UIBuildRoom"] ---@type UIBuildRoom
 
+---@param ui UI
 function UIBuildRoom:UIBuildRoom(ui)
   self:Window()
 

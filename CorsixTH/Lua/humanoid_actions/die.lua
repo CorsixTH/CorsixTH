@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "DieAction" (HumanoidAction)
 
 ---@class DieAction: HumanoidAction
----@operator call: DieAction
+---@overload fun(): DieAction
 local DieAction = _G["DieAction"] ---@type DieAction
 
 function DieAction:DieAction()

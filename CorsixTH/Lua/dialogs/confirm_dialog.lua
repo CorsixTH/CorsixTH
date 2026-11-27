@@ -25,7 +25,7 @@ local Window = _G['Window'] ---@type Window
 class "UIConfirmDialog" (Window)
 
 ---@class UIConfirmDialog: Window
----@operator call: UIConfirmDialog
+---@overload fun(UI, boolean, string, function, function): UIConfirmDialog
 local UIConfirmDialog = _G["UIConfirmDialog"] ---@type UIConfirmDialog
 
 local top_frame = 357
@@ -35,12 +35,12 @@ local middle_frame_height = 11
 local bottom_frame = 359
 local text_width = 153
 
---! Initialise the Confirmation Dialog
---!param ui The UI
---!param must_pause (boolean) set whether this dialog should pause the game
---!param text (string) message to show
---!param callback_ok (function) what to do on yes/ok
---!param callback_cancel (function) what to do on no/cancel/close
+--- Initialise the Confirmation Dialog
+---@param ui UI The UI
+---@param must_pause (boolean) set whether this dialog should pause the game
+---@param text (string) message to show
+---@param callback_ok (function) what to do on yes/ok
+---@param callback_cancel (function) what to do on no/cancel/close
 function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, callback_cancel)
   self:Window()
 

@@ -24,7 +24,7 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIAnnualReport" (UIFullscreen)
 
 ---@class UIAnnualReport: UIFullscreen
----@operator call: UIAnnualReport
+---@overload fun(UI, World): UIAnnualReport
 local UIAnnualReport = _G["UIAnnualReport"] ---@type UIAnnualReport
 
 --- Helper function that enables and makes visible button or table of buttons/panels.
@@ -42,8 +42,9 @@ local function setActive(button, active)
   end
 end
 
+---@param ui UI
+---@param world World
 function UIAnnualReport:UIAnnualReport(ui, world)
-
   self:UIFullscreen(ui)
 
   self.ui = ui

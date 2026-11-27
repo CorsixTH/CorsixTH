@@ -23,7 +23,7 @@ local HumanoidAction = _G['HumanoidAction'] ---@type HumanoidAction
 class "SeekStaffRoomAction" (HumanoidAction)
 
 ---@class SeekStaffRoomAction: HumanoidAction
----@operator call: SeekStaffRoomAction
+---@overload fun(): SeekStaffRoomAction
 local SeekStaffRoomAction = _G["SeekStaffRoomAction"] ---@type SeekStaffRoomAction
 
 function SeekStaffRoomAction:SeekStaffRoomAction()

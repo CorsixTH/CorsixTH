@@ -46,13 +46,13 @@ local get_custom_criteria = {
 class "EndConditions"
 
 ---@class EndConditions
----@operator call: EndConditions
+---@overload fun(table, integer, boolean): EndConditions
 local EndConditions = _G["EndConditions"] ---@type EndConditions
 
---! Collect the end conditions for this level, if they exist
---!param level_config (table) The map's level_config, containing criteria.
---!param level_number (integer) The number of the map, if playing a campaign.
---!param freebuild (boolean) The free build status of the world
+--- Collect the end conditions for this level, if they exist
+---@param level_config (table) The map's level_config, containing criteria.
+---@param level_number (integer) The number of the map, if playing a campaign.
+---@param freebuild (boolean) The free build status of the world
 function EndConditions:EndConditions(level_config, level_number, freebuild)
   self.win_goals, self.lose_goals, self.highest_group = {}, {}, 0
   if freebuild then return end

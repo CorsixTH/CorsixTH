@@ -24,15 +24,12 @@ local Window = _G['Window'] ---@type Window
 class "UIInformation" (Window)
 
 ---@class UIInformation: Window
----@operator call: UIInformation
+---@overload fun(UI, string, boolean): UIInformation
 local UIInformation = _G["UIInformation"] ---@type UIInformation
 
---! Constructor for the Information Dialog.
---!param text The text to show, held in a table. All elements of the table will be written
--- beneath each other. If instead a table within the table is supplied the texts
--- will be shown in consecutive dialogs.
---!param use_built_in_font Whether the built-in font should be used to make sure that
--- the given message can be read without distortions.
+--- Constructor for the Information Dialog.
+---@param text string The text to show, held in a table. All elements of the table will be written beneath each other. If instead a table within the table is supplied the texts will be shown in consecutive dialogs.
+---@param use_built_in_font boolean Whether the built-in font should be used to make sure that the given message can be read without distortions.
 function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:Window()
 

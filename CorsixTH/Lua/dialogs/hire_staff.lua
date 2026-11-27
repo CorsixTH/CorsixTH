@@ -23,9 +23,10 @@ local Window = _G['Window'] ---@type Window
 class "UIHireStaff" (Window)
 
 ---@class UIHireStaff: Window
----@operator call: UIHireStaff
+---@overload fun(UI): UIHireStaff
 local UIHireStaff = _G["UIHireStaff"] ---@type UIHireStaff
 
+---@param ui UI
 function UIHireStaff:UIHireStaff(ui)
   self:Window()
   self.modal_class = "main"

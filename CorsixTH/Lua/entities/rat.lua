@@ -25,7 +25,7 @@ local Entity = _G['Entity'] ---@type Entity
 class "Rat" (Entity)
 
 ---@class Rat: Entity
----@operator call: Rat
+---@overload fun(THAnimation): Rat
 local Rat = _G["Rat"] ---@type Rat
 
 -- anims
@@ -71,6 +71,7 @@ local walk_quantity = 4
 Rat.hover_cursor = TheApp.gfx:loadMainCursor("kill_rat_hover")
 Rat.proximity_cursor = TheApp.gfx:loadMainCursor("kill_rat")
 
+---@param animation THAnimation
 function Rat:Rat(animation)
   self:Entity(animation)
   self.last_move_direction = "east"

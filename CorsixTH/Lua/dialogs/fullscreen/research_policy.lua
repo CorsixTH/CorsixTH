@@ -23,7 +23,7 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UIResearch" (UIFullscreen)
 
 ---@class UIResearch: UIFullscreen
----@operator call: UIResearch
+---@overload fun(UI): UIResearch
 local UIResearch = _G["UIResearch"] ---@type UIResearch
 
 local research_categories = {
@@ -40,6 +40,7 @@ local col_bg = {
   blue = 20,
 }
 
+---@param ui UI
 function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

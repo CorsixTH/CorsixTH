@@ -26,9 +26,11 @@ local Window = _G['Window'] ---@type Window
 class "UIQueue" (Window)
 
 ---@class UIQueue: Window
----@operator call: UIQueue
+---@overload fun(UI, any): UIQueue
 local UIQueue = _G["UIQueue"] ---@type UIQueue
 
+---@param ui UI
+---@param queue any The queue.
 function UIQueue:UIQueue(ui, queue)
   self:Window()
 
@@ -368,9 +370,14 @@ end
 class "UIQueuePopup" (Window)
 
 ---@class UIQueuePopup: Window
----@operator call: UIQueuePopup
+---@overload fun(UI, integer, integer, Patient): UIQueuePopup
 local UIQueuePopup = _G["UIQueuePopup"] ---@type UIQueuePopup
 
+---Constructor of the UIQueuePopup class.
+---@param ui UI
+---@param x integer
+---@param y integer
+---@param patient Patient
 function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:Window()
   self.esc_closes = true

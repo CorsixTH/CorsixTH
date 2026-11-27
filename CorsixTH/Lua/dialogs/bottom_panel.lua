@@ -24,13 +24,14 @@ local Window = _G['Window'] ---@type Window
 class "UIBottomPanel" (Window)
 
 ---@class UIBottomPanel: Window
----@operator call: UIBottomPanel
+---@overload fun(UI): UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"] ---@type UIBottomPanel
 
 local MESSAGE_DOOR_FULLY_OPEN = 0
 local MESSAGE_DOOR_FULLY_SHUT = 22
 local FACTORY_ICON_WIDTH = 30
 
+---@param ui UI
 function UIBottomPanel:UIBottomPanel(ui)
   self:Window()
 

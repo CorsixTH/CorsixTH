@@ -73,11 +73,17 @@ cth_require("queue")
 class "ReceptionDesk" (Object)
 
 ---@class ReceptionDesk: Object
----@operator call: ReceptionDesk
+---@overload fun(Hospital, string, integer, integer, any, EtcType): ReceptionDesk
 local ReceptionDesk = _G["ReceptionDesk"] ---@type ReceptionDesk
 
-function ReceptionDesk:ReceptionDesk(...)
-  self:Object(...)
+---@param hospital Hospital
+---@param object_type string
+---@param x integer
+---@param y integer
+---@param direction any
+---@param etc EtcType
+function ReceptionDesk:ReceptionDesk(hospital, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.queue = Queue()
   self.queue:setBenchThreshold(3) -- Keep 3 people standing in the queue even if there are benches
   self.queue:setMaxQueue(20) -- larger queues for reception desk

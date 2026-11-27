@@ -68,7 +68,7 @@ object.orientations = {
 class "OperatingSink" (Object)
 
 ---@class OperatingSink: Object
----@operator call: OperatingSink
+---@overload fun(): OperatingSink
 local OperatingSink = _G["OperatingSink"] ---@type OperatingSink
 
 OperatingSink:slaveMixinClass()

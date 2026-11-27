@@ -27,12 +27,12 @@ local Humanoid = _G['Humanoid'] ---@type Humanoid
 class "Staff" (Humanoid)
 
 ---@class Staff: Humanoid
----@operator call: Staff
+---@overload fun(THAnimation): Staff
 local Staff = _G["Staff"] ---@type Staff
 
---!param ... Arguments to base class constructor.
-function Staff:Staff(...)
-  self:Humanoid(...)
+---@param animation THAnimation Animation showing the staff member.
+function Staff:Staff(animation)
+  self:Humanoid(animation)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
   self.parcelNr = 0
   self.leave_sounds = {}

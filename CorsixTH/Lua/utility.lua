@@ -248,7 +248,7 @@ AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
 
--- Predefined colours
+--- Predefined colours
 Colours = {}
 Colours.PanelDefault = { -- CorsixTH's default panel colour (pale purple)
   red = 154, green = 146, blue = 198

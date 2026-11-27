@@ -27,12 +27,15 @@ local Hospital = _G['Hospital'] ---@type Hospital
 class "PlayerHospital" (Hospital)
 
 ---@class PlayerHospital: Hospital
----@operator call: PlayerHospital
+---@overload fun(World, any, string): PlayerHospital
 local PlayerHospital = _G["PlayerHospital"] ---@type PlayerHospital
 
 local num_sitting_ratios = 15 -- Number of stored recent sitting ratio measurements.
 local ratio_interval = 2 -- Measurement interval in days.
 
+---@param world World
+---@param avail_rooms any
+---@param name string User name.
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
 

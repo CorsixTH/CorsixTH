@@ -26,9 +26,10 @@ local UIFullscreen = _G['UIFullscreen'] ---@type UIFullscreen
 class "UITownMap" (UIFullscreen)
 
 ---@class UITownMap: UIFullscreen
----@operator call: UITownMap
+---@overload fun(UI): UITownMap
 local UITownMap = _G["UITownMap"] ---@type UITownMap
 
+---@param ui UI
 function UITownMap:UITownMap(ui)
   self:UIFullscreen(ui)
 
