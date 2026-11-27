@@ -182,6 +182,7 @@ end
 --- If it is not found it tries to use the font file from the compile setting WITH_FONT,
 --- or look for one in the CorsixTH folder, the grandparent of this file.
 function Graphics:loadFontFile()
+  self.cache.language_fonts = {} -- Clear font cache first
   local lfs = require("lfs")
   local function check(path) return lfs.attributes(path, "mode") == "file" end
   local config_path, compile_path = self.app.config.unicode_font, TH.GetCompileOptions().font

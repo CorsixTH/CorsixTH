@@ -48,13 +48,15 @@ function UIChooseFont:UIChooseFont(ui, mode)
   self:UIFileBrowser(ui, mode, _S.font_location_window.caption:format(".ttc, .otf, .ttf"), 265, root)
 end
 
---! Function called by clicking button of existing save #num
+--- Process our chosen font selection
+---@param name (string) The full path to the font
 function UIChooseFont:choiceMade(name)
   local app = TheApp
+  local UIOptions = cth_require("dialogs.resizables.options")
   app.config.unicode_font = name
   app:saveConfig()
   app.gfx:loadFontFile()
-  local UIOptions = cth_require("dialogs.resizables.options")
+  app:initLanguage()
   if class.is(self.parent, UIOptions) then
     self.parent:checkForAvailableLanguages()
   end
