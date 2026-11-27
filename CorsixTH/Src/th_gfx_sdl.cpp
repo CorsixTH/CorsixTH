@@ -713,9 +713,13 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     if (override_resolution ||
         (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
             SDL_WINDOW_FULLSCREEN) {
-      // Drawing to an intermediate screen-sized buffer when fullscreen or
-      // using logical-presentation resolution override results in noticeably
-      // better text rendering quality.
+      // SDL_LOGICAL_PRESENTATION_LETTERBOX scales the final render output to
+      // the window/display size (e.g. 1.5x for 1280x720 override on 1920x1080).
+      // Without this linear intermediate target texture, fonts and thdf_nearest
+      // sprites render directly to the backbuffer and are nearest-neighbor
+      // scaled at non-integer ratios, garbling text and borders.
+      // (Historically SDL2 fullscreen used logical size too; keep fullscreen
+      // here alongside override_resolution.)
       auto [width, height] = get_size();
       zoom_buffer =
           std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
