@@ -694,17 +694,28 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
   if (fScale <= 0.000) {
     return false;
-  } else if (0.999 <= fScale && fScale <= 1.001) {
+  }
+
+  const bool is_unit_scale = (0.999 <= fScale && fScale <= 1.001);
+  const bool needs_override_buffer = eWhatToScale == scaled_items::all &&
+                                     override_resolution &&
+                                     (direct_zoom || supports_target_textures);
+  if (is_unit_scale && !needs_override_buffer) {
     if (eWhatToScale == scaled_items::all) {
       global_scale_factor = 1.0;
     }
     return true;
-  } else if (eWhatToScale == scaled_items::all && direct_zoom) {
-    global_scale_factor = fScale;
-    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
-        SDL_WINDOW_FULLSCREEN) {
-      // Drawing to an intermediate screen sized buffer when fullscreen results
-      // in noticeably better text rendering quality.
+  }
+
+  const double normalized_scale = is_unit_scale ? 1.0 : fScale;
+  if (eWhatToScale == scaled_items::all && direct_zoom) {
+    global_scale_factor = normalized_scale;
+    if (override_resolution ||
+        (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ==
+            SDL_WINDOW_FULLSCREEN) {
+      // Drawing to an intermediate screen-sized buffer when fullscreen or
+      // using logical-presentation resolution override results in noticeably
+      // better text rendering quality.
       auto [width, height] = get_size();
       zoom_buffer =
           std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
@@ -716,8 +727,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     // with the appropriate virtual size, which will be copied scaled to
     // fit the window.
     auto [width, height] = get_size();
-    int virtWidth = static_cast<int>(width / fScale);
-    int virtHeight = static_cast<int>(height / fScale);
+    int virtWidth = static_cast<int>(width / normalized_scale);
+    int virtHeight = static_cast<int>(height / normalized_scale);
 
     zoom_buffer = std::make_unique<scoped_target_texture>(
         this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
@@ -731,7 +742,7 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
     // When zoom_buffer is allocated with bScale = false, this is only used for
     // the scale to commit the zoom buffer back to the screen at.
-    global_scale_factor = fScale;
+    global_scale_factor = normalized_scale;
     return true;
   } else if (eWhatToScale == scaled_items::bitmaps) {
     scale_bitmaps = true;
