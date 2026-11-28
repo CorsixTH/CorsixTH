@@ -1185,9 +1185,9 @@ menu_options_game_speed = {
 }
 
 menu_display = {
-  high_res            = " 阴影",
-  -- mcga_lo_res         = M[4][2],
-  -- shadows             = M[4][3],
+  high_res            = "  高分辨率  ",
+  mcga_lo_res         = "  MCGA 低分辨率  ",
+  shadows             = "  阴影  ",
 }
 
 menu_charts = {
@@ -1203,33 +1203,33 @@ menu_charts = {
 }
 
 menu_debug = {
-  object_cells        = " OBJECT CELLS         ",
-  entry_cells         = " ENTRY CELLS          ",
-  keep_clear_cells    = " KEEP CLEAR CELLS     ",
-  nav_bits            = " NAV BITS             ",
-  remove_walls        = " REMOVE WALLS         ",
-  remove_objects      = " REMOVE OBJECTS       ",
-  display_pager       = " DISPLAY PAGER        ",
-  mapwho_checking     = " MAPWHO CHECKING      ",
-  plant_pagers        = " PLANT PAGERS         ",
-  porter_pagers       = " PORTER PAGERS        ",
-  pixbuf_cells        = " PIXBUF CELLS         ",
-  enter_nav_debug     = " ENTER NAV DEBUG      ",
-  show_nav_cells      = " SHOW NAV CELLS       ",
-  machine_pagers      = " MACHINE PAGERS       ",
-  display_room_status = " DISPLAY ROOM STATUS  ",
-  display_big_cells   = " DISPLAY BIG CELLS    ",
-  show_help_hotspot   = " SHOW HELP HOTSPOTS   ",
-  win_game_anim       = " WIN GAME ANIM        ",
-  win_level_anim      = " WIN LEVEL ANIM       ",
+  object_cells        = " 物体格子       ",
+  entry_cells         = " 入口格子       ",
+  keep_clear_cells    = " 保持畅通格子   ",
+  nav_bits            = " 寻路标志位     ",
+  remove_walls        = " 移除墙壁       ",
+  remove_objects      = " 移除物体       ",
+  display_pager       = " 显示寻呼机     ",
+  mapwho_checking     = " MAPWHO 检查    ",
+  plant_pagers        = " 植物寻呼       ",
+  porter_pagers       = " 搬运工寻呼     ",
+  pixbuf_cells        = " 像素缓冲格子   ",
+  enter_nav_debug     = " 进入寻路调试   ",
+  show_nav_cells      = " 显示寻路格子   ",
+  machine_pagers      = " 机器寻呼       ",
+  display_room_status = " 显示房间状态   ",
+  display_big_cells   = " 显示大格子     ",
+  show_help_hotspot   = " 显示帮助热点   ",
+  win_game_anim       = " 通关动画       ",
+  win_level_anim      = " 过关动画       ",
   lose_game_anim = {
-    " LOSE GAME 1 ANIM     ",
-    " LOSE GAME 2 ANIM     ",
-    " LOSE GAME 3 ANIM     ",
-    " LOSE GAME 4 ANIM     ",
-    " LOSE GAME 5 ANIM     ",
-    " LOSE GAME 6 ANIM     ",
-    " LOSE GAME 7 ANIM     ",
+    " 失败动画 1     ",
+    " 失败动画 2     ",
+    " 失败动画 3     ",
+    " 失败动画 4     ",
+    " 失败动画 5     ",
+    " 失败动画 6     ",
+    " 失败动画 7     ",
   },
 }
 
@@ -1547,21 +1547,21 @@ tooltip = {
   },
 
   toolbar = {
-    bank_button        = "左击进入银行经理画面，右击进入银行账户",
+    bank_button        = "左击（或按 %s）进入银行经理画面，右击（或按 %s）进入银行账户",
     balance            = "现金",
     reputation         = "声望", -- NB: no %d! Append " ([reputation])".
     date               = "日期",
-    rooms              = "建造房屋",
-    objects            = "设置走廊",
-    edit               = "编辑房间/ 物品",
-    hire               = "雇佣员工",
-    staff_list         = "员工管理",
-    town_map           = "城镇地图",
-    casebook           = "治疗手册",
-    research           = "研究",
-    status             = "状态",
-    charts             = "图表",
-    policy             = "制度",
+    rooms              = "建造房屋 (%s)",
+    objects            = "设置走廊 (%s)",
+    edit               = "编辑房间/物品 (%s)",
+    hire               = "雇佣员工 (%s)",
+    staff_list         = "员工管理 (%s)",
+    town_map           = "城镇地图 (%s)",
+    casebook           = "治疗手册 (%s)",
+    research           = "研究 (%s)",
+    status             = "状态 (%s)",
+    charts             = "图表 (%s)",
+    policy             = "制度 (%s)",
   },
 
   hire_staff_window = {
@@ -1923,56 +1923,56 @@ tooltip = {
     inflator             = "充气机：治疗头部肿胀病患者。",
     pool_table           = "台球桌：帮助员工放松。",
     reception_desk       = "接待台：需要一名接待员为病人服务。",
-    table2               = "12 OB_BTABLE", -- unused & duplicate
-    cardio               = "13 OB_CARDIO", -- no description
-    scanner              = "14 OB_SCANNER", -- no description
-    console              = "15 OB_SCANNER_CONSOLE", -- no description
-    screen               = "16 OB_SCREEN", -- no description
+    table2               = "12 大桌子", -- unused & duplicate
+    cardio               = "13 心电图仪", -- no description
+    scanner              = "14 扫描仪", -- no description
+    console              = "15 扫描仪控制台", -- no description
+    screen               = "16 屏风", -- no description
     litter_bomb          = "垃圾炸弹：来自对手医院的破坏活动",
-    couch                = "18 OB_COUCH", -- no description
+    couch                = "18 长沙发椅", -- no description
     sofa                 = "沙发：摆放在员工休息室中，员工如果没有更好的放松方式，则可以坐在上面恢复疲劳。",
-    crash_trolley        = "20 OB_CRASH", -- no description
+    crash_trolley        = "20 诊断仪器小推车", -- no description
     tv                   = "电视：使员工不会错过喜爱的节目。",
-    ultrascanner         = "22 OB_ULTRASCAN", -- no description
-    dna_fixer            = "23 OB_DNA_FIXER", -- no description
-    cast_remover         = "24 OB_CAST_REMOVE", -- no description
-    hair_restorer        = "25 OB_HAIR_RESTORER", -- no description
-    slicer               = "26 OB_SLICER", -- no description
-    x_ray                = "27 OB_XRAY", -- no description
-    radiation_shield     = "28 OB_RAD_SHIELD", -- no description
-    x_ray_viewer         = "29 OB_XRAY_VIEWER", -- no description
-    operating_table      = "30 OB_OP_TABLE", -- no description
+    ultrascanner         = "22 超级扫描仪", -- no description
+    dna_fixer            = "23 DNA 修复装置", -- no description
+    cast_remover         = "24 石膏剥离装置", -- no description
+    hair_restorer        = "25 毛发恢复机", -- no description
+    slicer               = "26 舌头治疗机", -- no description
+    x_ray                = "27 X 光机", -- no description
+    radiation_shield     = "28 射线防护屏", -- no description
+    x_ray_viewer         = "29 X 光透视仪", -- no description
+    operating_table      = "30 手术台", -- no description
     lamp                 = "灯：照明用。", -- unused
     toilet_sink          = "洗手池：讲卫生的病人可以在洗手池中洗净脏手。如果没有足够的洗手池，病人将感到不高兴。",
-    op_sink1             = "33 OB_OP_SINK_1", -- no description
-    op_sink2             = "34 OB_OP_SINK_2", -- no description
-    surgeon_screen       = "35 OB_SURGEON_SCREEN", -- no description
+    op_sink1             = "33 手术室洗手池 1", -- no description
+    op_sink2             = "34 手术室洗手池 2", -- no description
+    surgeon_screen       = "35 外科屏风", -- no description
     lecture_chair        = "教室座位：接受培训的医生坐在上面，收听无聊的演讲。座位摆放得越多，则教室越大。",
-    projector            = "37 OB_PROJECTOR", -- no description
+    projector            = "37 放映机", -- no description
     bed2                 = "未使用", -- unused duplicate
     pharmacy_cabinet     = "药房：用来保存药品",
     computer             = "计算机：关键的研究部件",
     atom_analyser        = "化学混合器：摆放在研究部门中，该机器可以加速全部研究进程。",
-    blood_machine        = "42 OB_BLOOD_MC", -- no description
+    blood_machine        = "42 血液机器", -- no description
     fire_extinguisher    = "灭火器：降低治疗仪器爆炸所产生的危险。",
     radiator             = "暖气：保持医院内的温度。",
     plant                = "植物：使病人快乐并净化空气。",
-    electrolyser         = "46 OB_ELECTRO", -- no description
-    jelly_moulder        = "47 OB_JELLY_VAT", -- no description
-    gates_of_hell        = "48 OB_HELL", -- no description
+    electrolyser         = "46 电分解机器", -- no description
+    jelly_moulder        = "47 胶桶", -- no description
+    gates_of_hell        = "48 地狱之门", -- no description
     bed3                 = "未使用", -- unused duplicate
     bin                  = "垃圾桶：放置垃圾。",
     toilet               = "洗手间：提供给病人使用。",
-    swing_door1          = "52 OB_DOUBLE_DOOR1", -- no description
-    swing_door2          = "53 OB_DOUBLE_DOOR2", -- no description
-    shower               = "54 OB_DECON_SHOWER", -- no description
+    swing_door1          = "52 双开转门 1", -- no description
+    swing_door2          = "53 双开转门 2", -- no description
+    shower               = "54 消毒淋浴", -- no description
     auto_autopsy         = "验尸机：对研究新的治疗方法有很大帮助。",
     bookcase             = "书柜：放置医生的参考资料。",
     video_game           = "视频游戏：让您的员工在游戏中彻底放松。",
-    entrance_left        = "58 OB_ENT_LDOOR", -- no description
-    entrance_right       = "59 OB_ENT_RDOOR", -- no description
+    entrance_left        = "58 左入口大门", -- no description
+    entrance_right       = "59 右入口大门", -- no description
     skeleton             = "骨骼模型：主要用于培训",
-    comfortable_chair    = "61 OB_COMFY_CHAIR", -- no description
+    comfortable_chair    = "61 舒适座椅", -- no description
   },
 }
 
@@ -2101,7 +2101,7 @@ vip_names = {
   [3] = "来自荷兰的伯那德国王",
   [4] = "缅甸民主党领袖：昂山苏蒂",
   [5] = "克朗伯先生",
-  -- [6] requires replacement (English uses 'Sir Lancelot Spratt')
+  [6] = "杀人名医平一指",
   [7] = "克劳福议员",
   [8] = "罗尼",
   [9] = "一个超级联赛球星",
@@ -2518,17 +2518,17 @@ fax = {
     -- never seen this, must fbe a debug option of original TH
     -- TODO: make this nicer i we ever want to make use of it
     close_text = "嗨，哈，哈！",
-    text1      = "BEST COUNT %d", -- %d
-    text2      = "TOTAL PEOPLE IN HOSPITAL %d CHECKING AGAINST %d", -- %d %d
-    text3      = "FIGURES  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d", -- %d %d %d %d %d
-    text4      = "FACTORS  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d", -- %d %d %d %d %d
-    text5      = "CONTRIBN : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d PERCENT", -- %d %d %d %d %d
-    text6      = "THE FOLLOWING FACTORS ARE ALSO APPLIED",
-    text7      = "REPUTATION: %d EXPECTED %d REDUCTION %d", -- %d %d %d
-    text8      = "AMENITIES %d PEEPS HANDLED %d REDUCTION %d", -- %d %d %d
-    text9      = "DISASTERS %d ALLOWED (MTHS) %d (%d)REDUCTION %d", -- %d %d %d %d
-    text10     = "KILLS %d ALLOWED (MTHS) %d (%d) REDUCTION %d", -- %d %d %d %d
-    text11     = "PEOPLE THIS MONTH %d", -- %d
+    text1      = "最佳计数 %d", -- %d
+    text2      = "医院总人数 %d 核对基准 %d", -- %d %d
+    text3      = "数值：医生 %d  护士 %d  面积 %d  房间 %d  定价 %d", -- %d %d %d %d %d
+    text4      = "系数：医生 %d  护士 %d  面积 %d  房间 %d  定价 %d", -- %d %d %d %d %d
+    text5      = "贡献：医生 %d  护士 %d  面积 %d  房间 %d  定价 %d%%", -- %d %d %d %d %d
+    text6      = "以下因素也会被应用",
+    text7      = "声望：%d 预期 %d 扣减 %d", -- %d %d %d
+    text8      = "设施 %d 已接诊人数 %d 扣减 %d", -- %d %d %d
+    text9      = "灾难 %d 允许（月数）%d (%d) 扣减 %d", -- %d %d %d %d
+    text10     = "死亡 %d 允许（月数）%d (%d) 扣减 %d", -- %d %d %d %d
+    text11     = "本月人数 %d", -- %d
   },
 
   emergency = {
@@ -3088,6 +3088,8 @@ tooltip.research_policy.no_research = "当前没有任何此类研究在进行�
 tooltip.research_policy.research_progress = "此类研究下次发现的进度: %1%/%2%"
 
 menu["player_count"] = "玩家数"
+menu.cheats = "  (%1%) 作弊  "
+menu.cheats_title = "作弊"
 
 menu_file = {
   load =    "  (%1%) 读取",
@@ -3141,6 +3143,8 @@ menu_charts = {
   status        = "  (%1%) 状态",
   graphs        = "  (%1%) 图表",
   policy        = "  (%1%) 制度",
+  machine_menu  = "  (%1%) 机器菜单",
+  adviser_history = "  (%1%) 顾问消息历史 ",
 }
 
 menu_debug = {
@@ -3152,7 +3156,7 @@ menu_debug = {
   allow_blocking_off_areas    = "  允许导致空间无法到达的建造  ",
   make_debug_fax              = "  创建调试传真  ",
   make_debug_patient          = "  创建调试病人   ",
-  cheats                      = "  (%1%) 作弊  ",
+  make_debug_rat              = "  生成调试老鼠  ",
   lua_console                 = "  (%1%) LUA 控制台  ",
   debug_script                = "  (%1%) 运行调试脚本  debug_script.lua",
   calls_dispatcher            = "  签派窗口  ",
@@ -3160,6 +3164,11 @@ menu_debug = {
   dump_gamelog                = "  (%1%) 转存游戏日志  ",
   map_overlay                 = "  地图层次  ",
   sprite_viewer               = "  贴图浏览器  ",
+}
+menu_debug_overlay_blocking_off_areas = {
+  choice_1 = "  完全禁止  ",
+  choice_2 = "  部分允许  ",
+  choice_3 = "  完全允许  ",
 }
 menu_debug_overlay = {
   none                        = "  无  ",
@@ -3194,6 +3203,10 @@ adviser = {
     no_desk_7 = "你已经建了一个接待台，要不要雇一位接待员？除非解决这个问题，否则不会有病人来！",
     cannot_afford = "你没有足够的存款来雇这个人！", -- I can't see anything like this in the original strings
     cannot_afford_2 = "你没有足够的存款来做这件事！",
+    cannot_afford_machine = "您的银行账户至少需要有 $%1% 才能购买一台新的 %2%！",
+    cannot_buy = "您不能再购买更多该物品了！",
+    no_doctor_no_gp_office = "您迟早需要建造一间一般诊断室并雇佣一名医生！",
+    no_gp_office = "您还没有建造能让医生为病人诊断的一般诊断室！",
     falling_1 = "嘿！别开玩笑了，看看你都是怎么点鼠标的，你可能会伤到人！",
     falling_2 = "不要再胡搞了，跟有病似的？",
     falling_3 = "啊~有人受伤了，赶紧叫医生！",
@@ -3218,6 +3231,10 @@ adviser = {
     roujin_off_cheat = "Roujin's challenge 关闭。",
     norest_on_cheat = "哇喔！似乎咖啡因使你的员工十分兴奋，永远不用休息。",
     norest_off_cheat = "呼～精神亢奋剂的效力过去了，员工现在恢复正常作息",
+    queuejump_on_cheat = "您的病人很懂礼貌，他们会让濒死的病人排到队伍最前面。",
+    queuejump_off_cheat = "大家都变得自私了，不再让濒死的病人插队了。",
+    superdoctor_on_cheat = "一所顶尖医学院向毕业生推荐了您的医院！快去看看可雇佣的员工吧。",
+    superdoctor_off_cheat = "医学院院长不再向毕业生推荐您的医院了。",
   },
 }
 
@@ -3268,6 +3285,15 @@ install = {
 
 misc.not_yet_implemented = "（尚未实现）"
 misc.no_heliport = "还没有疾病被发现，或者地图上需要一个直升机场。你可能需要建一个接待台，并雇佣一位接待员"
+misc.epidemics_off = "已禁用传染病。将不会再出现新的传染病"
+misc.epidemics_on = "已重新启用传染病"
+misc.earthquakes_off = "已禁用地震"
+misc.earthquakes_on = "已重新启用地震"
+misc.invulnerable_machines_off = "机器将重新开始损耗并发生故障。"
+misc.invulnerable_machines_on = "机器将不再损耗或发生故障。"
+misc.epidemic_no_icon_to_toggle = "无法显示/隐藏感染图标——当前没有尚未暴露的传染病"
+misc.epidemic_no_diseases = "无法引发传染病——当前没有可用的传染病"
+misc.epidemic_no_receptionist = "无法引发传染病——当前没有接待员在岗的接待台"
 
 main_menu = {
   new_game = "开始游戏",
@@ -3297,12 +3323,18 @@ tooltip.main_menu = {
 
 load_game_window = {
   caption = "载入游戏 (%1%)",
+  load_button = "载入",
 }
 
 tooltip.load_game_window = {
   load_game = "载入游戏 %s",
   load_game_number = "载入游戏 %d",
   load_autosave = "载入自动保存的游戏",
+}
+
+load_map_window = {
+  caption = "载入地图 (%1%)",
+  load_button = "载入",
 }
 
 custom_game_window = {
@@ -3320,16 +3352,20 @@ tooltip.custom_game_window = {
 custom_campaign_window = {
   caption = "自定义任务",
   start_selected_campaign = "开始任务",
+  duplicates_warning = "已隐藏 %d 个重名战役",
 }
 
 tooltip.custom_campaign_window = {
   choose_campaign = "点击一项任务以了解更多信息",
   start_selected_campaign = "加载任务第一关",
+  duplicates_warning = "查看控制台窗口了解具体错误信息",
 }
 
 save_game_window = {
   caption = "保存游戏 (%1%)",
   new_save_game = "新游戏存档",
+  save_button = "保存",
+  missing_filename = "请输入新存档的名称，或选择要覆盖的存档。",
 }
 
 tooltip.save_game_window = {
@@ -3340,6 +3376,8 @@ tooltip.save_game_window = {
 save_map_window = {
   caption = "保存地图 (%1%)",
   new_map = "新地图",
+  save_button = "保存",
+  missing_filename = "请输入新地图文件的名称，或选择要覆盖的地图文件。",
 }
 
 tooltip.save_map_window = {
@@ -3374,11 +3412,29 @@ options_window = {
   back = "返回",
   hotkey = "快捷键",
   check_for_updates = "自动检查更新",
+  graphics = "图形",
+  sound = "声音",
+  accessibility = "无障碍",
+  autosave_frequency = "自动存档频率",
+  right_mouse_scrolling = "鼠标滚屏",
+  right_mouse_scrolling_option_middle = "中键",
+  right_mouse_scrolling_option_right = "右键",
+  apply = "应用",
+  cancel = "取消",
 }
+
 graphics_window = {
+  caption = "图形",
   fullscreen = "全屏幕",
   width = "宽度",
   height = "高度",
+  window_size = "窗口大小",
+  custom_window_size = "自定义...",
+  override_resolution = "覆盖分辨率",
+  original_aspect_ratio = "原始比例 (4:3)",
+  ui_scale = "界面缩放",
+  cursor_scale = "光标缩放",
+  scale_auto = "自动",
   option_on = "开",
   option_off = "关",
   apply = "应用",
@@ -3392,26 +3448,47 @@ tooltip.options_window = {
   language = "游戏文字使用的语言",
   select_language = "选择语言",
   language_dropdown_item = "选择 %s 为语言",
+  language_dropdown_no_font = "请在文件夹设置中选择一个字体以启用此语言",
   back = "关闭设置窗口",
   hotkey = "更改键盘热键。",
   check_for_updates = "游戏启动时自动检查更新",
+  graphics = "更改显示设置",
+  sound = "更改音频设置",
+  accessibility = "无障碍选项",
+  autosave_frequency = "设置游戏自动存档的频率。",
+  right_mouse_scrolling = "切换用于滚动地图的鼠标按键",
 }
+
 tooltip.graphics_window = {
   fullscreen = "应该在全屏还是窗口模式运行",
   fullscreen_button = "点击切换全屏模式",
   width = "输入想要的屏幕宽度",
   height = "输入想要的屏幕高度",
+  window_size = "游戏运行时的窗口大小",
+  select_window_size = "选择新的窗口大小",
+  window_size_does_not_fit = "该窗口大小不适合当前显示器",
+  override_resolution = "指定要使用的分辨率来代替原生窗口分辨率。关闭时将使用原生显示器分辨率。",
+  original_aspect_ratio = "必要时添加黑边，以保持原版游戏的 4:3 画面比例",
+  ui_scale = "缩放用户界面。",
+  select_ui_scale = "选择新的用户界面缩放比例",
+  cursor_scale = "缩放光标大小。",
+  select_cursor_scale = "选择新的光标缩放比例",
   apply = "应用此分辨率",
   cancel = "返回而不更改分辨率",
 }
 
 accessibility_window = {
+  caption = "无障碍设置",
+  enable_screen_shake = "屏幕震动",
+  enable_announcer_subtitles = "广播字幕",
   scroll_speed = "滚动速度",
   shift_scroll_speed = "加速滚动速度",
   zoom_speed = "缩放速度",
 }
 
 tooltip.accessibility_window = {
+  enable_screen_shake = "地震发生时整个屏幕都会震动。如果您希望画面保持静止，请关闭此选项",
+  enable_announcer_subtitles = "如果您希望游戏为医院广播显示字幕，请开启此选项",
   scroll_speed = "将滚动速度设为1（最慢）到10（最快）。默认为2。",
   shift_scroll_speed = "设定在滚动时按下 Shift 键时的滚动速度。1（最慢）到10（最快）。默认：4。",
   zoom_speed = "将相机变焦速度设为10（最慢）到1000（最快）。默认值为80。",
@@ -3424,13 +3501,52 @@ tooltip.accessibility_window = {
 }
 
 audio_window = {
+  caption = "声音设置",
   audio = "全局音效",
+  play_own_music = "播放自定义音乐",
+  jukebox = "音乐盒",
+  sound_volume = "音效音量",
+  announcement_volume = "广播音量",
+  music_volume = "音乐音量",
+  midi_api = "MIDI 接口",
+  default_midi_api = "默认（软件合成）",
+  midi_port = "MIDI 端口",
+  default_midi_port = "默认",
+  soundfont = "SoundFont 音色库",
+  soundfont_location_caption = "选择音色库 (%1%)",
+  no_soundfont_specified = "使用默认音色库",
   back = "返回",
 }
 
 tooltip.audio_window = {
   audio_button = "开关所有的声音",
   audio = "切换开关",
+  play_own_music = "在您自己的音乐和主题医院原声音乐之间切换",
+  play_own_music_button = "开启以播放您自己的音乐，或关闭以收听主题医院原声音乐",
+  play_own_music_no_folder_set = "尚未设置个人音乐文件夹。请先在文件夹设置中进行指定。",
+  jukebox = "打开音乐盒以控制音乐播放",
+  sound_volume = "音效音量",
+  announcement_volume = "广播音量",
+  music_volume = "音乐音量",
+  midi_api = "用于播放游戏内音乐的接口。使用自定义音乐文件夹时不使用此项。",
+  midi_port = "用于播放游戏内音乐的设备端口。",
+  soundfont = "用于播放 MIDI 音乐的 SoundFont 文件位置。若未指定则使用默认音色库。",
+  browse_soundfont = "浏览选择其他 SoundFont 文件（sf2 或 sf3）（当前位置：%1%）",
+  no_soundfont_specified = "使用默认音色库",
+  browse = "浏览文件夹位置",
+  back = "关闭窗口",
+}
+
+autosave_frequency = {
+  daily = "每天",
+  weekly = "每周",
+  monthly = "每月",
+}
+
+tooltip.autosave_frequency = {
+  daily = "在每个游戏日开始时自动存档一次，保留 1 年共 365 个存档。请注意，单个存档通常可达 1 MB 甚至更大，自动存档文件夹可能会占用 300-500 MB 空间。",
+  weekly = "每月第 1、7、14、21、28 日每周自动存档一次，保留 1 年共 60 个存档。",
+  monthly = "每月 1 日自动存档一次，保留 1 年共 12 个存档。",
 }
 
 customise_window = {
@@ -3442,9 +3558,15 @@ customise_window = {
   play_intro = "播放启动 CG",
   allow_user_actions_while_paused = "建造时暂停",
   alien_dna_only_by_emergency = "外星人只限紧急情况",
+  alien_dna_only_by_emergency_on = "仅限急诊",
+  alien_dna_only_by_emergency_off = "普通病人",
   disable_fractured_bones_females = "骨折只限男性",
+  disable_fractured_bones_females_on = "仅限男性",
+  disable_fractured_bones_females_off = "男女不限",
   enable_avg_contents = "房间常用物件",
   remove_destroyed_rooms = "移除已毁坏的房间",
+  machine_menu_button = "机器菜单按钮",
+  enable_insurance_blue_banknote = "保险公司蓝色钞票",
 }
 
 tooltip.customise_window = {
@@ -3455,6 +3577,8 @@ tooltip.customise_window = {
   disable_fractured_bones_females = "由于动画效果不佳，默认不会有女性骨折患者。要允许女性骨折患者就诊，请关闭此功能",
   enable_avg_contents = "如果您想让游戏记住在建造房间时通常会添加哪些其它对象，请启用此选项。",
   remove_destroyed_rooms = "打开这个选项，使已毁坏的房间可以付费移除。",
+  machine_menu_button = "如果您希望在底部面板中显示机器菜单按钮，请开启此选项。请注意，在较小的屏幕分辨率下该按钮将不可用",
+  enable_insurance_blue_banknote = "通过保险公司支付的病人费用会显示为飘浮的蓝色钞票动画，便于与直接支付给医院的费用一目了然地区分开来。如果您更喜欢所有款项均为绿色的原版显示风格，可以关闭此选项",
   back = "关闭此菜单，并返回设置菜单",
 }
 
@@ -3470,6 +3594,7 @@ folders_window = {
   savegames_location = "选择要用于保存的目录",
   music_location = "选择您要用于音乐的目录",
   screenshots_location = "选择您要用于屏幕截图的目录",
+  not_specified = "尚未指定文件夹位置！",
   back  = "返回",
 }
 
@@ -3477,13 +3602,14 @@ tooltip.folders_window = {
   browse = "浏览文件夹位置",
   theme_hospital_install = "原版主题医院安装的目录，CorsixTH 运行所必需",
   unicode_font = "选择可以显示您的语言所需 Unicode 字体的位置。如果没有指定，您将不能使用原游戏提供字体之外的语言，例如中文和俄语。（你一定已经选了，要不怎么可以看到这句话呢？）",
-  savegames_location = "默认情况下，游戏存档存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
-  screenshots_location = "默认情况下，屏幕快照存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
+  savegames = "默认情况下，游戏存档存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
+  screenshots = "默认情况下，屏幕快照存储在配置文件旁边的文件夹中。如果不合适，可以选择自己的目录，只需浏览到要使用的目录即可。",
   audio_music = "选择存储音乐文件的位置。此目录必须已经存在，然后才能浏览到刚创建的目录。",
   browse_font = "浏览另一个字体",
   browse_saves = "浏览另一处游戏存档储存位置",
   browse_screenshots = "浏览另一处屏幕截图储存位置",
   browse_music = "浏览另一处音乐储存位置",
+  clear_directory = "清除当前选择的目录",
   no_font_specified = "没有指定字体的位置！",
   not_specified = "没有指定文件夹位置！",
   default = "默认位置",
@@ -3557,6 +3683,8 @@ hotkey_window = {
   ingame_panel_status = "状态",
   ingame_panel_charts = "图表",
   ingame_panel_policy = "制度",
+  ingame_panel_machineMenu = "机器菜单",
+  ingame_panel_adviserHistory = "顾问消息历史",
   ingame_panel_map_alt = "城镇地图2",
   ingame_panel_research_alt = "研究2",
   ingame_panel_casebook_alt = "治疗手册2",
@@ -3566,11 +3694,13 @@ hotkey_window = {
   ingame_panel_editRoom = "编辑房间/物品",
   ingame_panel_hireStaff = "雇佣员工",
   ingame_rotateobject = "旋转对象",
+  ingame_sellPickedUpItem = "出售拾起的物品",
   ingame_quickSave = "快速保存",
   ingame_quickLoad = "快速加载",
   ingame_restartLevel = "重启关卡",
   ingame_quitLevel = "退出关卡",
   ingame_setTransparent = "透明墙壁",
+  ingame_toggleTransparent = "切换半透明",
   ingame_toggleAnnouncements = "公告",
   ingame_toggleSounds = "声音",
   ingame_toggleMusic = "音乐",
@@ -3609,6 +3739,12 @@ tooltip.hotkey_window = {
   button_gameSpeedKeys = "开启游戏速度热键的窗口",
   button_recallPosKeys = "打开窗口以设置用于存储和调用摄像机位置的键",
   button_back_02 = "返回主热键窗口。在此窗口中更改的热键可在此处接受",
+  panel_globalKeys = "分配全局快捷键",
+  panel_generalInGameKeys = "分配游戏内通用快捷键",
+  panel_scrollKeys = "分配滚屏快捷键",
+  panel_zoomKeys = "分配画面缩放快捷键",
+  panel_toggleKeys = "分配开关选项快捷键",
+  panel_debugKeys = "分配调试用快捷键",
 }
 
 font_location_window = {
@@ -3664,9 +3800,14 @@ errors = {
   dialog_missing_graphics = "哎呀，演示版数据文件不包含这个对话框。",
   save_prefix = "保存游戏失败：",
   load_prefix = "载入游戏失败：",
+  load_level_prefix = "载入关卡时出错：",
+  load_map_prefix = "载入地图时出错：",
   no_games_to_contine = "无游戏存档。",
   load_quick_save = "错误，不存在快速存档，无法加载。不用担心，我们已经为您创建了一个！",
   map_file_missing = "找不到该关卡的地图文件 %s！",
+  missing_corsixth_file = "警告：找不到文件 %s，请尝试重新安装 CorsixTH。",
+  missing_th_data_file = "警告：找不到文件 %s，主题医院原版数据不完整。",
+  missing_level_file = "错误：找不到所选的关卡文件。",
   minimum_screen_size = "最小屏幕大小为 %dx%d。",
   unavailable_screen_size = "您设置的屏幕大小无法应用于全屏模式。",
   alien_dna_only_by_emergency = "注意：对于外星人病人来说，坐下、打开或敲门等都没有动画。因此，像在主题医院中做这些事情一样，它们看起来会恢复正常外观，然后又变回原状。外星人 DNA 仅当它们在关卡文件中设置启动时才会显示",
@@ -3675,10 +3816,19 @@ errors = {
   could_not_find_first_campaign_level = "找不到该任务的第一关：%s",
   save_to_tmp = "文件无法保存到 %s 。文件改为保存到 %s 。问题: %s",
   dialog_empty_queue = "抱歉，程序遇到bug了。弹出窗口显示的这个人员没有被安排指令（empty action queue），请你决定把他叫离医院或进行其它动作。",
+  cannot_restart_missing_files = "抱歉，由于缺少文件 %s 或 %s，无法重新开始此关卡。",
+  music = "您的音乐目录中有一个或多个文件播放出错。问题文件将在音乐盒中被禁用。请查看控制台窗口以获取更多信息。",
+  custom_music_bad_path = "所选的自定义音乐目录不是有效目录。请检查目录后重试。// %s",
+  custom_music_no_tracks = "所选的自定义音乐目录中不包含可播放的音乐文件。请检查目录后重试。// %s",
   compatibility_error = {
     demo_in_full = "抱歉，这是演示版的游戏存档，无法在完整版中打开。请更新原版主题医院目录内容。",
     full_in_demo = "抱歉，这是完整版的游戏存档，无法在演示版中打开。请更新原版主题医院目录内容。",
     new_in_old = "抱歉，此游戏存档需要较新版本的 CorsixTH 才能打开。",
+  },
+  overlay = {
+    incorrect_difficulty = "覆盖难度必须为 easy、full 或 hard。当前值为 ",
+    incorrect_level_number = "覆盖关卡编号必须为 1-12。当前值为 ",
+    missing_setting = "自定义关卡的 overlay 字段中未指定难度和关卡编号。",
   },
 }
 
@@ -3692,6 +3842,9 @@ confirmation = {
   needs_restart = "这项设置的改动需要重新启动 CorsixTH。尚未保存的进度将会丢失。确定要这么做吗？",
   abort_edit_room = "您正在修建或者修改一间房间。如果所有必需的物品都被放置了就没有问题，否则所做的修改将被删除。继续吗？",
   maximum_screen_size = "您输入的屏幕尺寸大于 3000x2000。可以使用更大的分辨率，但需要更好的硬件才能保持可播放的帧速率。继续吗？",
+  quit_mapeditor = "您确定要退出地图编辑器吗？",
+  restart_mapeditor = "您确定要重新开始地图编辑器吗？",
+  very_old_save = "自您开始本关以来游戏已进行了大量更新。为确保所有功能正常运行，是否立即重新开始本关卡？//除非覆盖保存，否则您的旧存档不会被删除。",
 }
 
 information = {
@@ -3705,6 +3858,9 @@ information = {
     reputation = "声望低于%d。",
     balance = "银行账户资金低于%d。",
     percentage_killed = "杀死了多于%d%%的病人。",
+    months_played = "您未能在 %d 个月内完成关卡目标。",
+    patient_happiness = "您的病人平均快乐度低于 %d%%。",
+    staff_happiness = "您的员工平均快乐度低于 %d%%。",
     cheat = "这是你的选择，还是选择了错误的按钮？你甚至连作弊都不会，不是那么有趣吧？",
   },
   cheat_not_possible = "无法在这关上使用此项作弊。你甚至连作弊都失败了，不是那么有趣吧？",
@@ -3750,6 +3906,57 @@ debug_patient_window = {
   caption = "调试病人",
 }
 
+tooltip.debug_patient_window = {
+  item = "生成一个患有 %s 的调试病人",
+}
+
+adviser_history = {
+  message = "消息",
+  close = "关闭",
+}
+
+tooltip.adviser_history = {
+  message = "顾问消息列表——最新消息显示在最前面",
+  close = "关闭顾问消息历史对话框",
+  delete_message = "点击忽略此消息",
+  header = {
+    message = "顾问消息",
+    delete_message = "点击删除所有消息",
+  },
+}
+
+machine_menu = {
+  machine = "机器",
+  remaining_strength = "剩余",
+  total_strength = "耐久",
+  percentage = "%d%%",
+  ratio = "比例",
+  status = "状态",
+  close = "关闭",
+}
+
+tooltip.machine_menu = {
+  machine = "机器列表——点击机器可打开其窗口并滚动到对应位置",
+  remaining_strength = "该数值显示机器的剩余耐久度",
+  total_strength = "该数值显示机器的总耐久度",
+  ratio = "该数值显示剩余耐久度与总耐久度的比例",
+  assigned = "如果已指派清洁工维修对应机器，此框会被标记。点击可查看指派的清洁工。",
+  smoking = "如果机器存在爆炸风险，此框会被标记。点击可购买新机器。",
+  close = "关闭机器列表对话框",
+  sort = "点击按此数值排序。",
+  header = {
+    machine = "机器名称",
+    remaining_strength = "机器的剩余耐久度。",
+    total_strength = "机器的总耐久度。",
+    ratio = "机器剩余耐久度与总耐久度的百分比。",
+    assigned = "维修指派指示器",
+    smoking = "危险指示器",
+    status = "机器的状态。",
+  },
+}
+
+tooltip.toolbar.machine_menu = "机器菜单 (%s)"
+
 cheats_window = {
   caption = "作弊",
   warning = "警告: 如果作弊关卡结束时你将得不到任何奖励！",
@@ -3772,6 +3979,12 @@ cheats_window = {
     win_level = "获胜",
     increase_prices = "涨价",
     decrease_prices = "降价",
+    max_reputation = "最高声望",
+    repair_all_machines = "维修所有机器",
+    reset_death_count = "重置死亡人数",
+    toggle_earthquake = "开关地震",
+    toggle_epidemic = "开关传染病",
+    toggle_invulnerable_machines = "开关机器无损",
   },
   close = "关闭",
 }
@@ -3793,6 +4006,12 @@ tooltip.cheats_window = {
     win_level = "赢得当前关卡。",
     increase_prices = "所有项目涨价50%（最大200%）",
     decrease_prices = "所有项目降价50%（最小50%）",
+    max_reputation = "将医院声望设为最高值",
+    repair_all_machines = "维修医院中的所有机器",
+    reset_death_count = "将医院死亡人数重置为零",
+    toggle_earthquake = "开启或关闭地震",
+    toggle_epidemic = "开启或关闭传染病发生",
+    toggle_invulnerable_machines = "开启或关闭机器使用损耗",
   },
 }
 
@@ -3846,16 +4065,9 @@ map_editor_window = {
     west_wall = "西墙",
     helipad = "停机坪",
     delete_wall = "删除墙壁",
-    parcel_0 = "包 0",
-    parcel_1 = "包 1",
-    parcel_2 = "包 2",
-    parcel_3 = "包 3",
-    parcel_4 = "包 4",
-    parcel_5 = "包 5",
-    parcel_6 = "包 6",
-    parcel_7 = "包 7",
-    parcel_8 = "包 8",
-    parcel_9 = "包 9",
+    parcel = "地块 %d",
+    set_parcel = "设置地块编号",
+    set_parcel_tooltip = "输入一个数字并按回车键。",
     camera_1 = "相机 1",
     camera_2 = "相机 2",
     camera_3 = "相机 3",
@@ -3864,8 +4076,25 @@ map_editor_window = {
     heliport_2 = "直升机场 2",
     heliport_3 = "直升机场 3",
     heliport_4 = "直升机场 4",
-    paste = "Paste area",
-  }
+    paste = "粘贴区域",
+  },
+  checks = {
+    spawn_points_and_path = "警告：病人无法到达医院。地图边缘需要铺设“道路”或灰色的“外部”地砖，并连通一条通往医院入口的路径。",
+  },
+}
+
+tooltip.status.over = {
+  staff_happiness = "您的员工平均快乐度必须超过 %d%%。当前值为 %d%%",
+  patient_happiness = "您的病人平均快乐度必须超过 %d%%。当前值为 %d%%",
+  months_played = "您需要坚持到 %2% 年%1%底。当前是 %4% 年%3%",
+  years_played = "您需要坚持到 %d 年。当前是 %d 年",
+}
+
+tooltip.status.under = {
+  staff_happiness = "您的员工平均快乐度不得低于 %d%%。当前值为 %d%%",
+  patient_happiness = "您的病人平均快乐度不得低于 %d%%。当前值为 %d%%",
+  months_played = "您需要在 %2% 年%1%底前获胜。当前是 %4% 年%3%",
+  years_played = "您需要坚持到 %d 年。当前是 %d 年",
 }
 
 hotkeys_file_err = {
