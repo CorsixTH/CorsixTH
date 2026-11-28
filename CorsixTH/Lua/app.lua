@@ -32,8 +32,8 @@ local SDL = require("sdl")
 -- and add compatibility code in afterLoad functions
 -- Recommended: Also replace/Update the summary comment
 
--- Saves keep integers and floats apart
-local SAVEGAME_VERSION = 272
+-- Use level config values for staff room rest
+local SAVEGAME_VERSION = 273
 
 --- Controls the main CorsixTH application
 class "App"
