@@ -10,8 +10,10 @@ LuaLS requires
 
     ---@class Foo: Bar
     (other '---' or empty lines)
-    ---@operator call: Foo
+    ---@overload fun(ARGS): Foo
     local Foo = _G["Foo"] ---@type Foo
+
+where ARGS is a comma-separated list of type names.
 
 with LuaLS below Lua in the same file due to using '_G["Foo"]' which
 retrieves the global Foo class created by 'class "Foo"'.
@@ -117,7 +119,7 @@ def _collect_editor_classes(lines, overview: FileOverview):
     Find class definitions for the LuaLS editor, and check and store each.
     '''
     cldef_pat = re.compile('--- *@class ([A-Z][A-Za-z0-9_]+)(: +([A-Z][A-Za-z0-9_]+))?')
-    operator_pat = re.compile('--- *@operator +call *: +([A-Z][A-Za-z0-9_]+)')
+    overload = re.compile('--- *@overload +fun *[(][^)]* *[)] *: +([A-Z][A-Za-z0-9_]+)')
     local_pat = re.compile('local +([A-Z][A-Za-z0-9_]+) *= *'
                     '_G\\["([A-Z][A-Za-z0-9_]+)"\\] +--- *@type +([A-Z][A-Za-z0-9_]+)')
 
@@ -159,7 +161,7 @@ def _collect_editor_classes(lines, overview: FileOverview):
             if not line.lstrip().startswith('---'):
                 # Neither a LuaLS doc comment nor an empty line. Some lines
                 # are missing. Report them.
-                text1 = f'---@operator call: {class_name}'
+                text1 = f'---@overload fun(...): {class_name}'
                 text2 = f'local {class_name} = _G[\"{class_name}\"] ---@type {class_name}'
                 for text in (text1, text2):
                     mesg = (f"Missing the line '{text}' for the class "
@@ -170,8 +172,8 @@ def _collect_editor_classes(lines, overview: FileOverview):
                 # Find the next runtime class definition.
                 break # Line increment is done at the top of the loop.
 
-            # Check the operator line.
-            m = operator_pat.fullmatch(line)
+            # Check the overload line.
+            m = overload.fullmatch(line)
             if not m:
                 continue # Some other '---' line. Check the next line.
             else:
@@ -188,7 +190,7 @@ def _collect_editor_classes(lines, overview: FileOverview):
 
             if not m:
                 text = f'local {class_name} = _G[\"{class_name}\"] ---@type {class_name}'
-                mesg = f"Missing the line '{text}' that should be below the operator line"
+                mesg = f"Missing the line '{text}' that should be below the overload line"
                 report = Report(mesg, cur_line + 1)
                 overview.reports.append(report)
 
