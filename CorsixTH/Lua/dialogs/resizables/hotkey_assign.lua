@@ -24,40 +24,48 @@ local Window = _G['Window'] ---@type Window
 --! Custom key bindings
 class "UIHotkeyAssign" (UIResizable)
 
+---@alias HotKeyAssignMode "menu" | "main menu" | "options" | "folders"
+
 ---@class UIHotkeyAssign: UIResizable
----@operator call: UIHotkeyAssign
+---@overload fun(UI, HotKeyAssignMode): UIHotkeyAssign
 local UIHotkeyAssign = _G["UIHotkeyAssign"] ---@type UIHotkeyAssign
 
+---@type RGBColour
 local col_bg = {
   red = 154,
   green = 146,
   blue = 198,
 }
 
+---@type RGBColour
 local col_hotkeybox = {
   red = 81,
   green = 76,
   blue = 150,
 }
 
+---@type RGBColour
 local col_hotkeybox_lowered = {
   red = 41,
   green = 36,
   blue = 90,
 }
 
+---@type RGBColour
 local col_highlight = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@type RGBColour
 local col_caption = {
   red = 174,
   green = 166,
@@ -278,6 +286,8 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
   hotkey_buttons_table[hotkey]:setText( string.upper( array_join(app.hotkeys[hotkey], "+") ) )
 end
 
+---@param ui UI
+---@param mode HotKeyAssignMode
 function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self:UIResizable(ui, 640, 480, col_bg)
 
@@ -572,9 +582,15 @@ end
 class "UIHotkeyAssignKeyPane" (Window)
 
 ---@class UIHotkeyAssignKeyPane: Window
----@operator call: UIHotkeyAssignKeyPane
+---@overload fun(integer, integer, UI, any, any): UIHotkeyAssignKeyPane
 local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"] ---@type UIHotkeyAssignKeyPane
 
+---Constructor of the UIHotkeyAssignKeyPane class
+---@param x integer
+---@param y integer
+---@param ui UI
+---@param key_options any
+---@param app_hotkeys any
 function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_hotkeys)
   self:Window()
 

@@ -24,9 +24,10 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIMainMenu" (UIResizable)
 
 ---@class UIMainMenu: UIResizable
----@operator call: UIMainMenu
+---@overload fun(UI): UIMainMenu
 local UIMainMenu = _G["UIMainMenu"] ---@type UIMainMenu
 
+ ---@type RGBColour
 local col_bg = {
   red = 154,
   green = 146,
@@ -42,6 +43,7 @@ local label_ttf_col = { -- slightly translucent
 
 local menu_item_height = 40
 
+---@param ui UI
 function UIMainMenu:UIMainMenu(ui)
 
   -- First define all menu entries with a label, a callback and a tooltip.

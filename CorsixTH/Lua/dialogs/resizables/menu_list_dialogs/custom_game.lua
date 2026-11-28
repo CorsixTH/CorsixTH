@@ -24,9 +24,10 @@ local UIMenuList = _G['UIMenuList'] ---@type UIMenuList
 class "UICustomGame" (UIMenuList)
 
 ---@class UICustomGame: UIMenuList
----@operator call: UICustomGame
+---@overload fun(string, table): UICustomGame
 local UICustomGame = _G["UICustomGame"] ---@type UICustomGame
 
+--- @type RGBColour
 local col_scrollbar = {
   red = 164,
   green = 156,
@@ -35,9 +36,9 @@ local col_scrollbar = {
 
 local details_width = 280
 
---! Compile metainfo for all of the levels in the given path.
---!param path (string) The path that should contain level files.
---!param items (table) Table to insert the level metadata into.
+--- Compile metainfo for all of the levels in the given path.
+---@param path (string) The path that should contain level files.
+---@param items (table) Table to insert the level metadata into.
 local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
     if file:match("%.level$") then

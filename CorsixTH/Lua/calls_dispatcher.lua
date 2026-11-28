@@ -25,7 +25,7 @@ local AnnouncementPriority = _G["AnnouncementPriority"] --[[@as AnnouncementPrio
 class "CallsDispatcher"
 
 ---@class CallsDispatcher
----@operator call: CallsDispatcher
+---@overload fun(World): CallsDispatcher
 local CallsDispatcher = _G["CallsDispatcher"] ---@type CallsDispatcher
 
 local debug_enabled = false -- Turn on for debug message

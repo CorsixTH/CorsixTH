@@ -23,9 +23,10 @@ local UIMenuList = _G['UIMenuList'] ---@type UIMenuList
 class "UIMakeDebugPatient" (UIMenuList)
 
 ---@class UIMakeDebugPatient: UIMenuList
----@operator call: UIMakeDebugPatient
+---@overload fun(UI): UIMakeDebugPatient
 local UIMakeDebugPatient = _G["UIMakeDebugPatient"] ---@type UIMakeDebugPatient
 
+---@param ui UI
 function UIMakeDebugPatient:UIMakeDebugPatient(ui)
   local items = {}
   local hosp = TheApp.world:getLocalPlayerHospital()

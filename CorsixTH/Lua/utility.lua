@@ -248,7 +248,33 @@ AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
 AnimationEffect.Jelly = 2
 
---- Predefined colours
+---@alias RGBColour {["red"] : integer, ["green"] : integer, ["blue"] : integer} RGB triplet, values are in thge range [0..255].
+---@alias Colour RGBColour | integer[]
+
+--- @class Colours Predefined colours
+--- @field PanelDefault RGBColour
+--- @field Disabled RGBColour
+--- @field Setting RGBColour
+--- @field SettingHover RGBColour
+--- @field SettingActive RGBColour
+--- @field HotkeyBox RGBColour
+--- @field HotkeyBoxActive RGBColour 
+--- @field Textbox RGBColour 
+--- @field Scrollbar RGBColour 
+--- @field Title RGBColour 
+--- @field Caption RGBColour 
+--- @field AdviserPanelBackground RGBColour 
+--- @field AdviserPanelHighlight RGBColour 
+--- @field AdviserPanelShadow RGBColour 
+--- @field AdviserPanelDeleteButton RGBColour 
+--- @field White RGBColour 
+--- @field Black RGBColour 
+--- @field Red RGBColour 
+--- @field Green RGBColour 
+--- @field Blue RGBColour 
+--- @field Magenta RGBColour 
+--- @field Cyan RGBColour 
+--- @field Yellow RGBColour 
 Colours = {}
 Colours.PanelDefault = { -- CorsixTH's default panel colour (pale purple)
   red = 154, green = 146, blue = 198

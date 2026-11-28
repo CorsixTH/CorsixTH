@@ -24,7 +24,7 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UINewGame" (UIResizable)
 
 ---@class UINewGame: UIResizable
----@operator call: UINewGame
+---@overload fun(UI): UINewGame
 local UINewGame = _G["UINewGame"] ---@type UINewGame
 
 -- Colour definitions
@@ -39,6 +39,7 @@ local col = {
   textbox        = Colours.Textbox,
 }
 
+---@param ui UI
 function UINewGame:UINewGame(ui)
   self:UIResizable(ui, 320, 220, col.bg)
 

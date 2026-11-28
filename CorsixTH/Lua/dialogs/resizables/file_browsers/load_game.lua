@@ -24,9 +24,11 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UILoadGame" (UIFileBrowser)
 
 ---@class UILoadGame: UIFileBrowser
----@operator call: UILoadGame
+---@overload fun(UI, FileBrowserMode): UILoadGame
 local UILoadGame = _G["UILoadGame"] ---@type UILoadGame
 
+---@param ui UI
+---@param mode FileBrowserMode
 function UILoadGame:UILoadGame(ui, mode)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"

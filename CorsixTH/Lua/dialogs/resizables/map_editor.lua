@@ -24,10 +24,10 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIMapEditor" (UIResizable)
 
 ---@class UIMapEditor: UIResizable
----@operator call: UIMapEditor
+---@overload fun(UI): UIMapEditor
 local UIMapEditor = _G["UIMapEditor"] ---@type UIMapEditor
 
-local col_bg = {red = 154, green = 146, blue = 198}
+local col_bg = {red = 154, green = 146, blue = 198} ---@type RGBColour
 
 -- {{{ Editor sprites.
 
@@ -412,6 +412,7 @@ local EDITOR_COLUMNS = 10 -- Number of columns for the sprite buttons
 local EDITOR_COLUMN_SIZE = 32 + 3 -- Width of a sprite button in pixels
 local EDITOR_ROW_SIZE = 32 + 4 -- Height of a sprite button in pixels
 
+---@param ui UI
 function UIMapEditor:UIMapEditor(ui)
   self:UIResizable(ui, EDITOR_WINDOW_XSIZE, EDITOR_WINDOW_YSIZE, col_bg)
   self.resizable = false

@@ -27,9 +27,11 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UIChooseFont" (UIFileBrowser)
 
 ---@class UIChooseFont: UIFileBrowser
----@operator call: UIChooseFont
+---@overload fun(UI, FileBrowserMode): UIChooseFont
 local UIChooseFont = _G["UIChooseFont"] ---@type UIChooseFont
 
+---@param ui UI
+---@param mode FileBrowserMode
 function UIChooseFont:UIChooseFont(ui, mode)
   -- Create the root item (or items, on Windows).
   local root

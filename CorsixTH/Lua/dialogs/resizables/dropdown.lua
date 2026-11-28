@@ -24,25 +24,22 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 --! Dropdown "window" used for selection of one item from a list.
 class "UIDropdown" (UIResizable)
 
+---@alias DropdownCallback fun(Window, integer)
+
 ---@class UIDropdown: UIResizable
----@operator call: UIDropdown
+---@overload fun(UI, Window, Button, table, DropdownCallback, RGBColour?, RGBColour?, RGBColour?): UIDropdown
 local UIDropdown = _G["UIDropdown"] ---@type UIDropdown
 
---! Constructor for the dropdown "window"
---!param ui (UI) The ui the window is created in
---!param parent_window (Window) The window that this dropdown will be attached to
---!param parent_button (Button) The button in the parent_window that this dropdown will be positioned under
---!param items (table) A list of items for the list to display, where each item is a table with at least
---       the field text, and optionally fields font and/or tooltip, which is a table containing text, x and y positions.
---!param callback (function) A function to be called when an item is selected. It is called with two parameters:
---       The parent window and the index of the selected item
---!param colour (table) Colour of the dropdown's list items, in the form of {red = ..., green = ..., blue = ...}.
+--- Constructor for the dropdown "window"
+---@param ui (UI) The ui the window is created in
+---@param parent_window (Window) The window that this dropdown will be attached to
+---@param parent_button (Button) The button in the parent_window that this dropdown will be positioned under
+---@param items (table) A list of items for the list to display, where each item is a table with at least the field text, and optionally fields font and/or tooltip, which is a table containing text, x and y positions.
+---@param callback (DropdownCallback) A function to be called when an item is selected. It is called with two parameters: The parent window and the index of the selected item
+---@param colour (RGBColour?) Colour of the dropdown's list items, in the form of {red = ..., green = ..., blue = ...}. Optional if parent_window is a UIResizable
+---@param scrollbar_colour (RGBColour?) Colour of the scrollbar's 'thumb' and button hover in the form of {red = ..., green = ..., blue = ...}.
 -- Optional if parent_window is a UIResizable
---!param scrollbar_colour (table) Colour of the scrollbar's 'thumb', and
--- button hover in the form of {red = ..., green = ..., blue = ...}.
--- Optional if parent_window is a UIResizable
---!param disabled_colour (table) Colour of the disabled items in the form of {red = ..., green = ..., blue = ...}.
--- Optional.
+---@param disabled_colour (RGBColour?) Colour of the disabled items in the form of {red = ..., green = ..., blue = ...}. Optional.
 function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback, colour, scrollbar_colour, disabled_colour)
   assert(colour or parent_window.colour,
       "Dropdown has no colours available to it. Please specify one in the colour parameter.")

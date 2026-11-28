@@ -23,10 +23,13 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 --! Customise window used in the main menu and ingame.
 class "UIFolder" (UIResizable)
 
+---@alias FolderMode "menu" | "main menu" | "options" | "folders"
+
 ---@class UIFolder: UIResizable
----@operator call: UIFolder
+---@overload fun(UI, FolderMode): UIFolder
 local UIFolder = _G["UIFolder"] ---@type UIFolder
 
+---@type {["bg"] : RGBColour, ["setting"] : RGBColour, ["title"] : RGBColour, ["caption"] : RGBColour, ["button"] : RGBColour}
 local col = {
    bg = Colours.PanelDefault,
    setting = Colours.Setting,
@@ -50,6 +53,8 @@ function UIFolder:_getOptionYPos()
   return calculated_pos
 end
 
+---@param ui UI
+---@param mode FolderMode
 function UIFolder:UIFolder(ui, mode)
   self:UIResizable(ui, 420, 240, col.bg)
 

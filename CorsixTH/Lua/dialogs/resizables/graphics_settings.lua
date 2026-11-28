@@ -22,10 +22,24 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 
 class "UIGraphicSettings" (UIResizable)
 
+---@alias GraphicsSettingsMode "menu" | "main menu" | "options" | "graphics"
+
 ---@class UIGraphicSettings: UIResizable
----@operator call: UIGraphicSettings
+---@overload fun(UI, GraphicsSettingsMode): UIGraphicSettings
 local UIGraphicSettings = _G["UIGraphicSettings"] ---@type UIGraphicSettings
 
+---@alias GraphicsSettingsColourKey
+---| "bg"
+---| "button"
+---| "setting"
+---| "setting_active"
+---| "scrollbar"
+---| "disabled"
+---| "title"
+---| "caption"
+---| "textbox"
+
+---@type table<GraphicsSettingsColourKey, RGBColour>
 local col = {
   bg = Colours.PanelDefault,
   button         = Colours.PanelDefault,
@@ -128,6 +142,8 @@ local available_cursor_scales = function()
   return res
 end
 
+---@param ui UI
+---@param mode GraphicsSettingsMode
 function UIGraphicSettings:UIGraphicSettings(ui, mode)
   self:UIResizable(ui, 605, 209, col.bg)
 
@@ -341,9 +357,11 @@ end
 class "UIWindowSize" (UIResizable)
 
 ---@class UIWindowSize: UIResizable
----@operator call: UIWindowSize
+---@overload fun(UI, function): UIWindowSize
 local UIWindowSize = _G["UIWindowSize"] ---@type UIWindowSize
 
+---@param ui UI
+---@param callback function
 function UIWindowSize:UIWindowSize(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
 

@@ -26,11 +26,12 @@ local Window = _G['Window'] ---@type Window
 class "UIQueue" (Window)
 
 ---@class UIQueue: Window
----@overload fun(UI, any): UIQueue
+---@field queue Queue
+---@overload fun(UI, Queue): UIQueue
 local UIQueue = _G["UIQueue"] ---@type UIQueue
 
 ---@param ui UI
----@param queue any The queue.
+---@param queue Queue The queue.
 function UIQueue:UIQueue(ui, queue)
   self:Window()
 

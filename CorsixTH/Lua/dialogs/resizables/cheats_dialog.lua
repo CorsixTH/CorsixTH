@@ -25,42 +25,46 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UICheats" (UIResizable)
 
 ---@class UICheats: UIResizable
----@operator call: UICheats
+---@overload fun(UI): UICheats
 local UICheats = _G["UICheats"] ---@type UICheats
 
+---@type Colour
 local col_bg = {
   red = 154,
   green = 146,
   blue = 198,
 }
 
+---@type Colour
 local col_caption = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@type Colour
 local col_border = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@type Colour
 local col_cheated_no = {
   red = 36,
   green = 154,
   blue = 36,
 }
 
+---@type Colour
 local col_cheated_yes = {
   red = 224,
   green = 36,
   blue = 36,
 }
 
---[[ Constructs the cheat dialog.
-!param ui (UI) The active ui.
-]]
+--- Constructor of the cheat dialog.
+---@param ui (UI) The active ui.
 function UICheats:UICheats(ui)
   self.cheats = ui.hospital.hosp_cheats
   self.cheat_list = ui.hospital.hosp_cheats.cheat_list

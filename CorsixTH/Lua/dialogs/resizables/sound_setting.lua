@@ -22,8 +22,10 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 
 class "UISoundSettings" (UIResizable)
 
+---@alias SoundSettingsMode "menu" | "games"
+
 ---@class UISoundSettings: UIResizable
----@operator call: UISoundSettings
+---@overload fun(UI, SoundSettingsMode): UISoundSettings
 local UISoundSettings = _G["UISoundSettings"] ---@type UISoundSettings
 
 -- Constants for most button's width and height
@@ -36,18 +38,21 @@ local BTN_X = LBL_X + LBL_WIDTH + 5
 local BIG_BTN_WIDTH = 565
 local BIG_BTN_HEIGHT = 30
 
+ ---@type RGBColour
 local col_bg = {
   red = 154,
   green = 146,
   blue = 198,
 }
 
+ ---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+ ---@type RGBColour
 local col_caption = {
   red = 174,
   green = 166,
@@ -67,10 +72,9 @@ local function midi_port_options(app)
   return res
 end
 
---! Construct new UISoundSettings window
---!param ui (UI) The game ui
---!param mode (string) 'menu' or 'game', depending on whether the window is
---  displayed from the main menu or in game.
+--- Construct new UISoundSettings window
+---@param ui (UI) The game ui
+---@param mode (SoundSettingsMode) 'menu' or 'game', depending on whether the window is displayed from the main menu or in game.
 function UISoundSettings:UISoundSettings(ui, mode)
   self:UIResizable(ui, 605, 295, col_bg)
 

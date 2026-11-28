@@ -24,39 +24,49 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIUpdate" (UIResizable)
 
 ---@class UIUpdate: UIResizable
----@operator call: UIUpdate
+---@overload fun(UI, string, string, string, string): UIUpdate
 local UIUpdate = _G["UIUpdate"] ---@type UIUpdate
 
+ ---@type RGBColour
 local col_bg = {
   red = 154,
   green = 146,
   blue = 198,
 }
 
+ ---@type RGBColour
 local col_old_version = {
   red = 255,
   green = 0,
   blue = 0,
 }
 
+ ---@type RGBColour
 local col_new_version = {
   red = 0,
   green = 255,
   blue = 0,
 }
 
+ ---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+ ---@type RGBColour
 local col_caption = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@param ui UI
+---@param this_version string
+---@param new_version string
+---@param brief_description string
+---@param download_url string
 function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, download_url)
   self:UIResizable(ui, 320, 320, col_bg)
 

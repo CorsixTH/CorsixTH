@@ -23,8 +23,10 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 
+---@alias OptionsMode "menu" | "main menu" | "options"
+
 ---@class UIOptions: UIResizable
----@operator call: UIOptions
+---@overload fun(UI, OptionsMode): UIOptions
 local UIOptions = _G["UIOptions"] ---@type UIOptions
 
 -- Colour definitions
@@ -63,6 +65,8 @@ local current_autosave_frequency = function()
   return ""
 end
 
+---@param ui UI
+---@param mode OptionsMode
 function UIOptions:UIOptions(ui, mode)
   local width = 620
   local height = 360

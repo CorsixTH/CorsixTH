@@ -24,7 +24,7 @@ local UIMenuList = _G['UIMenuList'] ---@type UIMenuList
 class "UICustomCampaign" (UIMenuList)
 
 ---@class UICustomCampaign: UIMenuList
----@operator call: UICustomCampaign
+---@overload fun(UI): UICustomCampaign
 local UICustomCampaign = _G["UICustomCampaign"] ---@type UICustomCampaign
 
 local col_scrollbar = {
@@ -35,6 +35,7 @@ local col_scrollbar = {
 
 local details_width = 280
 
+---@param ui UI
 function UICustomCampaign:UICustomCampaign(ui)
   self.label_font = TheApp.gfx:loadFontAndSpriteTable("QData", "Font01V", nil, nil, { apply_ui_scale = true })
 

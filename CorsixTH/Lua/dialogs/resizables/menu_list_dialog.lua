@@ -24,15 +24,17 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIMenuList" (UIResizable)
 
 ---@class UIMenuList: UIResizable
----@overload fun(UI, string, string, table, integer, integer): UIMenuList
+---@overload fun(UI, string, THStringProxy, table, integer, integer): UIMenuList
 local UIMenuList = _G["UIMenuList"] ---@type UIMenuList
 
+ ---@type RGBColour
 local col_caption = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+ ---@type RGBColour
 local col_scrollbar = {
   red = 164,
   green = 156,
@@ -42,7 +44,7 @@ local col_scrollbar = {
 --- Constructs the menu list dialog.
 ---@param ui (UI) The active ui.
 ---@param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
----@param title (string) The desired title of the dialog.
+---@param title (THStringProxy) The desired title of the dialog.
 ---@param items (table) A list of items to include in the list. Each listing should be a table with keys "name" and "tooltip" with the corresponding values.
 ---@param num_rows (integer) The number of rows displayed at a given time. Default is 10.
 ---@param extra_beside_list (integer) How much space, if any, the dialog will need to the right of the list, e.g. information space.

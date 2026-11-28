@@ -29,9 +29,14 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UIChooseSoundfont" (UIFileBrowser)
 
 ---@class UIChooseSoundfont: UIFileBrowser
----@operator call: UIChooseSoundfont
+---@overload fun(UI, FileBrowserMode, any, function): UIChooseSoundfont
 local UIChooseSoundfont = _G["UIChooseSoundfont"] ---@type UIChooseSoundfont
 
+---Constructor of the UIChooseSoundFont class.
+---@param ui UI
+---@param mode FileBrowserMode
+---@param soundOptionsUI any
+---@param choiceCallback function
 function UIChooseSoundfont:UIChooseSoundfont(ui, mode, soundOptionsUI, choiceCallback)
   self.soundOptionsUI = soundOptionsUI
   self.choiceCallback = choiceCallback

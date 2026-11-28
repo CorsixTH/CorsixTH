@@ -27,12 +27,14 @@ local Window = _G['Window'] ---@type Window
 --! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)
 
+---@alias CorridorObjects Object[]
+
 ---@class UIFurnishCorridor: Window
----@overload fun(UI, any, Window): UIFurnishCorridor
+---@overload fun(UI, CorridorObjects, Window): UIFurnishCorridor
 local UIFurnishCorridor = _G["UIFurnishCorridor"] ---@type UIFurnishCorridor
 
 ---@param ui UI
----@param objects Object[]
+---@param objects CorridorObjects
 ---@param edit_dialog Window
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()

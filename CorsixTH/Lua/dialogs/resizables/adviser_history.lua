@@ -24,7 +24,7 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIAdviserHistory" (UIResizable)
 
 ---@class UIAdviserHistory: UIResizable
----@operator call: UIAdviserHistory
+---@overload fun(UI): UIAdviserHistory
 local UIAdviserHistory = _G["UIAdviserHistory"] ---@type UIAdviserHistory
 
 
@@ -33,6 +33,7 @@ local col_highlight = Colours.AdviserPanelHighlight
 local col_shadow = Colours.AdviserPanelShadow
 local col_delete_button = Colours.AdviserPanelDeleteButton
 
+---@param ui UI
 function UIAdviserHistory:UIAdviserHistory(ui)
   local app = ui.app
 

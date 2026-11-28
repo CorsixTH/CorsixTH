@@ -24,17 +24,17 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UIMachineMenu" (UIResizable)
 
 ---@class UIMachineMenu: UIResizable
----@operator call: UIMachineMenu
+---@overload fun(UI): UIMachineMenu
 local UIMachineMenu = _G["UIMachineMenu"] ---@type UIMachineMenu
 
-local col_bg = { red = 219, green = 81, blue = 12, }
-local col_shadow = { red = 202, green = 69, blue = 8, }
-local col_highlight = { red = 232, green = 95, blue = 16 }
-local col_assigned_button = { red = 84, green = 200, blue = 84 }
-local col_shaded_assigned_button = { red = 92, green = 150, blue = 92 }
-local col_disabled_assigned_button = { red = 84, green = 112, blue = 84 }
-local col_warning_button = { red = 219, green = 36, blue = 36 }
-local col_disabled = { red = 159, green = 90, blue = 56 }
+local col_bg = { red = 219, green = 81, blue = 12, } ---@type RGBColour
+local col_shadow = { red = 202, green = 69, blue = 8, } ---@type RGBColour
+local col_highlight = { red = 232, green = 95, blue = 16 } ---@type RGBColour
+local col_assigned_button = { red = 84, green = 200, blue = 84 } ---@type RGBColour
+local col_shaded_assigned_button = { red = 92, green = 150, blue = 92 } ---@type RGBColour
+local col_disabled_assigned_button = { red = 84, green = 112, blue = 84 } ---@type RGBColour
+local col_warning_button = { red = 219, green = 36, blue = 36 } ---@type RGBColour
+local col_disabled = { red = 159, green = 90, blue = 56 } ---@type RGBColour
 
 -- Timer, used to update machine menu only once per X ticks to reduce the burden.
 local ticks_to_skip = 10
@@ -43,6 +43,7 @@ local tick_timer = ticks_to_skip
 local row_height = 32
 local window_margin = 15
 
+---@param ui UI
 function UIMachineMenu:UIMachineMenu(ui)
   local app = ui.app
 

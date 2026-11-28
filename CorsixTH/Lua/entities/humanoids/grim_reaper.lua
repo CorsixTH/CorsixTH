@@ -23,11 +23,12 @@ local Humanoid = _G['Humanoid'] ---@type Humanoid
 class "GrimReaper" (Humanoid)
 
 ---@class GrimReaper: Humanoid
----@operator call: GrimReaper
+---@overload fun(THAnimation): GrimReaper
 local GrimReaper = _G["GrimReaper"] ---@type GrimReaper
 
-function GrimReaper:GrimReaper(...)
-  self:Humanoid(...)
+---@param animation THAnimation Animation showing the grim reaper.
+function GrimReaper:GrimReaper(animation)
+  self:Humanoid(animation)
   self.attributes = {}
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.walk_anims = {

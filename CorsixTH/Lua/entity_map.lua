@@ -21,15 +21,19 @@ SOFTWARE. --]]
 class "EntityMap"
 
 ---@class EntityMap
----@operator call: EntityMap
+---@field width integer Width of the map.
+---@field height integer Height of the map.
+---@field entity_map {["humanoids"] : Humanoid[], ["objects"] : Object[]}[][] Humanoids and entities in the map.
+---@overload fun(Map): EntityMap
 local EntityMap = _G["EntityMap"] ---@type EntityMap
 
---[[ An entity map is a structure is a 2 dimensional structure created from a
-game map, it has the same dimensions as the game map which intitalises it.
-The purpose of the map is store the location of entities in the map in
-real-time. Each cell given by an (x, y) coordinate is a
-table {humanoids ={}, objects = {}} where the tables of humanoids/objects
-may be empty or contain the entity/entities that currently exist in that tile.]]
+--- An entity map is a structure is a 2 dimensional structure created from a
+--- game map, it has the same dimensions as the game map which intitalises it.
+--- The purpose of the map is store the location of entities in the map in
+--- real-time. Each cell given by an (x, y) coordinate is a
+--- table {humanoids ={}, objects = {}} where the tables of humanoids/objects
+--- may be empty or contain the entity/entities that currently exist in that tile.
+---@param map Map
 function EntityMap:EntityMap(map)
   self.width, self.height = map.th:size()
   self.entity_map = {}

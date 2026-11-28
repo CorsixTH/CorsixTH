@@ -21,8 +21,10 @@ SOFTWARE. --]]
 --! Accessibility window used in the main menu and ingame.
 class "UIAccessibility" (UIResizable)
 
+---@alias AccessabilityMode "menu" | "main menu" | "options" | "accessibility"
+
 ---@class UIAccessibility: UIResizable
----@operator call: UIAccessibility
+---@overload fun(UI, AccessabilityMode): UIAccessibility
 local UIAccessibility = _G["UIAccessibility"] ---@type UIAccessibility
 
 local col = {
@@ -34,6 +36,8 @@ local col = {
    textbox = Colours.Textbox
 }
 
+---@param ui UI
+---@param mode AccessabilityMode
 function UIAccessibility:UIAccessibility(ui, mode)
   self:UIResizable(ui, 320, 280, col.bg)
 
@@ -123,9 +127,11 @@ end
 class "UIScrollSpeed" (UIResizable)
 
 ---@class UIScrollSpeed: UIResizable
----@operator call: UIScrollSpeed
+---@overload fun(UI, function): UIScrollSpeed
 local UIScrollSpeed = _G["UIScrollSpeed"] ---@type UIScrollSpeed
 
+---@param ui UI
+---@param callback function
 function UIScrollSpeed:UIScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
 
@@ -194,9 +200,11 @@ end
 class "UIShiftScrollSpeed" (UIResizable)
 
 ---@class UIShiftScrollSpeed: UIResizable
----@operator call: UIShiftScrollSpeed
+---@overload fun(UI, function): UIShiftScrollSpeed
 local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"] ---@type UIShiftScrollSpeed
 
+---@param ui UI
+---@param callback function
 function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
 
@@ -264,9 +272,11 @@ end
 class "UIZoomSpeed" (UIResizable)
 
 ---@class UIZoomSpeed: UIResizable
----@operator call: UIZoomSpeed
+---@overload fun(UI, function): UIZoomSpeed
 local UIZoomSpeed = _G["UIZoomSpeed"] ---@type UIZoomSpeed
 
+---@param ui UI
+---@param callback function
 function UIZoomSpeed:UIZoomSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col.bg)
 

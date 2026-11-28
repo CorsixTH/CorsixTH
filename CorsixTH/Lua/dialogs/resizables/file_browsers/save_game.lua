@@ -24,27 +24,31 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UISaveGame" (UIFileBrowser)
 
 ---@class UISaveGame: UIFileBrowser
----@operator call: UISaveGame
+---@overload fun(UI): UISaveGame
 local UISaveGame = _G["UISaveGame"] ---@type UISaveGame
 
+---@type RGBColour
 local col_textbox = {
   red = 0,
   green = 0,
   blue = 0,
 }
 
+---@type RGBColour
 local col_highlight = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@param ui UI
 function UISaveGame:UISaveGame(ui)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"

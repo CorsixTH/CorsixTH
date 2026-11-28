@@ -26,7 +26,7 @@ local Window = _G['Window'] ---@type Window
 class "UIResizable" (Window)
 
 ---@class UIResizable: Window
----@operator call: UIResizable
+---@overload fun(UI, integer, integer, Colour, boolean?, boolean?): UIResizable
 local UIResizable = _G["UIResizable"] ---@type UIResizable
 
 local border_offset_x = 9
@@ -42,7 +42,7 @@ local big_button_padding = 5
 -- Vertical distance from the bottom of one element to the top of the next below
 local element_spacing = 10
 
--- Colour definitions
+--- @type table<string, RGBColour> Colour definitions
 local col = {
   bg             = Colours.PanelDefault,
   button         = Colours.PanelDefault,
@@ -59,9 +59,9 @@ local col = {
 ---@param ui UI
 ---@param width integer
 ---@param height integer
----@param colour integer[]
----@param no_borders boolean
----@param background_bevel boolean
+---@param colour Colour
+---@param no_borders boolean?
+---@param background_bevel boolean?
 function UIResizable:UIResizable(ui, width, height, colour, no_borders, background_bevel)
   self:Window()
 

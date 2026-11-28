@@ -24,27 +24,31 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UICallsDispatcher" (UIResizable)
 
 ---@class UICallsDispatcher: UIResizable
----@operator call: UICallsDispatcher
+---@overload fun(UI): UICallsDispatcher
 local UICallsDispatcher = _G["UICallsDispatcher"] ---@type UICallsDispatcher
 
+---@type Colour
 local col_bg = {
   red = 154,
   green = 146,
   blue = 198,
 }
 
+---@type Colour
 local col_button = {
   red = 84,
   green = 200,
   blue = 84,
 }
 
+---@type Colour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@param ui UI
 function UICallsDispatcher:UICallsDispatcher(ui)
   local app = ui.app
   self:UIResizable(ui, 320, 350, col_bg)

@@ -24,27 +24,31 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UISaveMap" (UIFileBrowser)
 
 ---@class UISaveMap: UIFileBrowser
----@operator call: UISaveMap
+---@overload fun(UI): UISaveMap
 local UISaveMap = _G["UISaveMap"] ---@type UISaveMap
 
+---@type RGBColour
 local col_textbox = {
   red = 0,
   green = 0,
   blue = 0,
 }
 
+---@type RGBColour
 local col_highlight = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@param ui UI
 function UISaveMap:UISaveMap(ui)
   local treenode = FilteredFileTreeNode(ui.app.user_level_dir, ".map")
   treenode.label = "Maps"

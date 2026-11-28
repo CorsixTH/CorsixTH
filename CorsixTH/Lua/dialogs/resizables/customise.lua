@@ -23,14 +23,21 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 --! Customise window used in the main menu and ingame.
 class "UICustomise" (UIResizable)
 
+---@alias CustomiseMode "menu" | "main menu" | "options" | "customise"
+
 ---@class UICustomise: UIResizable
----@operator call: UICustomise
+---@field mode CustomiseMode
+---@field modal_class string
+---@overload fun(UI, CustomiseMode): UICustomise
 local UICustomise = _G["UICustomise"] ---@type UICustomise
 
+---@type {["bg"] : Colour}
 local col = {
-  bg             = Colours.PanelDefault,
+  bg = Colours.PanelDefault,
 }
 
+---@param ui UI
+---@param mode CustomiseMode
 function UICustomise:UICustomise(ui, mode)
   self:UIResizable(ui, 360, 375, col.bg)
 

@@ -24,9 +24,11 @@ local UIFileBrowser = _G['UIFileBrowser'] ---@type UIFileBrowser
 class "UILoadMap" (UIFileBrowser)
 
 ---@class UILoadMap: UIFileBrowser
----@operator call: UILoadMap
+---@overload fun(UI, FileBrowserMode): UILoadMap
 local UILoadMap = _G["UILoadMap"] ---@type UILoadMap
 
+---@param ui UI
+---@param mode FileBrowserMode
 function UILoadMap:UILoadMap(ui, mode)
   local path = ui.app.user_level_dir
   local treenode = FilteredFileTreeNode(path, ".map")

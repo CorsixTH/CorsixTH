@@ -24,7 +24,7 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UITipOfTheDay" (UIResizable)
 
 ---@class UITipOfTheDay: UIResizable
----@operator call: UITipOfTheDay
+---@overload fun(UI): UITipOfTheDay
 local UITipOfTheDay = _G["UITipOfTheDay"] ---@type UITipOfTheDay
 
 local col_bg = {
@@ -33,6 +33,7 @@ local col_bg = {
   blue = math.cosmetic_random(20, 200),
 }
 
+---@param ui UI
 function UITipOfTheDay:UITipOfTheDay(ui)
   local app = ui.app
   -- If the application window is not wide enough,

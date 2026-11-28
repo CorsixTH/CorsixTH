@@ -27,11 +27,12 @@ local Humanoid = _G['Humanoid'] ---@type Humanoid
 class "Inspector" (Humanoid)
 
 ---@class Inspector: Humanoid
----@operator call: Inspector
+---@overload fun(THAnimation): Inspector
 local Inspector = _G["Inspector"] ---@type Inspector
 
-function Inspector:Inspector(...)
-  self:Humanoid(...)
+---@param animation THAnimation
+function Inspector:Inspector(animation)
+  self:Humanoid(animation)
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.has_been_announced = false
 end

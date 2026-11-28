@@ -30,9 +30,10 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "DirTreeNode" (FileTreeNode)
 
 ---@class DirTreeNode: FileTreeNode
----@operator call: DirTreeNode
+---@overload fun(string): DirTreeNode
 local DirTreeNode = _G["DirTreeNode"] ---@type DirTreeNode
 
+---@param path string Path to the directory.
 function DirTreeNode:DirTreeNode(path)
   self:FileTreeNode(path)
 end
@@ -65,9 +66,10 @@ end
 class "InstallDirTreeNode" (DirTreeNode)
 
 ---@class InstallDirTreeNode: DirTreeNode
----@operator call: InstallDirTreeNode
+---@overload fun(string): InstallDirTreeNode
 local InstallDirTreeNode = _G["InstallDirTreeNode"] ---@type InstallDirTreeNode
 
+---@param path string Path to the directory.
 function InstallDirTreeNode:InstallDirTreeNode(path)
   self:FileTreeNode(path)
 end
@@ -122,18 +124,19 @@ end
 --! Prompter for Theme Hospital install directory
 class "UIDirectoryBrowser" (UIResizable)
 
+---@alias BrowserMode "menu" | "dir_browser"
+---@alias BrowserCallback fun(string)
+
 ---@class UIDirectoryBrowser: UIResizable
----@operator call: UIDirectoryBrowser
+---@overload fun(UI, BrowserMode, THStringProxy, TreeNode, BrowserCallback): UIDirectoryBrowser
 local UIDirectoryBrowser = _G["UIDirectoryBrowser"] ---@type UIDirectoryBrowser
 
---! Creates a new directory browser window
---!param ui The active UI to hook into.
---!param mode Whether the dialog has been opened from the main_menu or somewhere else. Currently
---! valid are "menu" or "dir_browser".
---!param instruction The textual instruction what the user should do in the dialog.
---!param treenode_class What TreeNode subclass the nodes will be built from. E.g. "InstallDirTreeNode"
---!param callback The function that is called when the user has chosen a directory. Gets
---! a path string as argument.
+--- Creates a new directory browser window
+---@param ui UI The active UI to hook into.
+---@param mode BrowserMode Whether the dialog has been opened from the main_menu or somewhere else. Currently valid are "menu" or "dir_browser".
+---@param instruction THStringProxy The textual instruction what the user should do in the dialog.
+---@param treenode_class TreeNode What TreeNode subclass the nodes will be built from. E.g. "InstallDirTreeNode"
+---@param callback BrowserCallback The function that is called when the user has chosen a directory. Gets a path string as argument.
 function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_class, callback)
   self.col_bg = {
     red = 154,

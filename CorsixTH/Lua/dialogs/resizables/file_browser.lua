@@ -28,10 +28,14 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 --  that meets a given file extension criterion.
 class "FilteredFileTreeNode" (FileTreeNode)
 
+---@alias TreeNodeFilterType string | string[]
+
 ---@class FilteredFileTreeNode: FileTreeNode
----@operator call: FilteredFileTreeNode
+---@overload fun(string, FilteredFileTreeNode): FilteredFileTreeNode
 local FilteredFileTreeNode = _G["FilteredFileTreeNode"] ---@type FilteredFileTreeNode
 
+---@param path string Path
+---@param filter TreeNodeFilterType
 function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
   self:FileTreeNode(path)
   self.filter_by = filter
@@ -75,9 +79,19 @@ end
 class "FilteredTreeControl" (TreeControl)
 
 ---@class FilteredTreeControl: TreeControl
----@operator call: FilteredTreeControl
+---@overload fun(TreeNode, integer, integer, integer, integer, Colour, Colour, boolean, boolean): FilteredTreeControl
 local FilteredTreeControl = _G["FilteredTreeControl"] ---@type FilteredTreeControl
 
+--- Constructor of the FilterTreeControl class.
+--- @param root TreeNode
+--- @param x integer
+--- @param y integer
+--- @param width integer
+--- @param height integer
+--- @param col_bg Colour
+--- @param col_fg Colour
+--- @param has_font boolean
+--- @param show_dates boolean Whether to show dates
 function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
 
@@ -151,25 +165,27 @@ end
 --! A file browser with a scrollbar. Used by load_game and save_game.
 class "UIFileBrowser" (UIResizable)
 
+---@alias FileBrowserMode "menu" | "game"
+
 ---@class UIFileBrowser: UIResizable
----@operator call: UIFileBrowser
+---@overload fun(UI, FileBrowserMode, THStringProxy, number, any, boolean, string): UIFileBrowser
 local UIFileBrowser = _G["UIFileBrowser"] ---@type UIFileBrowser
 
+---@type RGBColour
 local col_caption = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
---[[ Constructs the dialog.
-!param ui (UI) The active ui.
-!param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
-!param title (string) The desired title of the dialog.
-!param vertical_size (number)
-!param root
-!param show_dates (boolean) Whether to show date last modified
-!param submit_text (string) Optional alternative labelling of the OK button
-]]
+--- Constructs the dialog.
+---@param ui (UI) The active ui.
+---@param mode (FileBrowserMode) Either "menu" or "game" depending on which mode the game is in right now.
+---@param title (THStringProxy) The desired title of the dialog.
+---@param vertical_size (number)
+---@param root any
+---@param show_dates (boolean) Whether to show date last modified
+---@param submit_text (string) Optional alternative labelling of the OK button
 function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates, submit_text)
   self.col_bg = {
     red = 154,

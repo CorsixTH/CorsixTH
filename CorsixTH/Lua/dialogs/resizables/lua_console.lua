@@ -28,33 +28,38 @@ local UIResizable = _G['UIResizable'] ---@type UIResizable
 class "UILuaConsole" (UIResizable)
 
 ---@class UILuaConsole: UIResizable
----@operator call: UILuaConsole
+---@overload fun(UI): UILuaConsole
 local UILuaConsole = _G["UILuaConsole"] ---@type UILuaConsole
 
+---@type RGBColour
 local col_bg = {
   red = 46,
   green = 186,
   blue = 60,
 }
 
+---@type RGBColour
 local col_textbox = {
   red = 0,
   green = 0,
   blue = 0,
 }
 
+---@type RGBColour
 local col_highlight = {
   red = 174,
   green = 166,
   blue = 218,
 }
 
+---@type RGBColour
 local col_shadow = {
   red = 134,
   green = 126,
   blue = 178,
 }
 
+---@param ui UI
 function UILuaConsole:UILuaConsole(ui)
   self:UIResizable(ui, 320, 240, col_bg)
 
