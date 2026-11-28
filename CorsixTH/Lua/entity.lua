@@ -18,10 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---! Abstraction for visible gameplay things which sit somewhere on the map.
+--- Abstraction for visible gameplay things which sit somewhere on the map.
 class "Entity"
 
+---@alias DynamicInfoKey 'text' | 'progress' | 'dividers'
+
 ---@class Entity
+---@field th THAnimation C++ access to the animation that is displayed for the entity.
+---@field layers integer[] Array of 13 entries for defining the part of the animation that is displayed.
+---@field world World The place where the entity lives and dies.
+---@field mood_marker integer? Defines the number to use for showing the mood of the entity in an animation. If not `nil`, either `1` or `2`.
+---@field mood_info boolean | THAnimation
+---@field ticks boolean Whether the entity receives timer ticks for updating itself.
+---@field playing_sounds_in_random_sequence boolean
+---@field waiting_for_sound_effects_to_be_turned_on boolean
+---@field random_sound_sequence_parameters table
+---@field dynamic_info { text : THStringProxy?, progress : number?, dividers : integer[]? }?
+---@field permanent_flags integer Bit-set of drawing flags that are always applied with each animation.
+---@field user_of Object? The object that the entity has claimed.
+---@field tile_x integer X coordinate of the entity at the tile map.
+---@field tile_y integer Y coordinate of the entity at the tile map.
+---@field animation_idx integer The ordinal into the main animation set
+---@field animation_flags integer Bit-set of drawing flags.
+---@field slow_animation boolean If set, every other tick is skipped, causing the entity to 'run' at 50% speed.
+---@field num_animation_ticks integer?
+---@field timer_time integer Countdown timer in ticks for firing `self.timer_function`.
+---@field timer_function function Function that takes self, is executed when `timer_time` reaches 0.
 ---@operator call: Entity
 local Entity = _G["Entity"] ---@type Entity
 
@@ -45,15 +67,13 @@ function Entity:Entity(animation)
   self.dynamic_info = nil
 end
 
---[[
-This plays a sound "at" the entity, meaning the sound will not be played
-if the entity is off-screen, and the volume will be quieter the further
-the entity is from the center of the screen. If this is not what you want
-then use UI:playSound instead.
-!param name (string, integer) The filename or ordinal of the sound to play.
-!param played_callback (function) a optional parameter.
-!param played_callback_delay (integer) a optional milliseconds parameter.
---]]
+--- This plays a sound "at" the entity, meaning the sound will not be played
+--- if the entity is off-screen, and the volume will be quieter the further
+--- the entity is from the center of the screen. If this is not what you want
+--- then use UI:playSound instead.
+--- @param name (string | integer) The filename or ordinal of the sound to play.
+--- @param played_callback (function?) a optional parameter.
+--- @param played_callback_delay (integer?) a optional milliseconds parameter.
 function Entity:playSound(name, played_callback, played_callback_delay)
   if TheApp.config.play_sounds then
     TheApp.audio:playSound(name, self, false, played_callback, played_callback_delay)
@@ -64,17 +84,15 @@ function Entity:setWaitingForSoundEffectsToBeTurnedOn()
   self.waiting_for_sound_effects_to_be_turned_on = true
 end
 
---[[
-Plays a sequence of related sounds at an entity while entity.playing_sounds_in_random_sequence = true.
 
-The silences between these sounds can either have randomly generated lengths between the min and max length parameters or
-they can all be a specified length by providing min and max tables with one value for the desired pause duration.
-
-!param name_pattern (String) example: LAVA00*.WAV
-!param min_silence_lengths (table) the desired minimum silences length for the different tick rates, [3] = Normal
-!param max_silence_lengths (table) the desired maximum silences length for the different tick rates, [3] = Normal
-!param num_silences (integer) how many different silence lengths should be used, this can be a nil parameter.
--]]
+--- Plays a sequence of related sounds at an entity while entity.playing_sounds_in_random_sequence = true.
+---
+--- The silences between these sounds can either have randomly generated lengths between the min and max length parameters or
+--- they can all be a specified length by providing min and max tables with one value for the desired pause duration.
+--- @param name_pattern (string) example: LAVA00*.WAV
+--- @param min_silence_lengths (table) the desired minimum silences length for the different tick rates, [3] = Normal
+--- @param max_silence_lengths (table) the desired maximum silences length for the different tick rates, [3] = Normal
+--- @param num_silences (integer?) how many different silence lengths should be used, this can be a nil parameter.
 function Entity:playEntitySounds(name_pattern, min_silence_lengths, max_silence_lengths, num_silences)
   self.playing_sounds_in_random_sequence = true
   self.random_sound_sequence_parameters = {}
@@ -87,16 +105,12 @@ function Entity:playEntitySounds(name_pattern, min_silence_lengths, max_silence_
       min_silence_lengths, max_silence_lengths, num_silences)
 end
 
---[[ Set which animation is used to give the entity a visual appearance.
-! Until an entity is given an animation, it is invisible to the player. Note
-that some "animations" consist of a single frame, and hence the term animation
-is used both to mean things which are animated and things which are static.
-
-!param animation (integer) The ordinal into the main animation set
-!param flags (integer) A combination of zero or more drawing flags to control
-the use of alternative palettes, transparency, and other similar settings. See
-`THDF_` values in `th_gfx.h` for the possible bit values.
-]]
+--- Set which animation is used to give the entity a visual appearance.
+--- Until an entity is given an animation, it is invisible to the player. Note
+--- that some "animations" consist of a single frame, and hence the term animation
+--- is used both to mean things which are animated and things which are static.
+--- @param animation (integer) The ordinal into the main animation set
+--- @param flags (integer) A combination of zero or more drawing flags to control the use of alternative palettes, transparency, and other similar settings. See `THDF_` values in `th_gfx.h` for the possible bit values.
 function Entity:setAnimation(animation, flags)
   flags = flags or 0
   if self.permanent_flags then
@@ -110,10 +124,9 @@ function Entity:setAnimation(animation, flags)
   return self
 end
 
---[[ Set the map tile which the entity is on.
-!param x (integer) The 1-based X coordinate of the tile.
-!param y (integer) The 1-based Y coordinate of the tile.
-]]
+--- Set the map tile which the entity is on.
+--- @param x (integer) The 1-based X coordinate of the tile.
+--- @param y (integer) The 1-based Y coordinate of the tile.
 function Entity:setTile(x, y)
   if self.user_of then
     print("Warning: Entity tile changed while marked as using an object")
@@ -155,32 +168,29 @@ function Entity:getRoom()
   end
 end
 
---[[ Set the pixel position of the entity within the current tile.
-!param x (integer) The 0-based X pixel offset from the default position.
-!param y (integer) The 0-based Y pixel offset from the default position.
-]]
+--- Set the pixel position of the entity within the current tile.
+--- @param x (integer) The 0-based X pixel offset from the default position.
+--- @param y (integer) The 0-based Y pixel offset from the default position.
 function Entity:setPosition(x, y)
   self.th:setPosition(x, y)
   return self
 end
 
---[[ Set the rate at which the entity pixel position changes
-!param x (integer) The X component of the speed in pixels per tick.
-!param y (integer) The Y component of the speed in pixels per tick.
-]]
+--- Set the rate at which the entity pixel position changes
+--- @param x (integer) The X component of the speed in pixels per tick.
+--- @param y (integer) The Y component of the speed in pixels per tick.
 function Entity:setSpeed(x, y)
   self.th:setSpeed(x, y)
   return self
 end
 
---[[ Combined form of `setTile`, `setPosition`, and `setSpeed`
-!param tx (integer) The 1-based X coordinate of the tile.
-!param ty (integer) The 1-based Y coordinate of the tile.
-!param px (integer) The 0-based X pixel offset from the default position.
-!param py (integer) The 0-based Y pixel offset from the default position.
-!param sx (integer) The X component of the speed in pixels per tick.
-!param sy (integer) The Y component of the speed in pixels per tick.
-]]
+--- Combined form of `setTile`, `setPosition`, and `setSpeed`
+--- @param tx (integer) The 1-based X coordinate of the tile.
+--- @param ty (integer) The 1-based Y coordinate of the tile.
+--- @param px (integer) The 0-based X pixel offset from the default position.
+--- @param py (integer) The 0-based Y pixel offset from the default position.
+--- @param sx (integer) The X component of the speed in pixels per tick.
+--- @param sy (integer) The Y component of the speed in pixels per tick.
 function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
   self:setTile(tx, ty)
   self:setPosition(px or 0, py or 0)
@@ -188,8 +198,8 @@ function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
   return self
 end
 
--- Inner tick function that will skip every other tick when
--- slow_animation is set.
+--- Inner tick function that will skip every other tick when
+--- slow_animation is set.
 function Entity:_tick()
   if self.slow_animation then
     if not self.skip_next_tick then
@@ -201,9 +211,9 @@ function Entity:_tick()
   end
 end
 
--- Function which is called once every tick, where a tick is the smallest unit
--- of time in the game engine. Typically used to advance animations and similar
--- recurring or long-duration tasks.
+--- Function which is called once every tick, where a tick is the smallest unit
+--- of time in the game engine. Typically used to advance animations and similar
+--- recurring or long-duration tasks.
 function Entity:tick()
   if self.num_animation_ticks then
     for _ = 1, self.num_animation_ticks do
@@ -234,30 +244,26 @@ function Entity:tick()
   end
 end
 
---[[ Set which parts of the animation to be displayed.
-! Each animation is made up of 13 layers, and generally has several different
-options for each layer. In the animation viewer tool, multiple options can be
-toggled on for each layer, however here only one option may be selected per
-layer.
-!param layer (integer) The layer to set (1 through 13).
-!param id (integer) The option to display for the given layer.
-]]
+--- Set which parts of the animation to be displayed.
+--- Each animation is made up of 13 layers, and generally has several different
+--- options for each layer. In the animation viewer tool, multiple options can be
+--- toggled on for each layer, however here only one option may be selected per layer.
+--- @param layer (integer) The layer to set (1 through 13).
+--- @param id (integer) The option to display for the given layer.
 function Entity:setLayer(layer, id)
   self.th:setLayer(layer, id)
   self.layers[layer] = id
   return self
 end
 
---[[ Register a function (related to the entity) to be called at a later time.
-! Each `Entity` can have a single timer associated with it, and due to this
-limit of one, it is almost always the case that the currently active humanoid
-action is the only thing which calls `setTimer`.
-If self.slow_animation is set then all timers will be doubled as animation
-length will be doubled.
-!param tick_count (integer) If 0, then `f` will be called during the entity's
-next `tick`. If 1, then `f` will be called one tick after that, and so on.
-!param f (function) Function which takes a single argument (the entity).
-]]
+--- Register a function (related to the entity) to be called at a later time.
+--- Each `Entity` can have a single timer associated with it, and due to this
+--- limit of one, it is almost always the case that the currently active humanoid
+--- action is the only thing which calls `setTimer`.
+--- If self.slow_animation is set then all timers will be doubled as animation
+--- length will be doubled.
+--- @param tick_count (integer) If 0, then `f` will be called during the entity's next `tick`. If 1, then `f` will be called one tick after that, and so on.
+--- @param f (function) Function which takes a single argument (the entity).
 function Entity:setTimer(tick_count, f)
   self.timer_time = tick_count
   self.timer_function = f
@@ -267,7 +273,7 @@ function Entity:setTimer(tick_count, f)
   end
 end
 
--- Used to set a mood icon over the entity.
+--- Used to set a mood icon over the entity.
 function Entity:setMoodInfo(new_mood)
   if new_mood then
     if not self.mood_info then
@@ -284,8 +290,8 @@ function Entity:setMoodInfo(new_mood)
   end
 end
 
--- Function which is called when the entity is to be permanently removed from
--- the world.
+--- Function which is called when the entity is to be permanently removed from
+--- the world.
 function Entity:onDestroy()
   -- Clear any mood
   self:setMoodInfo()
@@ -296,39 +302,39 @@ function Entity:onDestroy()
   end
 end
 
--- Function which is called when entity is picked up
+--- Function which is called when entity is picked up
 function Entity:onPickUp()
   self.world.dispatcher:dropFromQueue(self)
 end
 
--- Function which is called at the end of each ingame day. Should be used to
--- implement behaviours which happen regularly, but not as frequently as to
--- need them in `tick`.
+--- Function which is called at the end of each ingame day. Should be used to
+--- implement behaviours which happen regularly, but not as frequently as to
+--- need them in `tick`.
 function Entity:tickDay()
 end
 
---! Notify the entity of a new object.
---!param id Name of the new object.
+--- Notify the entity of a new object.
+--- @param id string Name of the new object.
 -- TODO Currently only used for benches placed nearby.
 -- TODO Maybe also pass the object tile coordinates?
 function Entity:notifyNewObject(id)
 end
 
---! Notify the entity that a new room was built.
---!param room (Room) The new room.
+--- Notify the entity that a new room was built.
+--- @param room (Room) The new room.
 function Entity:notifyNewRoom(room)
 end
 
 function Entity:setMood(mood_name, activate)
 end
 
--- Returns a table of hover info about an object.
+--- Returns a table of hover info about an object.
 function Entity:getDynamicInfo()
   return self.dynamic_info
 end
 
--- Sets a piece of Dynamic_info.
--- type could be 'text', 'progress' or 'dividers'
+--- Sets a piece of Dynamic_info.
+--- type could be 'text', 'progress' or 'dividers'
 function Entity:setDynamicInfo(type, value)
   if not self.dynamic_info then
     self.dynamic_info = {
@@ -340,12 +346,12 @@ function Entity:setDynamicInfo(type, value)
   self.dynamic_info[type] = value
 end
 
--- Completely clears the dynamic info.
+--- Completely clears the dynamic info.
 function Entity:clearDynamicInfo()
   self.dynamic_info = nil
 end
 
---! Stub to be extended in subclasses, if needed.
+--- Stub to be extended in subclasses, if needed.
 function Entity:afterLoad(old, new)
 end
 
@@ -359,7 +365,7 @@ function Entity:playAfterLoadSound()
   end
 end
 
---! Stub to be extended in subclasses, if needed.
+--- Stub to be extended in subclasses, if needed.
 function Entity:eraseObject()
   -- Give entity the chance to clear itself from the map before resetAnimation gets called.
 end
@@ -369,13 +375,12 @@ function Entity:resetAnimation()
   self.th:setTile(x and self.world.map.th, x, y, self:getDrawingLayer())
 end
 
---[[
-  Returns the drawing layer for this particular entity. Should be overridden in derived classes. The drawing layer
-  specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
-  Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
-  normal objects should have layers between 3 and 7, east side object should have layer 8 and south side
-  objects layer 9.
-]]
+
+--- Returns the drawing layer for this particular entity. Should be overridden in derived classes. The drawing layer
+--- specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
+--- Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
+--- normal objects should have layers between 3 and 7, east side object should have layer 8 and south side
+--- objects layer 9.
 function Entity:getDrawingLayer()
   return DrawingLayers.Entity
 end

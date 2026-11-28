@@ -22,35 +22,35 @@ local ReputationAccount = cth_require("reputation")
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "research"
-room.vip_must_visit = true
-room.level_config_id = 28
-room.class = "ResearchRoom"
-room.name = _S.rooms_short.research_room
-room.long_name = _S.rooms_long.research_room
-room.tooltip = _S.tooltip.rooms.research_room
-room.objects_additional = {
-  "extinguisher",
-  "radiator",
-  "plant",
-  "bin",
-  "computer",
-  "desk",
-  "cabinet",
-  "analyser" }
-room.objects_needed = { desk = 1, cabinet = 1, autopsy = 1 }
-room.build_preview_animation = 5102
-room.categories = {
-  facilities = 2,
+---@type RoomProperties
+local room_properties = {
+  id = "research",
+  vip_must_visit = true,
+  level_config_id = 28,
+  class = "ResearchRoom",
+  name = _S.rooms_short.research_room,
+  long_name = _S.rooms_long.research_room,
+  tooltip = _S.tooltip.rooms.research_room,
+  objects_additional = {
+    "extinguisher",
+    "radiator",
+    "plant",
+    "bin",
+    "computer",
+    "desk",
+    "cabinet",
+    "analyser" },
+  objects_needed = { desk = 1, cabinet = 1, autopsy = 1 },
+  build_preview_animation = 5102,
+  categories = {
+    facilities = 2,
+  },
+  minimum_size = 5,
+  wall_type = "green",
+  floor_tile = 21,
+  required_staff = { Researcher = 1 },
+  call_sound = "reqd023.wav",
 }
-room.minimum_size = 5
-room.wall_type = "green"
-room.floor_tile = 21
-room.required_staff = {
-  Researcher = 1,
-}
-room.call_sound = "reqd023.wav"
 
 class "ResearchRoom" (Room)
 
@@ -216,4 +216,4 @@ function ResearchRoom:afterLoad(old, new)
   end
   Room.afterLoad(self, old, new)
 end
-return room
+return room_properties

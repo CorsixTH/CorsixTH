@@ -20,29 +20,32 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "decontamination"
-room.vip_must_visit = false
-room.level_config_id = 30
-room.class = "DecontaminationRoom"
-room.name = _S.rooms_short.decontamination
-room.long_name = _S.rooms_long.decontamination
-room.tooltip = _S.tooltip.rooms.decontamination
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { shower = 1, console = 1 }
-room.build_preview_animation = 5100
-room.categories = {
-  clinics = 8,
+---@type StaffRequirements
+local needed_staff = { Doctor = 1, }
+
+---@type RoomProperties
+local room_properties = {
+  id = "decontamination",
+  vip_must_visit = false,
+  level_config_id = 30,
+  class = "DecontaminationRoom",
+  name = _S.rooms_short.decontamination,
+  long_name = _S.rooms_long.decontamination,
+  tooltip = _S.tooltip.rooms.decontamination,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin" },
+  objects_needed = { shower = 1, console = 1 },
+  build_preview_animation = 5100,
+  categories = {
+    clinics = 8,
+  },
+  minimum_size = 5,
+  wall_type = "blue",
+  floor_tile = 19,
+  required_staff = needed_staff,
+  maximum_staff = needed_staff,
+  call_sound = "reqd024.wav",
+  handyman_call_sound = "maint012.wav",
 }
-room.minimum_size = 5
-room.wall_type = "blue"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
-room.call_sound = "reqd024.wav"
-room.handyman_call_sound = "maint012.wav"
 
 class "DecontaminationRoom" (Room)
 
@@ -125,4 +128,4 @@ function DecontaminationRoom:onHumanoidLeave(humanoid)
   Room.onHumanoidLeave(self, humanoid)
 end
 
-return room
+return room_properties

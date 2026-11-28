@@ -21,24 +21,26 @@ SOFTWARE. --]]
 
 local Room = _G['Room'] ---@type Room
 
-local room = {}
-room.id = "training"
-room.vip_must_visit = false
-room.level_config_id = 22
-room.class = "TrainingRoom"
-room.long_name = _S.rooms_long.training_room
-room.name = _S.rooms_short.training_room
-room.tooltip = _S.tooltip.rooms.training_room
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "lecture_chair", "bookcase", "skeleton" }
-room.objects_needed = { lecture_chair = 1, projector = 1 }
-room.build_preview_animation = 5086
-room.categories = {
-  facilities = 4,
+---@type RoomProperties
+local room_properties = {
+  id = "training",
+  vip_must_visit = false,
+  level_config_id = 22,
+  class = "TrainingRoom",
+  long_name = _S.rooms_long.training_room,
+  name = _S.rooms_short.training_room,
+  tooltip = _S.tooltip.rooms.training_room,
+  objects_additional = { "extinguisher", "radiator", "plant", "bin", "lecture_chair", "bookcase", "skeleton" },
+  objects_needed = { lecture_chair = 1, projector = 1 },
+  build_preview_animation = 5086,
+  categories = {
+    facilities = 4,
+  },
+  minimum_size = 4,
+  wall_type = "green",
+  floor_tile = 17,
+  has_no_queue_dialog = true,
 }
-room.minimum_size = 4
-room.wall_type = "green"
-room.floor_tile = 17
-room.has_no_queue_dialog = true
 
 class "TrainingRoom" (Room)
 
@@ -278,4 +280,4 @@ function TrainingRoom:afterLoad(old, new)
   Room.afterLoad(self, old, new)
 end
 
-return room
+return room_properties
